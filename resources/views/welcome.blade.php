@@ -186,11 +186,11 @@
                     Hubungi tim kami sekarang untuk mendapatkan penawaran terbaik dan konsultasi gratis. Berlokasi di Jepara, kami siap melayani kebutuhan bahan bangunan Anda dengan harga kompetitif dan kualitas terjamin.
                 </p>
                 <div class="flex flex-col md:flex-row gap-4 justify-center mb-6">
-                    <a href="https://wa.me/+62123456789" target="_blank" class="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-4 px-12 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg text-lg">
-                        📱 WhatsApp: +62 123 456 789
+                    <a href="https://wa.me/+62 858-7765-3585" target="_blank" class="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-4 px-12 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg text-lg">
+                        📱 WhatsApp: +62 858-7765-3585
                     </a>
                     <div class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-4 px-12 rounded-lg shadow-lg text-lg">
-                        📞 Telepon: +62 (021) 1234-5678
+                        📞 Telepon: +62 858-7765-3585
                     </div>
                 </div>
                 <p class="text-gray-600">
@@ -209,12 +209,12 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <!-- About -->
-                    <div>i Jepara dan sekitarnya dengan pengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan dedikasi tinggi
+                    <div>
                         <div class="flex items-center mb-4">
                             <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="h-10 w-10 object-contain mr-2">
                             <h5 class="text-white text-lg font-bold">BPTrans</h5>
                         </div>
-                        <p class="text-gray-400">Distributor bahan bangunan berkualitas terpercaya dengan pengalaman lebih dari 20 tahun melayani kebutuhan konstruksi di Indonesia.</p>
+                        <p class="text-gray-400">Distributor bahan bangunan berkualitas terpercaya di Jepara dan sekitarnya dengan pengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan dedikasi tinggi.</p>
                     </div>
 
                     <!-- Products -->
@@ -230,13 +230,31 @@
 
                     <!-- Contact -->
                     <div>
-                        <h5 class="tepara, Jawa Tengah</li>
+                        <h5 class="text-white font-bold mb-4">Hubungi Kami</h5>
+                        <ul class="space-y-2 text-gray-400">
+                            <li>📧 Email: info@bptrans.com</li>
+                            <li>📞 WhatsApp: +62 858-7765-3585</li>
+                            <li>📱 Telepon: +62 858-7765-3585</li>
+                            <li>📍 Jepara, Jawa Tengah</li>
+                            <li class="pt-2"><a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank" class="text-blue-400 hover:text-white transition">→ Lihat di Google Maps</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
+                    <p>© 2026 BPTrans. Semua hak dilindungi. | Distributor Bahan Bangunan Terpercaya</p>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
+                        <h5 class="jepara, Jawa Tengah</li>
                             <li class="pt-2"><a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank" class="text-blue-400 hover:text-white transition">→ Lihat di Google Maps</a>ld mb-4">Hubungi Kami</h5>
                         <ul class="space-y-2 text-gray-400">
                             <li>📧 Email: info@bptrans.com</li>
-                            <li>📞 WhatsApp: +62 123 456 789</li>
-                            <li>📱 Telepon: +62 (021) 1234-5678</li>
-                            <li>📍 Jakarta, Indonesia</li>
+                            <li>📞 WhatsApp: +62 858-7765-3585</li>
+                            <li>📱 Telepon: +62 858-7765-3585</li>
+                            <li>📍 Jepara, Jawa Tengah</li>
                         </ul>
                     </div>
                 </div>
