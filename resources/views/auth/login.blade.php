@@ -3,8 +3,7 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-6 text-center">
-        <h1 class="text-3xl font-bold text-gray-800">Selamat Datang</h1>
-        <p class="text-gray-600 mt-2">BPTrans Admin Dashboard</p>
+        <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-32 h-32 object-contain mx-auto drop-shadow-lg" />
     </div>
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">

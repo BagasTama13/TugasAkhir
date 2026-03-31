@@ -16,15 +16,8 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50">
-            <!-- Logo Section -->
-            <div class="mb-4">
-                <a href="/">
-                    <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-40 h-40 object-contain drop-shadow-lg transform hover:scale-105 transition duration-300" />
-                </a>
-            </div>
-
             <!-- Form Card -->
-            <div class="w-full sm:max-w-md mt-4 px-6 py-8 bg-white shadow-2xl overflow-hidden sm:rounded-2xl border-t-4 border-blue-600">
+            <div class="w-full sm:max-w-md px-6 py-8 bg-white shadow-2xl overflow-hidden sm:rounded-2xl border-t-4 border-blue-600">
                 {{ $slot }}
             </div>
         </div>
