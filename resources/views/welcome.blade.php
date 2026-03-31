@@ -23,7 +23,15 @@
                         </div>
                     </div>
 
-                    <!-- Contact Button -->
+                    <!-- Navigation Menu -->
+                    <div class="hidden md:flex gap-8 items-center">
+                        <a href="#home" class="text-white hover:text-blue-100 font-semibold transition duration-200">Home</a>
+                        <a href="#tentang" class="text-white hover:text-blue-100 font-semibold transition duration-200">Tentang</a>
+                        <a href="#produk" class="text-white hover:text-blue-100 font-semibold transition duration-200">Produk</a>
+                        <a href="#kontak" class="text-white hover:text-blue-100 font-semibold transition duration-200">Kontak</a>
+                    </div>
+
+                    <!-- CTA Button -->
                     <div class="flex gap-3">
                         <a href="#kontak" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-md">
                             Hubungi Kami
@@ -34,7 +42,7 @@
         </nav>
 
         <!-- Hero Section -->
-        <section class="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 py-20">
+        <section id="home" class="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <!-- Left Content -->
@@ -67,7 +75,7 @@
         </section>
 
         <!-- About Section (Company Info) -->
-        <section class="bg-white py-16">
+        <section id="tentang" class="bg-white py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- About -->
