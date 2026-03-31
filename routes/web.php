@@ -10,7 +10,10 @@ use App\Livewire\Activity;
 // Auth Routes
 require __DIR__.'/auth.php';
 
-Route::redirect('/', '/login');
+// Public Routes
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
