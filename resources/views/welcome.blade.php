@@ -66,83 +66,53 @@
             </div>
         </section>
 
-        <!-- Features Section -->
+        <!-- Products Section -->
         <section id="features" class="py-20 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h3 class="text-4xl font-bold text-gray-800 mb-4">Fitur Utama</h3>
-                    <p class="text-xl text-gray-600">Semua yang Anda butuhkan untuk menjalankan bisnis logistik dengan efisien</p>
+                    <h3 class="text-4xl font-bold text-gray-800 mb-4">Daftar Produk</h3>
+                    <p class="text-xl text-gray-600">Produk unggulan kami dengan harga terbaik</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Feature 1 -->
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                        <div class="bg-blue-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                @if ($products && $products->count() > 0)
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        @foreach ($products as $product)
+                            <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                                <!-- Product Image -->
+                                <div class="mb-4 h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                    @if ($product->gambar)
+                                        <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="w-full h-full object-cover hover:scale-110 transition duration-300">
+                                    @else
+                                        <div class="text-gray-400 text-center">
+                                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
+                            <p>Tidak ada gambar</p>
                         </div>
-                        <h4 class="text-xl font-bold text-gray-800 mb-3">Manajemen Pesanan</h4>
-                        <p class="text-gray-600">Kelola semua pesanan dengan mudah, lacak status pesanan dari penerimaan hingga pengiriman.</p>
-                    </div>
-
-                    <!-- Feature 2 -->
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                        <div class="bg-green-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 mb-3">Tracking Pemasukan</h4>
-                        <p class="text-gray-600">Pantau semua pemasukan dengan sistem kategorisasi otomatis yang terhubung dengan pesanan.</p>
-                    </div>
-
-                    <!-- Feature 3 -->
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                        <div class="bg-purple-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 mb-3">Log Aktivitas</h4>
-                        <p class="text-gray-600">Pencatatan otomatis semua aktivitas admin dengan detail perubahan data untuk audit trail.</p>
-                    </div>
-
-                    <!-- Feature 4 -->
-                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                        <div class="bg-orange-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 mb-3">Dashboard Real-time</h4>
-                        <p class="text-gray-600">Visualisasi data real-time dengan statistik lengkap dan grafik performa bisnis Anda.</p>
-                    </div>
-
-                    <!-- Feature 5 -->
-                    <div class="bg-gradient-to-br from-red-50 to-red-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                        <div class="bg-red-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4l8-4M9 7L7 9m0 0l-2-2M9 7l2-2M9 7v10M9 17l-2-2m2 2l2-2"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 mb-3">Manajemen Produk</h4>
-                        <p class="text-gray-600">Kelola katalog produk dengan informasi lengkap dan mudah diakses dari dashboard.</p>
-                    </div>
-
-                    <!-- Feature 6 -->
-                    <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-                        <div class="bg-pink-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 mb-3">Keamanan</h4>
-                        <p class="text-gray-600">Autentikasi username dan password dengan enkripsi aman untuk melindungi data bisnis.</p>
-                    </div>
+                    @endif
                 </div>
+
+                <!-- Product Name -->
+                <h4 class="text-xl font-bold text-gray-800 mb-2">{{ $product->nama }}</h4>
+
+                <!-- Product Price -->
+                <div class="mb-3">
+                    <span class="text-2xl font-bold text-blue-600">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
+                    <span class="text-gray-600 ml-2">/ {{ $product->satuan ?? 'unit' }}</span>
+                </div>
+
+                <!-- Product Description -->
+                <p class="text-gray-600 text-sm line-clamp-3">{{ $product->deskripsi ?? 'Deskripsi tidak tersedia' }}</p>
             </div>
-        </section>
+        @endforeach
+        </div>
+        @else
+            <div class="text-center py-12">
+                <p class="text-gray-500 text-lg">Produk belum tersedia. Silakan kembali lagi nanti.</p>
+            </div>
+        @endif
+        </div>
+    </section>
 
         <!-- Stats Section -->
         <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-16">

@@ -12,7 +12,19 @@ require __DIR__.'/auth.php';
 
 // Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    // Get all products, group by nama and get cheapest for each, limit to 6
+    $products = \App\Models\Produk::all()
+        ->groupBy('nama')
+        ->map(function ($group) {
+            // Get the product with minimum price in this group
+            return $group->sortBy('harga')->first();
+        })
+        ->values()
+        ->sortBy('nama')
+        ->slice(0, 6)
+        ->values();
+    
+    return view('welcome', ['products' => $products]);
 })->name('welcome');
 
 Route::middleware('auth')->group(function () {

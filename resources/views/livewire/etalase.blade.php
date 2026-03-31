@@ -107,7 +107,9 @@
                     <th class="py-2">Gambar</th>
                     <th>Nama</th>
                     <th>Jenis</th>
-                    <th class="text-center">Aksi</th>
+                    <th class="text-center">Harga</th>
+                    <th class="text-center">Satuan</th>
+                    <th class="text-center"></th>
                 </tr>
             </thead>
             <tbody>
