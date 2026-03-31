@@ -43,10 +43,10 @@
                             Bahan Bangunan <span class="text-blue-600">Berkualitas Terbaik</span>
                         </h2>
                         <p class="text-xl text-gray-600 mb-4 leading-relaxed">
-                            Kami menyediakan berbagai pilihan bahan bangunan premium dengan harga kompetitif. Dari kayu pilihan, batu bata, hingga genteng berkualitas tinggi - semua tersedia untuk kebutuhan konstruksi Anda.
+                            Kami menyediakan berbagai pilihan bahan bangunan premium dengan harga kompetitif di Jepara. Dari kayu pilihan, batu bata, hingga genteng berkualitas tinggi - semua tersedia untuk kebutuhan konstruksi Anda.
                         </p>
                         <p class="text-gray-600 mb-8">
-                            Dipercaya oleh ribuan pelanggan di seluruh Indonesia untuk proyek bangunan residensial dan komersial.
+                            Dipercaya oleh pelanggan setia di area Jepara dan sekitarnya untuk proyek bangunan residensial dan komersial dengan kualitas terjamin.
                         </p>
                         <div class="flex gap-4">
                             <a href="#produk" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-8 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg">
@@ -73,13 +73,13 @@
                     <!-- About -->
                     <div class="bg-gray-50 p-6 rounded-lg">
                         <h3 class="text-xl font-bold text-gray-800 mb-3">Tentang BPTrans</h3>
-                        <p class="text-gray-600 text-sm">Distributor bahan bangunan terkemuka dengan pengalaman 20+ tahun melayani kebutuhan konstruksi di Indonesia dengan komitmen kualitas dan harga terbaik.</p>
+                        <p class="text-gray-600 text-sm">Distributor bahan bangunan terkemuka di Jepara dengan pengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan komitmen kualitas dan harga terbaik untuk semua kalangan.</p>
                     </div>
 
                     <!-- Vision -->
                     <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
                         <h3 class="text-xl font-bold text-gray-800 mb-3">Visi</h3>
-                        <p class="text-gray-600 text-sm">Menjadi distributor bahan bangunan pilihan utama yang terpercaya, inovatif, dan menyediakan produk berkualitas dengan harga kompetitif untuk seluruh nusantara.</p>
+                        <p class="text-gray-600 text-sm">Menjadi distributor bahan bangunan pilihan utama di Jepara dan sekitarnya yang terpercaya, inovatif, dan menyediakan produk berkualitas dengan harga kompetitif untuk semua kebutuhan konstruksi.</p>
                     </div>
 
                     <!-- Mission -->
@@ -183,9 +183,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h3 class="text-4xl font-bold text-gray-800 mb-6">Butuh Bahan Bangunan?</h3>
                 <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-                    Hubungi tim kami sekarang untuk mendapatkan penawaran terbaik dan konsultasi gratis tentang kebutuhan bahan bangunan proyek Anda. Kami siap membantu dengan harga kompetitif dan kualitas terjamin.
+                    Hubungi tim kami sekarang untuk mendapatkan penawaran terbaik dan konsultasi gratis. Berlokasi di Jepara, kami siap melayani kebutuhan bahan bangunan Anda dengan harga kompetitif dan kualitas terjamin.
                 </p>
-                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <div class="flex flex-col md:flex-row gap-4 justify-center mb-6">
                     <a href="https://wa.me/+62123456789" target="_blank" class="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-4 px-12 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg text-lg">
                         📱 WhatsApp: +62 123 456 789
                     </a>
@@ -193,9 +193,14 @@
                         📞 Telepon: +62 (021) 1234-5678
                     </div>
                 </div>
-                <p class="text-gray-600 mt-6">
+                <p class="text-gray-600">
                     Email: <a href="mailto:info@bptrans.com" class="text-blue-600 hover:underline">info@bptrans.com</a>
                 </p>
+                <div class="mt-8">
+                    <a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank" class="inline-block bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-10 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg">
+                        📍 Buka Lokasi Kami di Google Maps
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -204,7 +209,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <!-- About -->
-                    <div>
+                    <div>i Jepara dan sekitarnya dengan pengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan dedikasi tinggi
                         <div class="flex items-center mb-4">
                             <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="h-10 w-10 object-contain mr-2">
                             <h5 class="text-white text-lg font-bold">BPTrans</h5>
@@ -225,7 +230,8 @@
 
                     <!-- Contact -->
                     <div>
-                        <h5 class="text-white font-bold mb-4">Hubungi Kami</h5>
+                        <h5 class="tepara, Jawa Tengah</li>
+                            <li class="pt-2"><a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank" class="text-blue-400 hover:text-white transition">→ Lihat di Google Maps</a>ld mb-4">Hubungi Kami</h5>
                         <ul class="space-y-2 text-gray-400">
                             <li>📧 Email: info@bptrans.com</li>
                             <li>📞 WhatsApp: +62 123 456 789</li>
