@@ -242,9 +242,4 @@
         </footer>
     </body>
 </html>
-                </div>
-            </div>
-        </footer>
-    </body>
-</html>
                     
