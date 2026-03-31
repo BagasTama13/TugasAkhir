@@ -13,15 +13,18 @@
         <!-- Navigation -->
         <nav class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-20">
+                <div class="flex items-center h-20 justify-start gap-0">
                     <!-- Logo -->
-                    <div class="flex items-center">
+                    <div class="flex items-center flex-shrink-0">
                         <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="h-12 w-12 object-contain mr-3">
                         <div>
                             <h1 class="text-white text-2xl font-bold">BPTrans</h1>
                             <p class="text-blue-100 text-xs">Bahan Bangunan Terpercaya</p>
                         </div>
                     </div>
+
+                    <!-- Spacer -->
+                    <div class="flex-1"></div>
 
                     <!-- Navigation Menu -->
                     <div class="hidden md:flex gap-8 items-center">
@@ -32,7 +35,7 @@
                     </div>
 
                     <!-- CTA Button -->
-                    <div class="flex gap-3">
+                    <div class="flex gap-3 ml-8">
                         <a href="#kontak" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-md">
                             Hubungi Kami
                         </a>
