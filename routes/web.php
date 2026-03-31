@@ -12,13 +12,23 @@ require __DIR__.'/auth.php';
 
 // Public Routes
 Route::get('/', function () {
-    // Get all products, group by nama and get cheapest for each, limit to 6
+    // Get all products, group by nama
+    // For batu bata & genteng: show only cheapest
+    // For kayu: show all types
     $products = \App\Models\Produk::all()
         ->groupBy('nama')
         ->map(function ($group) {
-            // Get the product with minimum price in this group
-            return $group->sortBy('harga')->first();
+            $nama = $group->first()->nama;
+            
+            // For kayu (wood), show all types sorted by price
+            if ($nama === 'kayu') {
+                return $group->sortBy('harga')->values();
+            }
+            
+            // For others (batu bata, genteng), show only the cheapest
+            return collect([$group->sortBy('harga')->first()]);
         })
+        ->flatten(1)
         ->values()
         ->sortBy('nama')
         ->slice(0, 6)
