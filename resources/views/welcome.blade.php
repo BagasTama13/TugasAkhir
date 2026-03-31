@@ -3,6 +3,223 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>BPTrans Admin Dashboard - Sistem Manajemen Pesanan</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans text-gray-900 antialiased">
+        <!-- Navigation -->
+        <nav class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <img src="{{ asset('images/colt.png') }}" alt="COLT Logo" class="h-12 w-12 object-contain mr-3">
+                        <div>
+                            <h1 class="text-white text-2xl font-bold">BPTrans</h1>
+                            <p class="text-blue-100 text-xs">Admin Dashboard</p>
+                        </div>
+                    </div>
+
+                    <!-- Login Button -->
+                    <a href="{{ route('login') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-md">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <!-- Left Content -->
+                    <div>
+                        <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                            Sistem Manajemen <span class="text-blue-600">Pesanan & Pemasukan</span>
+                        </h2>
+                        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                            BPTrans Admin Dashboard adalah solusi lengkap untuk mengelola pesanan, pemasukan, produk, dan aktivitas bisnis Anda secara real-time dengan interface yang mudah digunakan.
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="{{ route('login') }}" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-8 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg">
+                                Masuk Sekarang
+                            </a>
+                            <a href="#features" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-3 px-8 rounded-lg border-2 border-blue-600 transition duration-200">
+                                Pelajari Lebih Lanjut
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Image -->
+                    <div class="flex justify-center">
+                        <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="w-64 h-64 object-contain drop-shadow-xl transform hover:scale-110 transition duration-300">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold text-gray-800 mb-4">Fitur Utama</h3>
+                    <p class="text-xl text-gray-600">Semua yang Anda butuhkan untuk menjalankan bisnis logistik dengan efisien</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                        <div class="bg-blue-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Manajemen Pesanan</h4>
+                        <p class="text-gray-600">Kelola semua pesanan dengan mudah, lacak status pesanan dari penerimaan hingga pengiriman.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                        <div class="bg-green-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Tracking Pemasukan</h4>
+                        <p class="text-gray-600">Pantau semua pemasukan dengan sistem kategorisasi otomatis yang terhubung dengan pesanan.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                        <div class="bg-purple-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Log Aktivitas</h4>
+                        <p class="text-gray-600">Pencatatan otomatis semua aktivitas admin dengan detail perubahan data untuk audit trail.</p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                        <div class="bg-orange-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Dashboard Real-time</h4>
+                        <p class="text-gray-600">Visualisasi data real-time dengan statistik lengkap dan grafik performa bisnis Anda.</p>
+                    </div>
+
+                    <!-- Feature 5 -->
+                    <div class="bg-gradient-to-br from-red-50 to-red-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                        <div class="bg-red-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4l8-4M9 7L7 9m0 0l-2-2M9 7l2-2M9 7v10M9 17l-2-2m2 2l2-2"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Manajemen Produk</h4>
+                        <p class="text-gray-600">Kelola katalog produk dengan informasi lengkap dan mudah diakses dari dashboard.</p>
+                    </div>
+
+                    <!-- Feature 6 -->
+                    <div class="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                        <div class="bg-pink-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 mb-3">Keamanan</h4>
+                        <p class="text-gray-600">Autentikasi username dan password dengan enkripsi aman untuk melindungi data bisnis.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-white text-center">
+                    <div>
+                        <h4 class="text-4xl font-bold mb-2">100%</h4>
+                        <p class="text-blue-100">Uptime Guaranteed</p>
+                    </div>
+                    <div>
+                        <h4 class="text-4xl font-bold mb-2">24/7</h4>
+                        <p class="text-blue-100">Real-time Monitoring</p>
+                    </div>
+                    <div>
+                        <h4 class="text-4xl font-bold mb-2">∞</h4>
+                        <p class="text-blue-100">Scalable System</p>
+                    </div>
+                    <div>
+                        <h4 class="text-4xl font-bold mb-2">∞</h4>
+                        <p class="text-blue-100">Data Storage</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="bg-gray-50 py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h3 class="text-4xl font-bold text-gray-800 mb-6">Siap Memulai?</h3>
+                <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                    Login ke dashboard admin kami sekarang dan mulai kelola pesanan, pemasukan, serta aktivitas bisnis Anda dengan lebih efisien.
+                </p>
+                <a href="{{ route('login') }}" class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-12 rounded-lg transform transition duration-200 hover:scale-105 shadow-lg text-lg">
+                    Login ke Dashboard
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-gray-300 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <div class="flex items-center mb-4">
+                            <img src="{{ asset('images/colt.png') }}" alt="COLT Logo" class="h-10 w-10 object-contain mr-2">
+                            <h5 class="text-white text-lg font-bold">BPTrans</h5>
+                        </div>
+                        <p class="text-gray-400">Sistem Admin Dashboard untuk manajemen pesanan dan pemasukan yang terintegrasi.</p>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-bold mb-4">Fitur</h5>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white transition">Manajemen Pesanan</a></li>
+                            <li><a href="#" class="hover:text-white transition">Tracking Pemasukan</a></li>
+                            <li><a href="#" class="hover:text-white transition">Log Aktivitas</a></li>
+                            <li><a href="#" class="hover:text-white transition">Dashboard</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-bold mb-4">Kontak</h5>
+                        <ul class="space-y-2 text-gray-400">
+                            <li>Email: admin@bptrans.com</li>
+                            <li>Phone: +62 123 456 789</li>
+                            <li>Address: Jakarta, Indonesia</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
+                    <p>&copy; 2026 BPTrans Admin Dashboard. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
