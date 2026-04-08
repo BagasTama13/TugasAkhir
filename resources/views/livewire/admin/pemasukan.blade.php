@@ -52,7 +52,9 @@
                             <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700">Jumlah</th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Admin</th>
-                            <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Aksi</th>
+                            @if(!$this->readonly)
+                                <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -117,26 +119,28 @@
                                 </td>
 
                                 <!-- Aksi -->
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <div class="flex justify-center gap-2">
-                                        @if($pemasukan->status === 'pending')
-                                            <button wire:click="confirmPemasukan({{ $pemasukan->id }})"
-                                                    class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition font-medium">
-                                                Konfirmasi
-                                            </button>
-                                            <button wire:click="rejectPemasukan({{ $pemasukan->id }})"
-                                                    class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition font-medium">
-                                                Tolak
-                                            </button>
-                                        @endif
+                                @if(!$this->readonly)
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <div class="flex justify-center gap-2">
+                                            @if($pemasukan->status === 'pending')
+                                                <button wire:click="confirmPemasukan({{ $pemasukan->id }})"
+                                                        class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition font-medium">
+                                                    Konfirmasi
+                                                </button>
+                                                <button wire:click="rejectPemasukan({{ $pemasukan->id }})"
+                                                        class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition font-medium">
+                                                    Tolak
+                                                </button>
+                                            @endif
 
-                                        <button wire:click="deletePemasukan({{ $pemasukan->id }})"
-                                                onclick="return confirm('Yakin ingin menghapus pemasukan ini?')"
-                                                class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition font-medium">
-                                            Hapus
-                                        </button>
-                                    </div>
-                                </td>
+                                            <button wire:click="deletePemasukan({{ $pemasukan->id }})"
+                                                    onclick="return confirm('Yakin ingin menghapus pemasukan ini?')"
+                                                    class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition font-medium">
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>

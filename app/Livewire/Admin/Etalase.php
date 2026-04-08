@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Livewire\Traits\OwnerAccess;
 use App\Models\Produk;
 use App\Models\Activity;
 use Livewire\Attributes\Layout;
@@ -15,6 +16,28 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app')]
 class Etalase extends Component
 {
+    use OwnerAccess;
+
+    public function mount(string $owner = ''): void
+    {
+        $user = Auth::user();
+        $username = strtolower($user->username ?? '');
+
+        // If owner parameter passed, this is for owner panel - reject
+        if (!empty($owner)) {
+            abort(403, 'Invalid access. Use owner panel instead.');
+        }
+
+        // Block owner and worker users from admin panel
+        if (in_array($username, ['owner', 'worker'], true)) {
+            abort(403, 'Access denied. Use your designated panel.');
+        }
+
+        // Only admin can access here
+        if ($username !== 'admin') {
+            abort(403, 'Unauthorized access.');
+        }
+    }
     use WithFileUploads;
 
     protected function getUserId(): int
@@ -34,10 +57,13 @@ class Etalase extends Component
         'gambar' => 'nullable|image|max:2048',
     ];
 
-    #[Computed]
+    #[Computed(cache: true)]
     public function produk()
     {
-        return Produk::latest()->get();
+        return Produk::select(['id', 'nama', 'jenis', 'harga', 'satuan', 'deskripsi', 'gambar'])
+            ->latest()
+            ->limit(100)
+            ->get();
     }
 
     public function toggleForm()
@@ -197,7 +223,7 @@ class Etalase extends Component
 
     public function render()
     {
-        return view('livewire.etalase');
+        return view('livewire.admin.etalase');
     }
 }
 

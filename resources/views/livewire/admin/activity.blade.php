@@ -3,16 +3,27 @@
         <!-- Header -->
         <div class="sticky top-0 bg-gray-50 z-30 pb-4 mb-0">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Riwayat Aktivitas</h1>
-            <p class="text-gray-500">Pantau semua aktivitas admin dalam sistem</p>
+            <p class="text-gray-500">
+                @php
+                    $segment = request()->segment(1);
+                    if ($segment === 'owner') {
+                        echo 'Pantau semua aktivitas owner dalam sistem';
+                    } elseif ($segment === 'worker') {
+                        echo 'Pantau semua aktivitas worker dalam sistem';
+                    } else {
+                        echo 'Pantau semua aktivitas admin dalam sistem';
+                    }
+                @endphp
+            </p>
         </div>
 
         <!-- Summary Stats -->
         <div class="sticky top-32 bg-gray-50 z-20 pt-4 pb-4 mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-{{ isset($isWorkerView) ? '3' : '4' }} gap-4">
                 <!-- Total Activities -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="text-5xl font-bold text-gray-900">
-                        {{ $this->activities->total() }}
+                        {{ $this->totalActivities }}
                     </div>
                     <p class="text-gray-600 text-sm mt-2">Total Aktivitas</p>
                 </div>
@@ -20,7 +31,7 @@
                 <!-- Today's Activities -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="text-5xl font-bold text-blue-600">
-                        {{ \App\Models\Activity::whereDate('created_at', today())->count() }}
+                        {{ $this->todayActivities }}
                     </div>
                     <p class="text-gray-600 text-sm mt-2">Aktivitas Hari Ini</p>
                 </div>
@@ -28,18 +39,20 @@
                 <!-- This Week -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="text-5xl font-bold text-orange-600">
-                        {{ \App\Models\Activity::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count() }}
+                        {{ $this->weekActivities }}
                     </div>
                     <p class="text-gray-600 text-sm mt-2">Aktivitas Minggu Ini</p>
                 </div>
 
-                <!-- Produk Changes -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="text-5xl font-bold text-green-600">
-                        {{ \App\Models\Activity::where('entity_type', 'Produk')->count() }}
+                @if(!isset($isWorkerView))
+                    <!-- Produk Changes -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="text-5xl font-bold text-green-600">
+                            {{ $this->produkActivities }}
+                        </div>
+                        <p class="text-gray-600 text-sm mt-2">Perubahan Produk</p>
                     </div>
-                    <p class="text-gray-600 text-sm mt-2">Perubahan Produk</p>
-                </div>
+                @endif
             </div>
         </div>
 
@@ -65,7 +78,9 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Data</label>
                     <select wire:model.live="filterEntity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">Semua Data</option>
-                        <option value="Produk">Produk (Etalase)</option>
+                        @if(!isset($isWorkerView))
+                            <option value="Produk">Produk (Etalase)</option>
+                        @endif
                         <option value="Pesanan">Pesanan</option>
                         <option value="Pemasukan">Pemasukan</option>
                     </select>

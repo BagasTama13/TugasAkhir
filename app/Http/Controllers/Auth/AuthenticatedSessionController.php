@@ -28,6 +28,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = Auth::user();
+        $ownerUsernames = ['owner'];
+        $workerUsernames = ['worker'];
+
+        if ($user && in_array(strtolower($user->username), $workerUsernames, true)) {
+            return redirect()->route('worker.dashboard', ['worker' => strtolower($user->username)]);
+        }
+
+        if ($user && in_array(strtolower($user->username), $ownerUsernames, true)) {
+            return redirect()->route('owner.dashboard', ['owner' => strtolower($user->username)]);
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

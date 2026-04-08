@@ -5,7 +5,22 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
+            refresh: [
+                'routes/**',
+                'resources/views/**',
+                'app/Http/Controllers/**',
+                'app/Livewire/**',
+                'app/Models/**',
+                'config/**',
+            ],
         }),
     ],
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+        watch: {
+            usePolling: true,
+        },
+    },
 });

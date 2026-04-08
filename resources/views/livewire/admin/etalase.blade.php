@@ -52,7 +52,7 @@
 
             <div class="col-span-2">
                 <label class="block text-sm font-medium mb-2">Gambar Produk</label>
-                <input type="file" wire:model.live="gambar"
+                <input type="file" wire:model.debounce-500ms="gambar"
                        class="border p-2 rounded w-full">
                 @error('gambar') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                 
@@ -95,10 +95,12 @@
     <div class="bg-white p-6 rounded-2xl shadow">
         <div class="flex justify-between items-center mb-4">
             <h2 class="font-semibold">Daftar Produk</h2>
-            <button wire:click="toggleForm()"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-                + Tambah Barang
-            </button>
+            @if(!$this->readonly)
+                <button wire:click="toggleForm()" wire:loading.attr="disabled"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50">
+                    + Tambah Barang
+                </button>
+            @endif
         </div>
 
         <table class="w-full text-left">
@@ -128,17 +130,22 @@
                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                     <td>{{ $item->satuan }}</td>
                     <td class="text-center">
-                        <div class="flex gap-2 justify-center">
-                            <button wire:click="editProduk({{ $item->id }})"
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
-                                Edit
-                            </button>
-                            <button wire:click="deleteProduk({{ $item->id }})"
-                                    onclick="return confirm('Yakin ingin menghapus produk ini?')"
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
-                                Hapus
-                            </button>
-                        </div>
+                        @if(!$this->readonly)
+                            <div class="flex gap-2 justify-center">
+                                <button wire:click="editProduk({{ $item->id }})" wire:loading.attr="disabled"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm disabled:opacity-50">
+                                    Edit
+                                </button>
+                                <button wire:click="deleteProduk({{ $item->id }})"
+                                        onclick="return confirm('Yakin ingin menghapus produk ini?')"
+                                        wire:loading.attr="disabled"
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm disabled:opacity-50">
+                                    Hapus
+                                </button>
+                            </div>
+                        @else
+                            <span class="text-gray-500 text-xs">Read-only</span>
+                        @endif
                     </td>
                 </tr>
                 @empty

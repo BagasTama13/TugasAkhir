@@ -15,11 +15,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin BPTrans',
-            'username' => 'Admin',
-            'email' => 'admin@bptrans.com',
-            'password' => bcrypt('BPTrans'),
-        ]);
+        User::firstOrCreate(
+            ['username' => 'Admin'],
+            [
+                'name' => 'Admin BPTrans',
+                'email' => 'admin@bptrans.com',
+                'password' => bcrypt('BPTrans'),
+            ]
+        );
+
+        User::firstOrCreate(
+            ['username' => 'owner'],
+            [
+                'name' => 'Owner BPTrans',
+                'email' => 'owner@bptrans.com',
+                'password' => bcrypt('bptrans'),
+            ]
+        );
+
+        User::firstOrCreate(
+            ['username' => 'worker'],
+            [
+                'name' => 'Worker BPTrans',
+                'email' => 'worker@bptrans.com',
+                'password' => bcrypt('bptrans'),
+            ]
+        );
     }
 }

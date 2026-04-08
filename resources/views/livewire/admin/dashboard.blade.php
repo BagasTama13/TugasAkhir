@@ -3,7 +3,18 @@
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p class="text-gray-500 mt-2">Selamat datang di panel admin BPTrans</p>
+            <p class="text-gray-500 mt-2">
+                @php
+                    $segment = request()->segment(1);
+                    if ($segment === 'owner') {
+                        echo 'Selamat datang di panel owner BPTrans';
+                    } elseif ($segment === 'worker') {
+                        echo 'Selamat datang di panel worker BPTrans';
+                    } else {
+                        echo 'Selamat datang di panel admin BPTrans';
+                    }
+                @endphp
+            </p>
         </div>
 
         <!-- Summary Cards -->
@@ -59,16 +70,18 @@
 
         <!-- Secondary Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- Total Produk -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm font-medium">Total Produk</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $this->totalProduk }}</p>
+            @if(!isset($isWorkerView))
+                <!-- Total Produk -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Total Produk</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">{{ $this->totalProduk }}</p>
+                        </div>
+                        <div class="text-4xl text-purple-500 opacity-20">🏪</div>
                     </div>
-                    <div class="text-4xl text-purple-500 opacity-20">🏪</div>
                 </div>
-            </div>
+            @endif
 
             <!-- Aktivitas Hari Ini -->
             <div class="bg-white rounded-lg shadow p-6">
@@ -172,26 +185,35 @@
         </div>
 
         <!-- Quick Links -->
+        @php
+            $isOwner = request()->segment(1) === 'owner';
+            $isWorker = request()->segment(1) === 'worker';
+            $panelPrefix = $isOwner ? '/owner/'.request()->segment(2) : ($isWorker ? '/worker/'.request()->segment(2) : '');
+        @endphp
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-            <a href="/pesanan" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
+            <a href="{{ $panelPrefix }}/pesanan" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
                 <div class="text-3xl mb-2">📦</div>
                 <p class="font-semibold">Pesanan</p>
                 <p class="text-xs mt-1 text-blue-100">Kelola pesanan</p>
             </a>
 
-            <a href="/etalase" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
-                <div class="text-3xl mb-2">🏪</div>
-                <p class="font-semibold">Etalase</p>
-                <p class="text-xs mt-1 text-purple-100">Produk & Barang</p>
-            </a>
+            @if(!$isWorker)
+                <a href="{{ $panelPrefix }}/etalase" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
+                    <div class="text-3xl mb-2">🏪</div>
+                    <p class="font-semibold">Etalase</p>
+                    <p class="text-xs mt-1 text-purple-100">Produk & Barang</p>
+                </a>
+            @endif
 
-            <a href="/pemasukan" class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
-                <div class="text-3xl mb-2">💰</div>
-                <p class="font-semibold">Pemasukan</p>
-                <p class="text-xs mt-1 text-green-100">Laporan keuangan</p>
-            </a>
+            @if($isOwner)
+                <a href="{{ $panelPrefix }}/pemasukan" class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
+                    <div class="text-3xl mb-2">💰</div>
+                    <p class="font-semibold">Pemasukan</p>
+                    <p class="text-xs mt-1 text-green-100">Laporan keuangan</p>
+                </a>
+            @endif
 
-            <a href="/activity" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
+            <a href="{{ $panelPrefix }}/activity" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-lg shadow hover:shadow-lg transition text-center">
                 <div class="text-3xl mb-2">📋</div>
                 <p class="font-semibold">Activity</p>
                 <p class="text-xs mt-1 text-orange-100">Riwayat aksi</p>

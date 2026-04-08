@@ -43,8 +43,18 @@
             </div>
         </div>
 
+        <!-- Add Button -->
+        @if(!$this->readonly && !isset($isWorkerView))
+            <div class="mb-8">
+                <button wire:click="toggleForm()"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition">
+                    + Tambah Pesanan Baru
+                </button>
+            </div>
+        @endif
+
         <!-- Add/Edit Pesanan Form -->
-        @if($showForm)
+        @if(!$this->readonly && $showForm)
             <div class="bg-white rounded-lg shadow p-6 mb-8">
                 <h2 class="text-xl font-bold text-gray-900 mb-6">
                     {{ $editingId ? 'Edit Pesanan' : 'Tambah Pesanan Baru' }}
@@ -245,34 +255,55 @@
 
                                 <!-- Aksi -->
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <div class="flex justify-center gap-2">
-                                        @if($pesanan->status === 'pending')
-                                            <button wire:click="acceptPesanan({{ $pesanan->id }})"
-                                                    class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition font-medium">
-                                                Terima
-                                            </button>
-                                            <button wire:click="rejectPesanan({{ $pesanan->id }})"
-                                                    class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition font-medium">
-                                                Tolak
-                                            </button>
-                                        @elseif($pesanan->status === 'accepted')
-                                            <button wire:click="markDelivered({{ $pesanan->id }})"
-                                                    class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition font-medium">
-                                                Terkirim
-                                            </button>
-                                        @endif
+                                    @if(!$this->readonly)
+                                        <!-- Admin: all actions -->
+                                        <div class="flex justify-center gap-2">
+                                            @if($pesanan->status === 'pending')
+                                                <button wire:click="acceptPesanan({{ $pesanan->id }})"
+                                                        class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition font-medium">
+                                                    Terima
+                                                </button>
+                                                <button wire:click="rejectPesanan({{ $pesanan->id }})"
+                                                        class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition font-medium">
+                                                    Tolak
+                                                </button>
+                                            @elseif($pesanan->status === 'accepted')
+                                                <button wire:click="markDelivered({{ $pesanan->id }})"
+                                                        class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition font-medium">
+                                                    Terkirim
+                                                </button>
+                                            @endif
 
-                                        <button wire:click="editPesanan({{ $pesanan->id }})"
-                                                class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 transition font-medium">
-                                            Edit
-                                        </button>
+                                            <button wire:click="editPesanan({{ $pesanan->id }})"
+                                                    class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 transition font-medium">
+                                                Edit
+                                            </button>
 
-                                        <button wire:click="deletePesanan({{ $pesanan->id }})"
-                                                onclick="return confirm('Yakin ingin menghapus pesanan ini?')"
-                                                class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition font-medium">
-                                            Hapus
-                                        </button>
-                                    </div>
+                                            <button wire:click="deletePesanan({{ $pesanan->id }})"
+                                                    onclick="return confirm('Yakin ingin menghapus pesanan ini?')"
+                                                    class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition font-medium">
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    @elseif(isset($isWorkerView))
+                                        <!-- Worker: status actions only -->
+                                        <div class="flex justify-center gap-2">
+                                            @if($pesanan->status === 'pending')
+                                                <button wire:click="acceptPesanan({{ $pesanan->id }})"
+                                                        class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition font-medium">
+                                                    Diproses
+                                                </button>
+                                            @elseif($pesanan->status === 'accepted')
+                                                <button wire:click="markDelivered({{ $pesanan->id }})"
+                                                        class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition font-medium">
+                                                    Dikirim
+                                                </button>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <!-- Owner: read-only -->
+                                        <span class="text-gray-500 text-xs">Read-only</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
+use App\Livewire\Traits\OwnerAccess;
 use App\Models\Pemasukan as PemasukanModel;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,28 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app')]
 class Pemasukan extends Component
 {
+    use OwnerAccess;
+
+    public function mount(string $owner = ''): void
+    {
+        $user = Auth::user();
+        $username = strtolower($user->username ?? '');
+
+        // If owner parameter passed, this is for owner panel - reject
+        if (!empty($owner)) {
+            abort(403, 'Invalid access. Use owner panel instead.');
+        }
+
+        // Block owner and worker users from admin panel
+        if (in_array($username, ['owner', 'worker'], true)) {
+            abort(403, 'Access denied. Use your designated panel.');
+        }
+
+        // Only admin can access here
+        if ($username !== 'admin') {
+            abort(403, 'Unauthorized access.');
+        }
+    }
     protected function getUserId(): int
     {
         return (int) Auth::id();
@@ -100,6 +123,6 @@ class Pemasukan extends Component
 
     public function render()
     {
-        return view('livewire.pemasukan');
+        return view('livewire.admin.pemasukan');
     }
 }

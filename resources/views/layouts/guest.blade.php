@@ -21,5 +21,38 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <!-- Auto reload script for development -->
+        @if(app()->environment('local'))
+        <script>
+            // Auto reload when files change (for development)
+            if (typeof EventSource !== 'undefined') {
+                const evtSource = new EventSource('http://localhost:5174/');
+                evtSource.onmessage = function(event) {
+                    if (event.data === 'connected') {
+                        console.log('🔄 Auto-reload connected');
+                    }
+                };
+                evtSource.addEventListener('reload', function(event) {
+                    console.log('🔄 Reloading page due to file changes...');
+                    window.location.reload();
+                });
+                evtSource.onerror = function() {
+                    // Fallback: check for changes every 2 seconds
+                    setInterval(() => {
+                        fetch(window.location.href, { method: 'HEAD' })
+                            .then(response => {
+                                if (response.status !== 200) {
+                                    window.location.reload();
+                                }
+                            })
+                            .catch(() => {
+                                // Ignore errors in development
+                            });
+                        }, 2000);
+                };
+            }
+        </script>
+        @endif
     </body>
 </html>

@@ -44,8 +44,8 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Find user by username
-        $user = \App\Models\User::where('username', $this->input('name'))->first();
+        // Find user by username (case-insensitive)
+        $user = \App\Models\User::whereRaw('LOWER(username) = ?', [Str::lower($this->input('name'))])->first();
 
         if (!$user || !\Illuminate\Support\Facades\Hash::check($this->input('password'), $user->password)) {
             RateLimiter::hit($this->throttleKey());

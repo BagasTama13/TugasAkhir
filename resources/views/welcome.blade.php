@@ -252,26 +252,13 @@
                     </div>
                 </div>
 
-                <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
+                <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-400 text-sm">
                     <p>© 2026 BPTrans. Semua hak dilindungi. | Distributor Bahan Bangunan Terpercaya</p>
-                </div>
-            </div>
-        </footer>
-    </body>
-</html>
-                        <h5 class="jepara, Jawa Tengah</li>
-                            <li class="pt-2"><a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank" class="text-blue-400 hover:text-white transition">→ Lihat di Google Maps</a>ld mb-4">Hubungi Kami</h5>
-                        <ul class="space-y-2 text-gray-400">
-                            <li>📧 Email: info@bptrans.com</li>
-                            <li>📞 WhatsApp: +62 858-7765-3585</li>
-                            <li>📱 Telepon: +62 858-7765-3585</li>
-                            <li>📍 Jepara, Jawa Tengah</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
-                    <p>© 2026 BPTrans. Semua hak dilindungi. | Distributor Bahan Bangunan Terpercaya</p>
+                    <p>
+                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-200 transition duration-200 underline decoration-dotted">
+                            Admin akses
+                        </a>
+                    </p>
                 </div>
             </div>
         </footer>
