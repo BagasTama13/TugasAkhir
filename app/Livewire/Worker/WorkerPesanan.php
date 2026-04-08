@@ -20,7 +20,7 @@ class WorkerPesanan extends Pesanan
 
     public function render()
     {
-        return view('livewire.worker-pesanan');
+        return view('livewire.worker.pesanan');
     }
 
     // Workers cannot add or edit orders - only customers/users can add orders

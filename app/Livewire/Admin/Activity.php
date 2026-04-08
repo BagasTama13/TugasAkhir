@@ -45,7 +45,9 @@ class Activity extends Component
     #[Computed]
     public function activities()
     {
-        $query = ActivityModel::with('user')->latest();
+        $query = ActivityModel::select(['id', 'user_id', 'action', 'entity_type', 'description', 'created_at'])
+            ->with('user:id,name')
+            ->latest();
 
         $this->applyPanelFilter($query);
 

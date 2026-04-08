@@ -36,8 +36,8 @@
 
                     <!-- CTA Button -->
                     <div class="flex gap-3 ml-8">
-                        <a href="#kontak" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-md">
-                            Hubungi Kami
+                        <a href="{{ route('login') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-semibold py-2 px-6 rounded-lg transition duration-200 shadow-md">
+                            Login User
                         </a>
                     </div>
                 </div>
@@ -216,52 +216,76 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-gray-800 text-gray-300 py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                    <!-- About -->
-                    <div>
-                        <div class="flex items-center mb-4">
-                            <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="h-10 w-10 object-contain mr-2">
-                            <h5 class="text-white text-lg font-bold">BPTrans</h5>
-                        </div>
-                        <p class="text-gray-400">Distributor bahan bangunan berkualitas terpercaya di Jepara dan sekitarnya dengan pengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan dedikasi tinggi.</p>
-                    </div>
-
-                    <!-- Products -->
-                    <div>
-                        <h5 class="text-white font-bold mb-4">Produk Kami</h5>
-                        <ul class="space-y-2 text-gray-400">
-                            <li><a href="#produk" class="hover:text-white transition">Batu Bata</a></li>
-                            <li><a href="#produk" class="hover:text-white transition">Genteng</a></li>
-                            <li><a href="#produk" class="hover:text-white transition">Kayu & Besi</a></li>
-                            <li><a href="#produk" class="hover:text-white transition">Lihat Semua →</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Contact -->
-                    <div>
-                        <h5 class="text-white font-bold mb-4">Hubungi Kami</h5>
-                        <ul class="space-y-2 text-gray-400">
-                            <li>📧 Email: info@bptrans.com</li>
-                            <li>📞 WhatsApp: +62 858-7765-3585</li>
-                            <li>📱 Telepon: +62 858-7765-3585</li>
-                            <li>📍 Jepara, Jawa Tengah</li>
-                            <li class="pt-2"><a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank" class="text-blue-400 hover:text-white transition">→ Lihat di Google Maps</a></li>
-                        </ul>
-                    </div>
+<footer class="bg-gray-800 text-gray-300 py-12">
+    <div class="container mx-auto px-4 md:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <!-- About -->
+            <div>
+                <div class="flex items-center mb-4">
+                    <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="h-10 w-10 object-contain mr-2">
+                    <h5 class="text-white text-lg font-bold">BPTrans</h5>
                 </div>
-
-                <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-400 text-sm">
-                    <p>© 2026 BPTrans. Semua hak dilindungi. | Distributor Bahan Bangunan Terpercaya</p>
-                    <p>
-                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-200 transition duration-200 underline decoration-dotted">
-                            Admin akses
-                        </a>
-                    </p>
-                </div>
+                <p class="text-gray-400">Distributor bahan bangunan berkualitas terpercaya di Jepara dan sekitarnya dengan pengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan dedikasi tinggi.</p>
             </div>
-        </footer>
+
+            <!-- Products -->
+            <div>
+                <h5 class="text-white font-bold mb-4">Produk Kami</h5>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#produk" class="hover:text-white transition">Batu Bata</a></li>
+                    <li><a href="#produk" class="hover:text-white transition">Genteng</a></li>
+                    <li><a href="#produk" class="hover:text-white transition">Kayu & Besi</a></li>
+                    <li><a href="#produk" class="hover:text-white transition">Lihat Semua →</a></li>
+                </ul>
+            </div>
+
+            <!-- Kontak -->
+                <div>
+                    <h5 class="text-white font-bold text-lg mb-4">Kontak Kami</h5>
+                    <p class="text-gray-400 mb-5 text-sm">
+                        Hubungi kami untuk informasi lebih lanjut.
+                    </p>
+
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="tel:081234567890"
+                            class="flex items-center text-gray-300 hover:text-blue-400 transition duration-200">
+                                <i class="fas fa-phone mr-3 text-lg"></i>
+                                <span>(0812) 3456 7890</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="mailto:info@bptrans.com"
+                            class="flex items-center text-gray-300 hover:text-blue-400 transition duration-200">
+                                <i class="fas fa-envelope mr-3 text-lg"></i>
+                                <span>infobptrans@gmail.com</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://www.google.com/maps?q=7Q4H+2P3,+Dusun+2,+Gemiring+Kidul,+Nalumsari,+Jepara,+Jawa+Tengah"
+                            target="_blank"
+                            class="flex items-center text-gray-300 hover:text-blue-400 transition duration-200">
+                                <i class="fas fa-map-marker-alt mr-3 text-lg"></i>
+                                <span>
+                                    Dusun 2, Gemiring Kidul, Kec. Nalumsari,<br>
+                                    Kabupaten Jepara, Jawa Tengah 59466
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-gray-400 text-sm">
+            <p>&copy; {{ date('Y') }} BPTrans. Semua hak dilindungi. | Distributor Bahan Bangunan Terpercaya</p>
+            <p>
+                <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-200 transition duration-200 underline decoration-dotted">
+                    Admin akses
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>
     </body>
 </html>
                     

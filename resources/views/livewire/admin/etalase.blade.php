@@ -52,19 +52,9 @@
 
             <div class="col-span-2">
                 <label class="block text-sm font-medium mb-2">Gambar Produk</label>
-                <input type="file" wire:model.debounce-500ms="gambar"
+                <input type="file" wire:model.live="gambar"
                        class="border p-2 rounded w-full">
                 @error('gambar') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-                
-                {{-- Preview gambar --}}
-                @if ($gambar)
-                    <div class="mt-3">
-                        <img src="{{ $gambar->temporaryUrl() }}" 
-                             class="w-24 h-24 object-cover rounded"
-                             alt="Preview">
-                        <p class="text-sm text-gray-500 mt-1">File: {{ $gambar->getClientOriginalName() }}</p>
-                    </div>
-                @endif
             </div>
 
             <div class="col-span-2">
@@ -76,14 +66,11 @@
 
         <div class="flex gap-2 mt-4">
             <button wire:click="tambahProduk" wire:loading.attr="disabled"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50">
-                <span wire:loading.remove>
-                    @if($editingId) Update @else Tambah @endif
-                </span>
-                <span wire:loading>Menyimpan...</span>
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 font-medium">
+                @if($editingId) Update @else Tambah @endif
             </button>
-            <button wire:click="closeForm()"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
+            <button wire:click="closeForm()" type="button"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded font-medium">
                 Batal
             </button>
         </div>

@@ -65,13 +65,17 @@ class Pesanan extends Component
     ];
 
     #[Computed(cache: true)]
-    public function pesanan()
+    public function pesanans()
     {
-        return PesananModel::select(['id', 'user_id', 'produk_id', 'jumlah', 'harga_total', 'status', 'created_at'])
+        return PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'created_at'])
             ->with('user:id,name,username')
             ->latest()
-            ->limit(100)
             ->get();
+    }
+
+    private function invalidatePesananCache()
+    {
+        $this->dispatch('DISPATCH_INVALIDATE_PESANAN');
     }
 
     public function toggleForm()
@@ -109,7 +113,7 @@ class Pesanan extends Component
 
     public function editPesanan($id)
     {
-        $pesanan = PesananModel::findOrFail($id);
+        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description'])->findOrFail($id);
         $this->editingId = $id;
         $this->nomor = $pesanan->nomor;
         $this->nama = $pesanan->nama;
@@ -126,142 +130,93 @@ class Pesanan extends Component
     {
         $this->validate();
 
+        $data = [
+            'nomor' => $this->nomor,
+            'nama' => $this->nama,
+            'tipe' => $this->tipe,
+            'jumlah' => $this->jumlah,
+            'alamat_penjemputan' => $this->alamat_penjemputan,
+            'alamat_pengiriman' => $this->alamat_pengiriman,
+            'status' => $this->status,
+            'description' => $this->description,
+        ];
+
         if ($this->editingId) {
             $pesanan = PesananModel::findOrFail($this->editingId);
-            $oldValues = $pesanan->toArray();
-
-            $pesanan->update([
-                'nomor' => $this->nomor,
-                'nama' => $this->nama,
-                'tipe' => $this->tipe,
-                'jumlah' => $this->jumlah,
-                'alamat_penjemputan' => $this->alamat_penjemputan,
-                'alamat_pengiriman' => $this->alamat_pengiriman,
-                'status' => $this->status,
-                'description' => $this->description,
-            ]);
-
-            Activity::create([
-                'user_id' => $this->getUserId(),
-                'action' => 'update',
-                'entity_type' => 'Pesanan',
-                'entity_id' => $pesanan->id,
-                'description' => "Mengubah pesanan #{$pesanan->nomor}",
-                'old_values' => $oldValues,
-                'new_values' => $pesanan->fresh()->toArray(),
-            ]);
+            $pesanan->update($data);
+            $msg = 'Pesanan berhasil diperbarui!';
+            $action = 'update';
         } else {
-            $pesanan = PesananModel::create([
-                'nomor' => $this->nomor,
-                'nama' => $this->nama,
-                'tipe' => $this->tipe,
-                'jumlah' => $this->jumlah,
-                'alamat_penjemputan' => $this->alamat_penjemputan,
-                'alamat_pengiriman' => $this->alamat_pengiriman,
-                'status' => $this->status,
-                'description' => $this->description,
-                'user_id' => $this->getUserId(),
-            ]);
-
-            // Create Pemasukan entry as pending when pesanan is created
+            $data['user_id'] = $this->getUserId();
+            $pesanan = PesananModel::create($data);
+            
+            // Create Pemasukan entry
             Pemasukan::create([
                 'tanggal' => today(),
                 'jumlah' => $this->jumlah,
-                'keterangan' => "Pesanan #{$pesanan->nomor} dari {$pesanan->nama}",
+                'keterangan' => "Pesanan #{$pesanan->nomor}",
                 'kategori' => 'penjualan',
                 'status' => 'pending',
-                'catatan' => "Dari pesanan: {$pesanan->tipe}",
                 'user_id' => $this->getUserId(),
             ]);
-
-            Activity::create([
-                'user_id' => $this->getUserId(),
-                'action' => 'create',
-                'entity_type' => 'Pesanan',
-                'entity_id' => $pesanan->id,
-                'description' => "Menambah pesanan #{$pesanan->nomor}",
-                'old_values' => [],
-                'new_values' => $pesanan->toArray(),
-            ]);
+            $msg = 'Pesanan berhasil ditambahkan!';
+            $action = 'create';
         }
 
+        Activity::create([
+            'user_id' => $this->getUserId(),
+            'action' => $action,
+            'entity_type' => 'Pesanan',
+            'entity_id' => $pesanan->id,
+            'description' => ($action === 'update' ? 'Update: ' : 'Tambah: ') . $pesanan->nomor,
+        ]);
+
+        $this->invalidatePesananCache();
+        session()->flash('success', $msg);
         $this->closeForm();
     }
 
     public function acceptPesanan($id)
     {
-        $pesanan = PesananModel::findOrFail($id);
-        $oldStatus = $pesanan->status;
-
+        $pesanan = PesananModel::select(['id', 'nomor', 'status'])->findOrFail($id);
+        if ($pesanan->status === 'accepted') return;
+        
         $pesanan->update(['status' => 'accepted']);
-
-        // Find and confirm the corresponding Pemasukan
-        $pemasukan = Pemasukan::where('keterangan', 'like', "%Pesanan #{$pesanan->nomor}%")->first();
-        if ($pemasukan) {
-            $pemasukan->update(['status' => 'confirmed']);
-        }
 
         Activity::create([
             'user_id' => $this->getUserId(),
             'action' => 'accept',
             'entity_type' => 'Pesanan',
             'entity_id' => $pesanan->id,
-            'description' => "Menerima pesanan #{$pesanan->nomor} dari {$pesanan->nama}",
-            'old_values' => ['status' => $oldStatus],
-            'new_values' => ['status' => 'accepted'],
+            'description' => "Terima: #{$pesanan->nomor}",
         ]);
+        
+        $this->invalidatePesananCache();
+        session()->flash('success', 'Pesanan diterima!');
     }
 
     public function rejectPesanan($id)
     {
-        $pesanan = PesananModel::findOrFail($id);
-        $oldStatus = $pesanan->status;
-
+        $pesanan = PesananModel::select(['id', 'nomor', 'status'])->findOrFail($id);
+        if ($pesanan->status === 'rejected') return;
+        
         $pesanan->update(['status' => 'rejected']);
-
-        // Find and reject the corresponding Pemasukan
-        $pemasukan = Pemasukan::where('keterangan', 'like', "%Pesanan #{$pesanan->nomor}%")->first();
-        if ($pemasukan) {
-            $pemasukan->update(['status' => 'rejected']);
-        }
 
         Activity::create([
             'user_id' => $this->getUserId(),
             'action' => 'reject',
             'entity_type' => 'Pesanan',
             'entity_id' => $pesanan->id,
-            'description' => "Menolak pesanan #{$pesanan->nomor} dari {$pesanan->nama}",
-            'old_values' => ['status' => $oldStatus],
-            'new_values' => ['status' => 'rejected'],
+            'description' => "Tolak: #{$pesanan->nomor}",
         ]);
-    }
-
-    public function markDelivered($id)
-    {
-        $pesanan = PesananModel::findOrFail($id);
-        $oldStatus = $pesanan->status;
-
-        $pesanan->update(['status' => 'delivered']);
-
-        Activity::create([
-            'user_id' => $this->getUserId(),
-            'action' => 'update',
-            'entity_type' => 'Pesanan',
-            'entity_id' => $pesanan->id,
-            'description' => "Menandai pesanan #{$pesanan->nomor} sebagai terkirim",
-            'old_values' => ['status' => $oldStatus],
-            'new_values' => ['status' => 'delivered'],
-        ]);
+        
+        $this->invalidatePesananCache();
+        session()->flash('success', 'Pesanan ditolak!');
     }
 
     public function deletePesanan($id)
     {
-        $pesanan = PesananModel::findOrFail($id);
-        $nomor = $pesanan->nomor;
-
-        // Delete corresponding Pemasukan
-        Pemasukan::where('keterangan', 'like', "%Pesanan #{$nomor}%")->delete();
-
+        $pesanan = PesananModel::select(['id', 'nomor'])->findOrFail($id);
         $pesanan->delete();
 
         Activity::create([
@@ -269,10 +224,11 @@ class Pesanan extends Component
             'action' => 'delete',
             'entity_type' => 'Pesanan',
             'entity_id' => $id,
-            'description' => "Menghapus pesanan #{$nomor}",
-            'old_values' => [],
-            'new_values' => [],
+            'description' => "Hapus: #{$pesanan->nomor}",
         ]);
+        
+        $this->invalidatePesananCache();
+        session()->flash('success', 'Pesanan berhasil dihapus!');
     }
 
     public function render()

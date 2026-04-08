@@ -48,22 +48,29 @@ class Etalase extends Component
     public $nama, $jenis, $harga, $satuan, $deskripsi, $gambar;
     public $showForm = false;
     public $editingId = null;
+    private $produkCache = null;
 
     protected $rules = [
         'nama' => 'required',
         'jenis' => 'required',
         'harga' => 'required|numeric',
         'satuan' => 'required',
-        'gambar' => 'nullable|image|max:2048',
     ];
 
-    #[Computed(cache: true)]
+    #[Computed]
     public function produk()
     {
-        return Produk::select(['id', 'nama', 'jenis', 'harga', 'satuan', 'deskripsi', 'gambar'])
-            ->latest()
-            ->limit(100)
-            ->get();
+        if ($this->produkCache === null) {
+            $this->produkCache = Produk::select(['id', 'nama', 'jenis', 'harga', 'satuan', 'gambar'])
+                ->orderByDesc('id')
+                ->get();
+        }
+        return $this->produkCache;
+    }
+
+    private function invalidateProdukCache()
+    {
+        $this->produkCache = null;
     }
 
     public function toggleForm()
@@ -106,118 +113,70 @@ class Etalase extends Component
 
     public function deleteProduk($id)
     {
-        $produk = Produk::find($id);
-        if ($produk) {
-            $produkNama = $produk->nama;
-            
-            if ($produk->gambar) {
-                Storage::disk('public')->delete($produk->gambar);
-            }
-            
-            $produk->delete();
-            
-            Activity::create([
-                'user_id' => $this->getUserId(),
-                'action' => 'delete',
-                'entity_type' => 'Produk',
-                'entity_id' => $id,
-                'description' => "Menghapus produk: {$produkNama}",
-            ]);
-            
-            session()->flash('success', 'Produk berhasil dihapus!');
+        $produk = Produk::select(['id', 'nama', 'gambar'])->find($id);
+        if (!$produk) return;
+        
+        if ($produk->gambar) {
+            Storage::disk('public')->delete($produk->gambar);
         }
+        
+        $produk->delete();
+        $this->invalidateProdukCache();
+        
+        Activity::create([
+            'user_id' => $this->getUserId(),
+            'action' => 'delete',
+            'entity_type' => 'Produk',
+            'entity_id' => $id,
+            'description' => "Menghapus produk: {$produk->nama}",
+        ]);
+        
+        session()->flash('success', 'Produk berhasil dihapus!');
     }
 
     public function tambahProduk()
     {
         $this->validate();
+        $path = null;
 
-        if ($this->editingId) {
-            // UPDATE MODE
-            $produk = Produk::find($this->editingId);
-            if ($produk) {
-                $oldValues = [
-                    'nama' => $produk->nama,
-                    'jenis' => $produk->jenis,
-                    'harga' => $produk->harga,
-                    'satuan' => $produk->satuan,
-                    'deskripsi' => $produk->deskripsi,
-                ];
-                
-                $path = $produk->gambar;
-
-                if ($this->gambar) {
-                    if ($produk->gambar) {
-                        Storage::disk('public')->delete($produk->gambar);
-                    }
-                    $path = $this->gambar->store('produk', 'public');
-                }
-
-                $produk->update([
-                    'nama' => $this->nama,
-                    'jenis' => $this->jenis,
-                    'harga' => $this->harga,
-                    'satuan' => $this->satuan,
-                    'deskripsi' => $this->deskripsi,
-                    'gambar' => $path,
-                ]);
-
-                Activity::create([
-                    'user_id' => $this->getUserId(),
-                    'action' => 'update',
-                    'entity_type' => 'Produk',
-                    'entity_id' => $this->editingId,
-                    'description' => "Memperbarui produk: {$this->nama}",
-                    'old_values' => $oldValues,
-                    'new_values' => [
-                        'nama' => $this->nama,
-                        'jenis' => $this->jenis,
-                        'harga' => $this->harga,
-                        'satuan' => $this->satuan,
-                        'deskripsi' => $this->deskripsi,
-                    ]
-                ]);
-
-                session()->flash('success', 'Produk berhasil diperbarui!');
-            }
-        } else {
-            // CREATE MODE
-            $path = null;
-
-            if ($this->gambar) {
-                $path = $this->gambar->store('produk', 'public');
-                Log::info('File stored at: ' . $path);
-            }
-
-            $produk = Produk::create([
-                'nama' => $this->nama,
-                'jenis' => $this->jenis,
-                'harga' => $this->harga,
-                'satuan' => $this->satuan,
-                'deskripsi' => $this->deskripsi,
-                'gambar' => $path,
-            ]);
-
-            Log::info('Produk created: ' . $produk->id . ' with gambar: ' . $path);
-            
-            Activity::create([
-                'user_id' => $this->getUserId(),
-                'action' => 'create',
-                'entity_type' => 'Produk',
-                'entity_id' => $produk->id,
-                'description' => "Menambahkan produk baru: {$this->nama}",
-                'new_values' => [
-                    'nama' => $this->nama,
-                    'jenis' => $this->jenis,
-                    'harga' => $this->harga,
-                    'satuan' => $this->satuan,
-                    'deskripsi' => $this->deskripsi,
-                ]
-            ]);
-            
-            session()->flash('success', 'Produk berhasil ditambahkan!');
+        if ($this->gambar) {
+            $path = $this->gambar->store('produk', 'public');
         }
 
+        $data = [
+            'nama' => $this->nama,
+            'jenis' => $this->jenis,
+            'harga' => $this->harga,
+            'satuan' => $this->satuan,
+            'deskripsi' => $this->deskripsi,
+        ];
+
+        if ($path) {
+            $data['gambar'] = $path;
+        }
+
+        if ($this->editingId) {
+            $produk = Produk::find($this->editingId);
+            if ($produk && $produk->gambar && $path) {
+                Storage::disk('public')->delete($produk->gambar);
+            }
+            $produk->update($data);
+            $msg = 'Produk berhasil diperbarui!';
+        } else {
+            $produk = Produk::create($data);
+            $msg = 'Produk berhasil ditambahkan!';
+        }
+
+        Activity::create([
+            'user_id' => $this->getUserId(),
+            'action' => $this->editingId ? 'update' : 'create',
+            'entity_type' => 'Produk',
+            'entity_id' => $produk->id,
+            'description' => ($this->editingId ? 'Update: ' : 'Tambah: ') . $this->nama,
+        ]);
+
+        $this->invalidateProdukCache();
+        session()->flash('success', $msg);
         $this->closeForm();
     }
 

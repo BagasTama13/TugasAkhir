@@ -4,6 +4,7 @@
 
     <div class="mb-6 text-center">
         <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-32 h-32 object-contain mx-auto drop-shadow-lg" />
+        <h1 class="mt-4 text-2xl font-semibold text-gray-900">Login User</h1>
     </div>
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
@@ -60,14 +61,16 @@
         <div class="flex items-center justify-between pt-2">
             <label for="remember_me" class="inline-flex items-center cursor-pointer">
                 <input id="remember_me" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 cursor-pointer" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-gray-600">Remember me</span>
             </label>
+
+            <a href="{{ route('register') }}" class="text-sm text-blue-600 hover:text-blue-800 transition">Belum punya akun? Register</a>
         </div>
 
         <!-- Login Button -->
         <div class="flex items-center justify-center pt-4">
             <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg transform transition duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg">
-                {{ __('Log in') }}
+                Log in
             </button>
         </div>
     </form>
