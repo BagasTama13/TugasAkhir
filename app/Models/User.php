@@ -23,7 +23,14 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'alamat',
+        'no_hp',
     ];
+
+    public function pesanans()
+    {
+        return $this->hasMany(\App\Models\Pesanan::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

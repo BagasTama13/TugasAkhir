@@ -14,6 +14,11 @@ use App\Livewire\Admin\Pesanan;
 use App\Livewire\Worker\WorkerActivity;
 use App\Livewire\Worker\WorkerDashboard;
 use App\Livewire\Worker\WorkerPesanan;
+use App\Livewire\User\UserDashboard;
+use App\Livewire\User\UserPesanan;
+use App\Livewire\User\UserDetailPesanan;
+use App\Livewire\User\UserProfile;
+use App\Livewire\User\UserEditProfile;
 
 // Auth Routes
 require __DIR__.'/auth.php';
@@ -76,4 +81,17 @@ Route::middleware('auth')->prefix('worker/{worker}')->group(function () {
     Route::get('/dashboard', WorkerDashboard::class)->name('worker.dashboard');
     Route::get('/pesanan', WorkerPesanan::class)->name('worker.pesanan');
     Route::get('/activity', WorkerActivity::class)->name('worker.activity');
+});
+
+// User Panel Routes
+Route::middleware('auth')->prefix('user')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('user.dashboard');
+    });
+
+    Route::get('/dashboard', UserDashboard::class)->name('user.dashboard');
+    Route::get('/pesanan', UserPesanan::class)->name('user.pesanan');
+    Route::get('/pesanan/buat', UserDetailPesanan::class)->name('user.pesanan.detail');
+    Route::get('/profile', UserProfile::class)->name('user.profile');
+    Route::get('/profile/edit', UserEditProfile::class)->name('user.profile.edit');
 });

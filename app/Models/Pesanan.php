@@ -16,10 +16,18 @@ class Pesanan extends Model
         'status',
         'description',
         'user_id',
+        'produk_id',
+        'catatan',
+        'no_whatsapp',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class);
     }
 }
