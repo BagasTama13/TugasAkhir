@@ -178,7 +178,12 @@
             </div>
 
             <div class="p-6 border-t border-gray-200 text-center">
-                <a href="/activity" class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                @php
+                    $isOwner = request()->segment(1) === 'owner';
+                    $isWorker = request()->segment(1) === 'worker';
+                    $panelPrefix = $isOwner ? '/owner/'.request()->segment(2) : ($isWorker ? '/worker/'.request()->segment(2) : '');
+                @endphp
+                <a href="{{ $panelPrefix }}/activity" class="text-blue-600 hover:text-blue-800 font-medium text-sm">
                     Lihat semua aktivitas →
                 </a>
             </div>

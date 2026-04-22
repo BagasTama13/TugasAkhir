@@ -1,13 +1,10 @@
-<div class="min-h-screen bg-gray-50 p-8">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="sticky top-0 bg-gray-50 z-30 pb-4 mb-0">
+<div class="min-h-screen bg-gray-50 pb-8">
+    <!-- Sticky Header Group (Solid background, no transparent gaps) -->
+    <div class="sticky top-0 bg-gray-50 z-30 pt-8 pb-6 px-8 border-b border-gray-200 shadow-sm mb-8">
+        <div class="max-w-7xl mx-auto">
             <h1 class="text-3xl font-bold text-gray-900">Daftar Pesanan</h1>
-            <p class="text-gray-500 mt-2">Kelola semua pesanan dari pelanggan</p>
-        </div>
+            <p class="text-gray-500 mt-2 mb-6">Kelola semua pesanan dari pelanggan</p>
 
-        <!-- Summary Stats -->
-        <div class="sticky top-32 bg-gray-50 z-20 pt-4 pb-4 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Total Pesanan -->
                 <div class="bg-white rounded-lg shadow p-6">
@@ -42,7 +39,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <!-- Rest of the Content -->
+    <div class="max-w-7xl mx-auto px-8">
         <!-- Add Button -->
         @if(!$this->readonly && !isset($isWorkerView))
             <div class="mb-8">
@@ -82,8 +82,21 @@
                         </div>
                     </div>
 
-                    <!-- Tipe & Jumlah -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Produk, Tipe & Jumlah -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Produk
+                            </label>
+                            <select wire:model="produk_id"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('produk_id') border-red-500 @enderror">
+                                <option value="">Pilih Produk</option>
+                                @foreach($this->produks as $produk)
+                                    <option value="{{ $produk->id }}">{{ $produk->nama }}</option>
+                                @endforeach
+                            </select>
+                            @error('produk_id') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Tipe Pesanan
@@ -169,16 +182,16 @@
                         <tr class="bg-gray-100 border-b border-gray-200">
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nomor</th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nama</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tipe</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Produk</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Jenis</th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Jumlah</th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Penjemputan</th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Pengiriman</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                             <th class="px-6 py-3 text-center text-sm font-semibold text-gray-700">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @forelse($this->pesanans as $pesanan)
+                        @forelse($this->pesanans->where('status', '!=', 'delivered') as $pesanan)
                             <tr class="hover:bg-gray-50 transition">
                                 <!-- Nomor -->
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -194,7 +207,14 @@
                                     </div>
                                 </td>
 
-                                <!-- Tipe -->
+                                <!-- Produk -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ $pesanan->produk ? $pesanan->produk->nama : '-' }}
+                                    </div>
+                                </td>
+
+                                <!-- Jenis -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
                                         {{ ucfirst($pesanan->tipe) }}
@@ -232,26 +252,7 @@
                                     </details>
                                 </td>
 
-                                <!-- Status -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
-                                        @if($pesanan->status === 'pending') bg-yellow-100 text-yellow-800
-                                        @elseif($pesanan->status === 'accepted') bg-green-100 text-green-800
-                                        @elseif($pesanan->status === 'rejected') bg-red-100 text-red-800
-                                        @elseif($pesanan->status === 'delivered') bg-blue-100 text-blue-800
-                                        @endif
-                                    ">
-                                        @if($pesanan->status === 'pending')
-                                            ⏳ Menunggu
-                                        @elseif($pesanan->status === 'accepted')
-                                            ✅ Diterima
-                                        @elseif($pesanan->status === 'rejected')
-                                            ❌ Ditolak
-                                        @elseif($pesanan->status === 'delivered')
-                                            🚚 Terkirim
-                                        @endif
-                                    </span>
-                                </td>
+                                <!-- Status Column Removed As Requested -->
 
                                 <!-- Aksi -->
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
@@ -272,18 +273,11 @@
                                                         class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition font-medium">
                                                     Terkirim
                                                 </button>
+                                            @elseif($pesanan->status === 'rejected')
+                                                <span class="text-xs font-medium text-red-600 px-2 py-1 bg-red-100 rounded-full border border-red-200">Ditolak</span>
+                                            @elseif($pesanan->status === 'delivered')
+                                                <span class="text-xs font-medium text-green-600 px-2 py-1 bg-green-100 rounded-full border border-green-200">Selesai</span>
                                             @endif
-
-                                            <button wire:click="editPesanan({{ $pesanan->id }})"
-                                                    class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 transition font-medium">
-                                                Edit
-                                            </button>
-
-                                            <button wire:click="deletePesanan({{ $pesanan->id }})"
-                                                    onclick="return confirm('Yakin ingin menghapus pesanan ini?')"
-                                                    class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition font-medium">
-                                                Hapus
-                                            </button>
                                         </div>
                                     @elseif(isset($isWorkerView))
                                         <!-- Worker: status actions only -->
@@ -298,6 +292,10 @@
                                                         class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition font-medium">
                                                     Dikirim
                                                 </button>
+                                            @elseif($pesanan->status === 'rejected')
+                                                <span class="text-xs font-medium text-red-600 px-2 py-1 bg-red-100 rounded-full border border-red-200">Ditolak</span>
+                                            @elseif($pesanan->status === 'delivered')
+                                                <span class="text-xs font-medium text-green-600 px-2 py-1 bg-green-100 rounded-full border border-green-200">Selesai</span>
                                             @endif
                                         </div>
                                     @else

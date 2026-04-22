@@ -40,7 +40,13 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('owner.dashboard', ['owner' => strtolower($user->username)]);
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Admin goes to admin dashboard
+        if ($user && strtolower($user->username) === 'admin') {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        // Regular users go to user dashboard
+        return redirect()->intended(route('user.dashboard', absolute: false));
     }
 
     /**

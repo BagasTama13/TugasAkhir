@@ -11,7 +11,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
+            $user = \Illuminate\Support\Facades\Auth::user();
+            if ($user && strtolower($user->username) === 'admin') {
+                return route('dashboard');
+            }
+            if ($user && strtolower($user->username) === 'owner') {
+                return route('owner.dashboard', ['owner' => 'owner']);
+            }
+            if ($user && strtolower($user->username) === 'worker') {
+                return route('worker.dashboard', ['worker' => 'worker']);
+            }
+            return route('user.dashboard');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

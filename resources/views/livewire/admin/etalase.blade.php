@@ -24,56 +24,59 @@
             </button>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <form wire:submit.prevent="tambahProduk">
+            <div class="grid grid-cols-2 gap-4">
 
-            <div>
-                <input type="text" wire:model="nama" placeholder="Nama Produk"
-                       class="border p-2 rounded w-full">
-                @error('nama') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                <div>
+                    <input type="text" wire:model="nama" placeholder="Nama Produk"
+                           class="border p-2 rounded w-full">
+                    @error('nama') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <input type="text" wire:model="jenis" placeholder="Jenis"
+                           class="border p-2 rounded w-full">
+                    @error('jenis') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <input type="number" wire:model="harga" placeholder="Harga"
+                           class="border p-2 rounded w-full">
+                    @error('harga') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <input type="text" wire:model="satuan" placeholder="Satuan"
+                           class="border p-2 rounded w-full">
+                    @error('satuan') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium mb-2">Gambar Produk</label>
+                    <input type="file" wire:model="gambar"
+                           class="border p-2 rounded w-full" accept="image/*">
+                    <div wire:loading wire:target="gambar" class="text-sm text-blue-500 mt-1">Mengunggah gambar...</div>
+                    @error('gambar') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="col-span-2">
+                    <textarea wire:model="deskripsi" placeholder="Deskripsi"
+                              class="border p-2 rounded w-full"></textarea>
+                </div>
+
             </div>
 
-            <div>
-                <input type="text" wire:model="jenis" placeholder="Jenis"
-                       class="border p-2 rounded w-full">
-                @error('jenis') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+            <div class="flex gap-2 mt-4">
+                <button type="submit" wire:loading.attr="disabled" wire:target="tambahProduk, gambar"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 font-medium">
+                    @if($editingId) Update @else Tambah @endif
+                </button>
+                <button wire:click="closeForm()" type="button"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded font-medium">
+                    Batal
+                </button>
             </div>
-
-            <div>
-                <input type="number" wire:model="harga" placeholder="Harga"
-                       class="border p-2 rounded w-full">
-                @error('harga') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <input type="text" wire:model="satuan" placeholder="Satuan"
-                       class="border p-2 rounded w-full">
-                @error('satuan') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-            </div>
-
-            <div class="col-span-2">
-                <label class="block text-sm font-medium mb-2">Gambar Produk</label>
-                <input type="file" wire:model.live="gambar"
-                       class="border p-2 rounded w-full">
-                @error('gambar') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-            </div>
-
-            <div class="col-span-2">
-                <textarea wire:model="deskripsi" placeholder="Deskripsi"
-                          class="border p-2 rounded w-full"></textarea>
-            </div>
-
-        </div>
-
-        <div class="flex gap-2 mt-4">
-            <button wire:click="tambahProduk" wire:loading.attr="disabled"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 font-medium">
-                @if($editingId) Update @else Tambah @endif
-            </button>
-            <button wire:click="closeForm()" type="button"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded font-medium">
-                Batal
-            </button>
-        </div>
+        </form>
 
     </div>
     @endif
@@ -83,7 +86,7 @@
         <div class="flex justify-between items-center mb-4">
             <h2 class="font-semibold">Daftar Produk</h2>
             @if(!$this->readonly)
-                <button wire:click="toggleForm()" wire:loading.attr="disabled"
+                <button type="button" wire:click="toggleForm" wire:loading.attr="disabled"
                         class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50">
                     + Tambah Barang
                 </button>
@@ -137,9 +140,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6
-                <tr>
-                    <td colspan="5" class="text-center text-gray-400 py-4">
+                    <td colspan="6" class="text-center text-gray-400 py-4">
                         Belum ada produk
                     </td>
                 </tr>

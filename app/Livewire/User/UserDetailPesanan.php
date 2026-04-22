@@ -50,6 +50,12 @@ class UserDetailPesanan extends Component
         $this->nama_pembeli = $user->name;
         $this->no_whatsapp = $user->no_hp ?? '';
         $this->alamat = $user->alamat ?? '';
+
+        // Pre-select product if passed via query parameter
+        $produkId = request()->query('produk');
+        if ($produkId && Produk::where('id', $produkId)->exists()) {
+            $this->selectedProdukId = (int) $produkId;
+        }
     }
 
     #[Computed]

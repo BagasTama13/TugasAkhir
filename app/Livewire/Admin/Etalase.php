@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 class Etalase extends Component
 {
     use OwnerAccess;
+    use WithFileUploads;
 
     public function mount(string $owner = ''): void
     {
@@ -38,7 +39,6 @@ class Etalase extends Component
             abort(403, 'Unauthorized access.');
         }
     }
-    use WithFileUploads;
 
     protected function getUserId(): int
     {
@@ -136,13 +136,16 @@ class Etalase extends Component
 
     public function tambahProduk()
     {
+        // 1. Validasi Keamanan (Security Check)
         $this->validate();
         $path = null;
 
+        // 2. Proses Penyimpanan File Gambar (Storage)
         if ($this->gambar) {
             $path = $this->gambar->store('produk', 'public');
         }
 
+        // Siapkan paket data untuk database
         $data = [
             'nama' => $this->nama,
             'jenis' => $this->jenis,
@@ -155,6 +158,7 @@ class Etalase extends Component
             $data['gambar'] = $path;
         }
 
+        // 3. Penulisan ke Database Produk (Mencetak Data Baru atau Update)
         if ($this->editingId) {
             $produk = Produk::find($this->editingId);
             if ($produk && $produk->gambar && $path) {
@@ -167,6 +171,7 @@ class Etalase extends Component
             $msg = 'Produk berhasil ditambahkan!';
         }
 
+        // 4. Rekam Jejak Aktivitas Admin (Activity Logging)
         Activity::create([
             'user_id' => $this->getUserId(),
             'action' => $this->editingId ? 'update' : 'create',
@@ -175,6 +180,7 @@ class Etalase extends Component
             'description' => ($this->editingId ? 'Update: ' : 'Tambah: ') . $this->nama,
         ]);
 
+        // 5. Pembersihan Cache dan Memperbarui Tampilan (Cleanup & Rendering)
         $this->invalidateProdukCache();
         session()->flash('success', $msg);
         $this->closeForm();

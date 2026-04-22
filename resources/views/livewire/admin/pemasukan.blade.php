@@ -1,13 +1,10 @@
-<div class="min-h-screen bg-gray-50 p-8">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="sticky top-0 bg-gray-50 z-30 pb-4 mb-0">
+<div class="min-h-screen bg-gray-50 pb-8">
+    <!-- Sticky Header Group -->
+    <div class="sticky top-0 bg-gray-50 z-30 pt-8 pb-6 px-8 border-b border-gray-200 shadow-sm mb-8">
+        <div class="max-w-7xl mx-auto">
             <h1 class="text-3xl font-bold text-gray-900">Laporan Pemasukan</h1>
-            <p class="text-gray-500 mt-2">Kelola semua pemasukan dan pendapatan</p>
-        </div>
+            <p class="text-gray-500 mt-2 mb-6">Kelola semua pemasukan dan pendapatan</p>
 
-        <!-- Summary Stats -->
-        <div class="sticky top-32 bg-gray-50 z-20 pt-4 pb-4 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Total Pemasukan -->
                 <div class="bg-white rounded-lg shadow p-6">
@@ -37,9 +34,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
-
-
+    <!-- Rest of the Content -->
+    <div class="max-w-7xl mx-auto px-8">
         <!-- Pemasukan Table -->
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">

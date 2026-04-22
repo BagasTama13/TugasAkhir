@@ -52,6 +52,7 @@ class Pesanan extends Component
     public $alamat_pengiriman = '';
     public $status = 'pending';
     public $description = '';
+    public $produk_id = null;
 
     protected $rules = [
         'nomor' => 'required|string|unique:pesanans,nomor',
@@ -62,12 +63,19 @@ class Pesanan extends Component
         'alamat_pengiriman' => 'required|string|min:5',
         'status' => 'required|in:pending,accepted,rejected,delivered',
         'description' => 'nullable|string',
+        'produk_id' => 'required|exists:produks,id',
     ];
+
+    #[Computed(cache: true)]
+    public function produks()
+    {
+        return \App\Models\Produk::select('id', 'nama')->get();
+    }
 
     #[Computed(cache: true)]
     public function pesanans()
     {
-        return PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'created_at'])
+        return PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'created_at', 'produk_id'])
             ->with('user:id,name,username')
             ->latest()
             ->get();
@@ -109,11 +117,12 @@ class Pesanan extends Component
         $this->alamat_pengiriman = '';
         $this->status = 'pending';
         $this->description = '';
+        $this->produk_id = null;
     }
 
     public function editPesanan($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description'])->findOrFail($id);
+        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description', 'produk_id'])->findOrFail($id);
         $this->editingId = $id;
         $this->nomor = $pesanan->nomor;
         $this->nama = $pesanan->nama;
@@ -123,6 +132,7 @@ class Pesanan extends Component
         $this->alamat_pengiriman = $pesanan->alamat_pengiriman;
         $this->status = $pesanan->status;
         $this->description = $pesanan->description;
+        $this->produk_id = $pesanan->produk_id;
         $this->showForm = true;
     }
 
@@ -139,6 +149,7 @@ class Pesanan extends Component
             'alamat_pengiriman' => $this->alamat_pengiriman,
             'status' => $this->status,
             'description' => $this->description,
+            'produk_id' => $this->produk_id,
         ];
 
         if ($this->editingId) {
@@ -212,6 +223,25 @@ class Pesanan extends Component
         
         $this->invalidatePesananCache();
         session()->flash('success', 'Pesanan ditolak!');
+    }
+
+    public function markDelivered($id)
+    {
+        $pesanan = PesananModel::select(['id', 'nomor', 'status'])->findOrFail($id);
+        if ($pesanan->status === 'delivered') return;
+        
+        $pesanan->update(['status' => 'delivered']);
+
+        Activity::create([
+            'user_id' => $this->getUserId(),
+            'action' => 'update',
+            'entity_type' => 'Pesanan',
+            'entity_id' => $pesanan->id,
+            'description' => "Selesai/Terkirim: #{$pesanan->nomor}",
+        ]);
+        
+        $this->invalidatePesananCache();
+        session()->flash('success', 'Pesanan ditandai terkirim!');
     }
 
     public function deletePesanan($id)
