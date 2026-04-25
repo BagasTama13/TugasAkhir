@@ -1,12 +1,10 @@
-<x-guest-layout>
+<x-guest-layout role="user">
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-6 text-center">
         <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-32 h-32 object-contain mx-auto drop-shadow-lg" />
-        <h1 class="mt-4 text-2xl font-semibold text-gray-900">
-            {{ request()->query('role') === 'admin' ? 'Login Admin' : 'Login User' }}
-        </h1>
+        <h1 class="mt-4 text-2xl font-semibold text-gray-900">Login User</h1>
     </div>
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
@@ -79,6 +77,6 @@
 
     <!-- Footer info -->
     <div class="mt-6 text-center text-xs text-gray-500">
-        <p>{{ request()->query('role') === 'admin' ? 'Sistem Admin Dashboard BPTrans' : 'Sistem Portal Member BPTrans' }}</p>
+        <p>Sistem Portal Member BPTrans</p>
     </div>
 </x-guest-layout>

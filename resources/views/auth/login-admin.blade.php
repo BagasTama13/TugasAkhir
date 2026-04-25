@@ -1,12 +1,10 @@
-<x-guest-layout>
+<x-guest-layout role="admin">
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-6 text-center">
         <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-32 h-32 object-contain mx-auto drop-shadow-lg" />
-        <h1 class="mt-4 text-2xl font-semibold text-gray-900">
-            {{ request()->query('role') === 'admin' ? 'Login Admin' : 'Login User' }}
-        </h1>
+        <h1 class="mt-4 text-2xl font-semibold text-gray-900">Login Admin</h1>
     </div>
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
@@ -15,7 +13,7 @@
         <!-- Username -->
         <div>
             <x-input-label for="name" value="Username" />
-            <x-text-input id="name" class="block mt-2 w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200" type="text" name="name" :value="old('name')" placeholder="wamilo" required autofocus autocomplete="username" />
+            <x-text-input id="name" class="block mt-2 w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200" type="text" name="name" :value="old('name')" placeholder="Admin" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
@@ -65,8 +63,6 @@
                 <input id="remember_me" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 cursor-pointer" name="remember">
                 <span class="ms-2 text-sm text-gray-600">Remember me</span>
             </label>
-
-            <a href="{{ route('register') }}" class="text-sm text-blue-600 hover:text-blue-800 transition">Belum punya akun? Register</a>
         </div>
 
         <!-- Login Button -->
@@ -79,6 +75,6 @@
 
     <!-- Footer info -->
     <div class="mt-6 text-center text-xs text-gray-500">
-        <p>{{ request()->query('role') === 'admin' ? 'Sistem Admin Dashboard BPTrans' : 'Sistem Portal Member BPTrans' }}</p>
+        <p>Sistem Admin Dashboard BPTrans</p>
     </div>
 </x-guest-layout>

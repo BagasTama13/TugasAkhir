@@ -20,6 +20,22 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
+     * Display the user login view.
+     */
+    public function createUser(): View
+    {
+        return view('auth.login-user');
+    }
+
+    /**
+     * Display the admin login view.
+     */
+    public function createAdmin(): View
+    {
+        return view('auth.login-admin');
+    }
+
+    /**
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
