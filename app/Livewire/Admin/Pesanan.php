@@ -72,11 +72,12 @@ class Pesanan extends Component
         return \App\Models\Produk::select('id', 'nama')->get();
     }
 
-    #[Computed(cache: true)]
+    #[Computed]
     public function pesanans()
     {
         return PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'created_at', 'produk_id'])
             ->with('user:id,name,username')
+            ->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
             ->latest()
             ->get();
     }
@@ -140,6 +141,8 @@ class Pesanan extends Component
     {
         $this->validate();
 
+        $produk = \App\Models\Produk::findOrFail($this->produk_id);
+        
         $data = [
             'nomor' => $this->nomor,
             'nama' => $this->nama,
@@ -150,6 +153,8 @@ class Pesanan extends Component
             'status' => $this->status,
             'description' => $this->description,
             'produk_id' => $this->produk_id,
+            'harga' => $produk->harga,
+            'total_harga' => $this->jumlah * $produk->harga,
         ];
 
         if ($this->editingId) {
@@ -161,15 +166,6 @@ class Pesanan extends Component
             $data['user_id'] = $this->getUserId();
             $pesanan = PesananModel::create($data);
             
-            // Create Pemasukan entry
-            Pemasukan::create([
-                'tanggal' => today(),
-                'jumlah' => $this->jumlah,
-                'keterangan' => "Pesanan #{$pesanan->nomor}",
-                'kategori' => 'penjualan',
-                'status' => 'pending',
-                'user_id' => $this->getUserId(),
-            ]);
             $msg = 'Pesanan berhasil ditambahkan!';
             $action = 'create';
         }
@@ -227,10 +223,26 @@ class Pesanan extends Component
 
     public function markDelivered($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor', 'status'])->findOrFail($id);
+        $pesanan = PesananModel::with('produk')->findOrFail($id);
         if ($pesanan->status === 'delivered') return;
         
         $pesanan->update(['status' => 'delivered']);
+
+        // Calculate total price: quantity * product price
+        $totalHarga = 0;
+        if ($pesanan->produk) {
+            $totalHarga = $pesanan->jumlah * $pesanan->produk->harga;
+        }
+
+        // Create Pemasukan entry automatically
+        Pemasukan::create([
+            'tanggal' => today(),
+            'jumlah' => $totalHarga,
+            'keterangan' => "Penjualan: {$pesanan->nomor} ({$pesanan->nama})",
+            'kategori' => 'penjualan',
+            'status' => 'selesai',
+            'user_id' => $this->getUserId(),
+        ]);
 
         Activity::create([
             'user_id' => $this->getUserId(),
@@ -241,7 +253,7 @@ class Pesanan extends Component
         ]);
         
         $this->invalidatePesananCache();
-        session()->flash('success', 'Pesanan ditandai terkirim!');
+        session()->flash('success', 'Pesanan ditandai terkirim & data pemasukan dicatat!');
     }
 
     public function deletePesanan($id)

@@ -38,6 +38,8 @@ class UserDetailPesanan extends Component
         'no_whatsapp.required' => 'No. WhatsApp wajib diisi.',
     ];
 
+    public $productCategory = '';
+
     public function mount(): void
     {
         $user = Auth::user();
@@ -53,14 +55,25 @@ class UserDetailPesanan extends Component
 
         // Pre-select product if passed via query parameter
         $produkId = request()->query('produk');
-        if ($produkId && Produk::where('id', $produkId)->exists()) {
-            $this->selectedProdukId = (int) $produkId;
+        if ($produkId) {
+            $p = Produk::find($produkId);
+            if ($p) {
+                $this->selectedProdukId = (int) $produkId;
+                $this->productCategory = trim(strtolower($p->nama));
+            }
         }
     }
 
     #[Computed]
     public function produks()
     {
+        if ($this->productCategory) {
+            // Group variants by their normalized name to match the dashboard selection
+            return Produk::all()->filter(function($p) {
+                return trim(strtolower($p->nama)) === $this->productCategory;
+            })->values();
+        }
+        
         return Produk::all();
     }
 
@@ -96,6 +109,8 @@ class UserDetailPesanan extends Component
             'description' => "Produk: {$produk->nama} ({$produk->jenis})",
             'user_id' => Auth::id(),
             'produk_id' => $produk->id,
+            'harga' => $produk->harga,
+            'total_harga' => $this->jumlah * $produk->harga,
             'catatan' => $this->catatan,
             'no_whatsapp' => $this->no_whatsapp,
         ]);

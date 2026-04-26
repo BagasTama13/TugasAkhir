@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'alamat',
         'no_hp',
+        'avatar',
     ];
 
     public function pesanans()

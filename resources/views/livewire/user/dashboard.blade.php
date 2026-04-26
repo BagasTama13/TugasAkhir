@@ -1,53 +1,75 @@
 <div>
     <!-- Page Header -->
-    <div class="mb-8 animate-fade-in-up">
-        <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">Dashboard</h1>
-        <p class="text-gray-500 mt-1">Selamat datang, <span class="font-semibold text-emerald-600">{{ auth()->user()->name }}</span>! Pilih produk untuk dipesan.</p>
+    <div class="mb-10 animate-fade-in-up">
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Katalog Produk</h1>
+        <p class="text-gray-500 mt-2">Selamat datang, <span class="font-bold text-blue-600">{{ auth()->user()->name }}</span>! Temukan bahan bangunan berkualitas untuk proyek Anda.</p>
     </div>
 
     <!-- Products Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-8">
         @forelse($this->products as $index => $product)
-            <div class="bg-gray-200 p-4 rounded-xl flex flex-col animate-fade-in-up animate-delay-{{ ($index % 3) + 1 }} shadow-sm border border-gray-300">
+            <div class="group bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 overflow-hidden flex flex-col animate-fade-in-up" style="animation-delay: {{ $index * 0.05 }}s">
                 
                 <!-- Product Picture -->
-                <div class="bg-gray-100 rounded-lg h-40 border border-gray-300 flex items-center justify-center overflow-hidden mb-4">
+                <div class="relative h-48 bg-gray-50 overflow-hidden">
                     @if($product->gambar)
                         <img src="{{ asset('storage/' . $product->gambar) }}"
                              alt="{{ $product->nama }}"
-                             class="w-full h-full object-cover">
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                     @else
-                        <span class="text-gray-500 font-medium text-sm">Product Picture</span>
+                        <div class="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                            <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
                     @endif
+
+                    <!-- Price Badge -->
+                    <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-lg border border-white/50">
+                        <span class="text-blue-600 font-black text-sm">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
+                        <span class="text-gray-400 text-[9px] font-bold uppercase">/ {{ $product->satuan ?? 'unit' }}</span>
+                    </div>
                 </div>
 
-                <!-- Product Description -->
-                <div class="bg-gray-100 rounded-lg p-4 border border-gray-300 flex-1 flex flex-col justify-center items-center text-center mb-4 min-h-[160px]">
-                    <h3 class="font-bold text-gray-800 text-lg capitalize mb-1">{{ $product->nama }}</h3>
-                    @if($product->jenis)
-                        <span class="text-xs font-semibold text-blue-600 mb-2">{{ $product->jenis }}</span>
-                    @endif
-                    <p class="text-gray-600 text-sm mb-3 font-medium">Product Description</p>
-                    <p class="text-gray-500 text-xs mb-2 line-clamp-2">{{ $product->deskripsi ?? 'Detail produk tidak tersedia.' }}</p>
-                    <span class="text-lg font-extrabold text-blue-700">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
-                </div>
+                <!-- Product Content -->
+                <div class="p-6 flex-1 flex flex-col">
+                    <h3 class="text-xl font-black text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300 capitalize">{{ $product->nama }}</h3>
+                    
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6 flex-1 line-clamp-3">
+                        {{ $product->deskripsi ?? 'Detail produk tidak tersedia untuk saat ini. Silakan hubungi admin untuk informasi lebih lanjut.' }}
+                    </p>
 
-                <!-- Buy Button Box -->
-                <div class="bg-gray-100 rounded-lg border border-gray-300 p-2 text-center hover:bg-gray-50 transition-colors">
+                    <!-- Buy Button -->
                     <a href="{{ route('user.pesanan.detail', ['produk' => $product->id]) }}"
-                       class="text-gray-700 font-semibold text-sm w-full block py-2">
-                        Buy Button
+                       class="inline-flex items-center justify-center w-full py-3 bg-gray-900 text-white font-bold rounded-2xl hover:bg-blue-600 transform hover:-translate-y-1 transition-all duration-300 gap-2 group/btn shadow-lg shadow-gray-100">
+                        Pesan Sekarang
+                        <svg class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
                     </a>
                 </div>
 
             </div>
         @empty
-            <div class="col-span-full text-center py-16">
-                <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                </svg>
-                <p class="text-gray-400 text-lg font-medium">Belum ada produk tersedia.</p>
+            <div class="col-span-full text-center py-20 bg-white rounded-[2rem] border border-gray-100 shadow-sm">
+                <div class="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900">Belum Ada Produk</h3>
+                <p class="text-sm text-gray-500 mt-1">Stok produk sedang diperbarui. Silakan kembali lagi nanti.</p>
             </div>
         @endforelse
     </div>
 </div>
+
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+</style>

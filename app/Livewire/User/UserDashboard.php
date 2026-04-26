@@ -26,12 +26,18 @@ class UserDashboard extends Component
     public function products()
     {
         return Produk::all()
-            ->groupBy('nama')
+            ->groupBy(function ($item) {
+                return trim(strtolower($item->nama));
+            })
             ->map(function ($group) {
-                $nama = $group->first()->nama;
+                $nama = trim(strtolower($group->first()->nama));
+                
+                // For kayu (wood), show all types sorted by price
                 if ($nama === 'kayu') {
                     return $group->sortBy('harga')->values();
                 }
+                
+                // For others (batu bata, genteng), show only the cheapest
                 return collect([$group->sortBy('harga')->first()]);
             })
             ->flatten(1)

@@ -21,6 +21,27 @@ class UserPesanan extends Component
         }
     }
 
+    public $selectedPesananId = null;
+
+    public function showDetail($id)
+    {
+        $this->selectedPesananId = $id;
+    }
+
+    public function closeDetail()
+    {
+        $this->selectedPesananId = null;
+    }
+
+    #[Computed]
+    public function selectedPesanan()
+    {
+        if ($this->selectedPesananId) {
+            return Pesanan::with('produk')->find($this->selectedPesananId);
+        }
+        return null;
+    }
+
     #[Computed]
     public function pesanans()
     {

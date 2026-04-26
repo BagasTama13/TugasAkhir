@@ -29,9 +29,11 @@ Route::get('/', function () {
     // For batu bata & genteng: show only cheapest
     // For kayu: show all types
     $products = \App\Models\Produk::all()
-        ->groupBy('nama')
+        ->groupBy(function ($item) {
+            return trim(strtolower($item->nama));
+        })
         ->map(function ($group) {
-            $nama = $group->first()->nama;
+            $nama = trim(strtolower($group->first()->nama));
             
             // For kayu (wood), show all types sorted by price
             if ($nama === 'kayu') {
@@ -44,7 +46,7 @@ Route::get('/', function () {
         ->flatten(1)
         ->values()
         ->sortBy('nama')
-        ->slice(0, 6)
+        ->slice(0, 8) // Increased slice to show more variety if available
         ->values();
     
     return view('welcome', ['products' => $products]);

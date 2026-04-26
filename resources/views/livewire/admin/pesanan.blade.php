@@ -269,14 +269,11 @@
                                                     Tolak
                                                 </button>
                                             @elseif($pesanan->status === 'accepted')
-                                                <button wire:click="markDelivered({{ $pesanan->id }})"
-                                                        class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition font-medium">
-                                                    Terkirim
-                                                </button>
+                                                <span class="text-xs font-bold text-green-600 px-3 py-1 bg-green-50 rounded-full border border-green-100">Diterima</span>
                                             @elseif($pesanan->status === 'rejected')
-                                                <span class="text-xs font-medium text-red-600 px-2 py-1 bg-red-100 rounded-full border border-red-200">Ditolak</span>
+                                                <span class="text-xs font-bold text-red-600 px-3 py-1 bg-red-50 rounded-full border border-red-100">Ditolak</span>
                                             @elseif($pesanan->status === 'delivered')
-                                                <span class="text-xs font-medium text-green-600 px-2 py-1 bg-green-100 rounded-full border border-green-200">Selesai</span>
+                                                <span class="text-xs font-bold text-blue-600 px-3 py-1 bg-blue-50 rounded-full border border-blue-100">Selesai</span>
                                             @endif
                                         </div>
                                     @elseif(isset($isWorkerView))
@@ -299,8 +296,18 @@
                                             @endif
                                         </div>
                                     @else
-                                        <!-- Owner: read-only -->
-                                        <span class="text-gray-500 text-xs">Read-only</span>
+                                        <!-- Owner: read-only status view -->
+                                        <div class="flex justify-center">
+                                            @if($pesanan->status === 'pending')
+                                                <span class="text-xs font-bold text-yellow-600 px-3 py-1 bg-yellow-50 rounded-full border border-yellow-100 uppercase tracking-tighter">Pending</span>
+                                            @elseif($pesanan->status === 'accepted')
+                                                <span class="text-xs font-bold text-green-600 px-3 py-1 bg-green-50 rounded-full border border-green-100 uppercase tracking-tighter">Diterima</span>
+                                            @elseif($pesanan->status === 'rejected')
+                                                <span class="text-xs font-bold text-red-600 px-3 py-1 bg-red-50 rounded-full border border-red-100 uppercase tracking-tighter">Ditolak</span>
+                                            @elseif($pesanan->status === 'delivered')
+                                                <span class="text-xs font-bold text-blue-600 px-3 py-1 bg-blue-50 rounded-full border border-blue-100 uppercase tracking-tighter">Selesai</span>
+                                            @endif
+                                        </div>
                                     @endif
                                 </td>
                             </tr>
