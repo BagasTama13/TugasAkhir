@@ -16,7 +16,7 @@ trait OwnerAccess
     public function isOwnerUser(): bool
     {
         $username = strtolower(Auth::user()->username ?? '');
-        return in_array($username, $this->allowedOwners, true);
+        return str_starts_with($username, 'owner') || in_array($username, $this->allowedOwners, true);
     }
 
     public function ensureAdminOnly(): void
@@ -29,7 +29,7 @@ trait OwnerAccess
     public function ensureOwnerOnly(): void
     {
         $owner = strtolower($this->owner ?? '');
-        if (!in_array($owner, $this->allowedOwners, true) || strtolower(Auth::user()->username ?? '') !== $owner) {
+        if ((!str_starts_with($owner, 'owner') && !in_array($owner, $this->allowedOwners, true)) || strtolower(Auth::user()->username ?? '') !== $owner) {
             abort(403, 'Hanya owner yang dapat mengakses panel ini.');
         }
     }

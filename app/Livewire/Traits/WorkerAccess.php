@@ -16,7 +16,7 @@ trait WorkerAccess
     public function isWorkerUser(): bool
     {
         $username = strtolower(Auth::user()->username ?? '');
-        return in_array($username, $this->allowedWorkers, true);
+        return str_starts_with($username, 'worker') || in_array($username, $this->allowedWorkers, true);
     }
 
     public function ensureAdminOnly(): void
@@ -29,7 +29,7 @@ trait WorkerAccess
     public function ensureWorkerOnly(): void
     {
         $worker = strtolower($this->worker ?? '');
-        if (!in_array($worker, $this->allowedWorkers, true) || strtolower(Auth::user()->username ?? '') !== $worker) {
+        if ((!str_starts_with($worker, 'worker') && !in_array($worker, $this->allowedWorkers, true)) || strtolower(Auth::user()->username ?? '') !== $worker) {
             abort(403, 'Hanya worker yang dapat mengakses panel ini.');
         }
     }

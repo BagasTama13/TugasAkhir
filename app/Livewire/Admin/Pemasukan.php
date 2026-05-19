@@ -33,7 +33,7 @@ class Pemasukan extends Component
         // Only check these if it's the base Admin\Pemasukan component
         if (!($this instanceof \App\Livewire\Owner\OwnerPemasukan)) {
             // Block owner and worker users from admin panel
-            if (in_array($username, ['owner', 'worker'], true)) {
+            if (str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
                 abort(403, 'Access denied. Use your designated panel.');
             }
 

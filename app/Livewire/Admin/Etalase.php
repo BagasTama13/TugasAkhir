@@ -30,7 +30,7 @@ class Etalase extends Component
         }
 
         // Block owner and worker users from admin panel
-        if (in_array($username, ['owner', 'worker'], true)) {
+        if (str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
             abort(403, 'Access denied. Use your designated panel.');
         }
 

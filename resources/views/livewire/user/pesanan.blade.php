@@ -68,10 +68,18 @@
                                         'rejected' => 'bg-rose-50 text-rose-600 border-rose-100',
                                         'delivered' => 'bg-indigo-50 text-indigo-600 border-indigo-100',
                                     ][$pesanan->status] ?? 'bg-slate-50 text-slate-600 border-slate-100';
+
+                                    $statusLabels = [
+                                        'pending' => 'Menunggu',
+                                        'accepted' => 'Pesanan Diterima',
+                                        'rejected' => 'Ditolak',
+                                        'delivered' => 'Pesanan Terkirim',
+                                    ];
+                                    $statusLabel = $statusLabels[$pesanan->status] ?? $pesanan->status;
                                 @endphp
                                 <span class="inline-flex items-center px-4 py-1.5 rounded-xl text-[10px] font-bold border {{ $statusStyles }} uppercase tracking-wider shadow-sm">
                                     <span class="h-1.5 w-1.5 rounded-full bg-current mr-2 animate-pulse"></span>
-                                    {{ $pesanan->status }}
+                                    {{ $statusLabel }}
                                 </span>
                             </div>
                         </div>
@@ -111,7 +119,16 @@
                         <h2 class="text-3xl font-display font-black tracking-tight">{{ $this->selectedPesanan->nomor }}</h2>
                         <div class="mt-4 inline-flex items-center px-3 py-1 bg-white/10 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
                             <span class="h-2 w-2 rounded-full bg-emerald-400 mr-2"></span>
-                            Status: {{ $this->selectedPesanan->status }}
+                            @php
+                                $modalStatusLabels = [
+                                    'pending' => 'Menunggu',
+                                    'accepted' => 'Pesanan Diterima',
+                                    'rejected' => 'Ditolak',
+                                    'delivered' => 'Pesanan Terkirim',
+                                ];
+                                $modalStatusLabel = $modalStatusLabels[$this->selectedPesanan->status] ?? $this->selectedPesanan->status;
+                            @endphp
+                            Status: {{ $modalStatusLabel }}
                         </div>
                     </div>
                 </div>

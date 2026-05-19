@@ -47,18 +47,21 @@ class Pesanan extends Component
     public $produk_id = null;
     public $no_whatsapp = '';
 
-    protected $rules = [
-        'nomor' => 'required|string|unique:pesanans,nomor',
-        'nama' => 'required|string|min:3',
-        'tipe' => 'required|string',
-        'jumlah' => 'required|integer|min:1',
-        'alamat_penjemputan' => 'required|string|min:5',
-        'alamat_pengiriman' => 'required|string|min:5',
-        'status' => 'required|in:pending,accepted,rejected,delivered',
-        'description' => 'nullable|string',
-        'produk_id' => 'required|exists:produks,id',
-        'no_whatsapp' => 'required|string|min:10',
-    ];
+    public function rules()
+    {
+        return [
+            'nomor' => 'required|string|unique:pesanans,nomor,' . ($this->editingId ?? 'NULL') . ',id',
+            'nama' => 'required|string|min:3',
+            'tipe' => 'required|string',
+            'jumlah' => 'required|integer|min:1',
+            'alamat_penjemputan' => 'required|string',
+            'alamat_pengiriman' => 'required|string|min:5',
+            'status' => 'required|in:pending,accepted,rejected,delivered',
+            'description' => 'nullable|string',
+            'produk_id' => 'required|exists:produks,id',
+            'no_whatsapp' => 'required|string|min:10',
+        ];
+    }
 
     #[Computed(cache: true)]
     public function produks()
@@ -66,10 +69,17 @@ class Pesanan extends Component
         return \App\Models\Produk::select('id', 'nama')->get();
     }
 
-    public function getPesanansProperty()
+    #[Computed]
+    public function pesanans()
     {
-        return PesananModel::with(['user', 'produk'])
-            ->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
+        $query = PesananModel::with(['user', 'produk']);
+
+        $username = strtolower(Auth::user()->username ?? '');
+        if (str_starts_with($username, 'worker')) {
+            $query->whereIn('status', ['accepted', 'delivered']);
+        }
+
+        return $query->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
             ->latest()
             ->get();
     }
@@ -180,7 +190,7 @@ class Pesanan extends Component
 
     public function acceptPesanan($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor', 'status'])->findOrFail($id);
+        $pesanan = PesananModel::findOrFail($id);
         if ($pesanan->status === 'accepted') return;
         
         $pesanan->update(['status' => 'accepted']);
@@ -199,7 +209,7 @@ class Pesanan extends Component
 
     public function rejectPesanan($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor', 'status'])->findOrFail($id);
+        $pesanan = PesananModel::findOrFail($id);
         if ($pesanan->status === 'rejected') return;
         
         $pesanan->update(['status' => 'rejected']);
@@ -235,7 +245,7 @@ class Pesanan extends Component
             'jumlah' => $totalHarga,
             'keterangan' => "Penjualan: {$pesanan->nomor} ({$pesanan->nama})",
             'kategori' => 'penjualan',
-            'status' => 'selesai',
+            'status' => 'confirmed',
             'user_id' => $this->getUserId(),
         ]);
 
@@ -253,7 +263,7 @@ class Pesanan extends Component
 
     public function deletePesanan($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor'])->findOrFail($id);
+        $pesanan = PesananModel::findOrFail($id);
         $pesanan->delete();
 
         Activity::create([

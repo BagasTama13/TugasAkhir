@@ -55,11 +55,12 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/pesanan', Pesanan::class)->name('pesanan');
+    Route::get('/pemasukan', Pemasukan::class)->name('pemasukan');
     Route::get('/etalase', Etalase::class)->name('etalase');
     Route::get('/activity', Activity::class)->name('activity');
 });
 
-Route::pattern('owner', 'owner');
+Route::pattern('owner', 'owner[0-9]*');
 
 Route::middleware('auth')->prefix('owner/{owner}')->group(function () {
     Route::get('/', function () {
@@ -73,7 +74,7 @@ Route::middleware('auth')->prefix('owner/{owner}')->group(function () {
     Route::get('/activity', OwnerActivity::class)->name('owner.activity');
 });
 
-Route::pattern('worker', 'worker');
+Route::pattern('worker', 'worker[0-9]*');
 
 Route::middleware('auth')->prefix('worker/{worker}')->group(function () {
     Route::get('/', function () {

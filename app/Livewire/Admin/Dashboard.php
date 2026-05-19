@@ -41,11 +41,11 @@ class Dashboard extends Component
         }
 
         // Block unauthorized users (unless they match the segment)
-        if ($segment1 === 'owner' && $username !== 'owner' && $username !== 'admin') {
+        if ($segment1 === 'owner' && !str_starts_with($username, 'owner') && $username !== 'admin') {
             abort(403, 'Access denied.');
         }
         
-        if ($segment1 === 'worker' && $username !== 'worker' && $username !== 'admin') {
+        if ($segment1 === 'worker' && !str_starts_with($username, 'worker') && $username !== 'admin') {
             abort(403, 'Access denied.');
         }
 

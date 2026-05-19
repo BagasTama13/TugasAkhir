@@ -4,6 +4,8 @@ namespace App\Livewire\Worker;
 
 use App\Livewire\Admin\Pesanan;
 use App\Livewire\Traits\WorkerAccess;
+use Livewire\Attributes\Computed;
+use App\Models\Pesanan as PesananModel;
 
 class WorkerPesanan extends Pesanan
 {

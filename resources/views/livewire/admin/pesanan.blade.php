@@ -168,33 +168,17 @@
                                     @if(!$this->readonly && !isset($isWorkerView))
                                         {{-- Admin Actions --}}
                                         @if($pesanan->status === 'pending')
-                                            <button title="Terima Pesanan" wire:click="acceptPesanan({{ $pesanan->id }})" class="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-sm border border-emerald-100 group">
+                                            <button type="button" title="Terima Pesanan" wire:click="acceptPesanan({{ $pesanan->id }})" wire:key="btn-accept-{{ $pesanan->id }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-sm border border-emerald-100 group">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                             </button>
-                                            <button title="Tolak Pesanan" wire:click="rejectPesanan({{ $pesanan->id }})" class="p-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100 group">
+                                            <button type="button" title="Tolak Pesanan" wire:click="rejectPesanan({{ $pesanan->id }})" wire:key="btn-reject-{{ $pesanan->id }}" class="p-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100 group">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
-                                        @elseif($pesanan->status === 'accepted')
-                                            <button title="Kirim Pesanan" wire:click="markDelivered({{ $pesanan->id }})" class="px-3 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-sm">
-                                                Kirim
-                                            </button>
                                         @endif
-
-                                        @if($pesanan->status !== 'delivered' && $pesanan->status !== 'rejected')
-                                            <button title="Edit Pesanan" wire:click="editPesanan({{ $pesanan->id }})" class="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-blue-100">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                            </button>
-                                        @endif
-
-                                        <button title="Hapus Pesanan" wire:click="deletePesanan({{ $pesanan->id }})" onclick="return confirm('Hapus data pesanan ini?')" class="p-2 bg-slate-50 text-slate-400 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-slate-100">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                        </button>
                                     @elseif(isset($isWorkerView))
                                         {{-- Worker Actions --}}
-                                        @if($pesanan->status === 'pending')
-                                            <button wire:click="acceptPesanan({{ $pesanan->id }})" class="px-4 py-1.5 bg-emerald-600 text-white text-[10px] font-bold rounded-lg hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-sm">Terima</button>
-                                        @elseif($pesanan->status === 'accepted')
-                                            <button wire:click="markDelivered({{ $pesanan->id }})" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-sm">Kirim</button>
+                                        @if($pesanan->status === 'accepted')
+                                            <button type="button" wire:click="markDelivered({{ $pesanan->id }})" wire:key="btn-kirim-{{ $pesanan->id }}" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-sm">Kirim</button>
                                         @else
                                             <span class="text-[10px] font-black text-slate-400 uppercase italic tracking-wider">Selesai</span>
                                         @endif

@@ -20,7 +20,7 @@ class UserDashboard extends Component
         $username = strtolower($user->username ?? '');
 
         // Block admin, owner, worker from user panel
-        if (in_array($username, ['admin', 'owner', 'worker'], true)) {
+        if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
             abort(403, 'Use your designated panel.');
         }
     }
