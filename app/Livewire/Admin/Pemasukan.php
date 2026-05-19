@@ -15,26 +15,39 @@ class Pemasukan extends Component
 {
     use OwnerAccess;
 
+    public $search = '';
+    public $startDate;
+    public $endDate;
+    public $statusFilter = '';
+
     public function mount(string $owner = ''): void
     {
         $user = Auth::user();
         $username = strtolower($user->username ?? '');
 
-        // If owner parameter passed, this is for owner panel - reject
-        if (!empty($owner)) {
+        // If owner parameter passed, this is for owner panel - handled by subclass
+        if (!empty($owner) && !($this instanceof \App\Livewire\Owner\OwnerPemasukan)) {
             abort(403, 'Invalid access. Use owner panel instead.');
         }
 
-        // Block owner and worker users from admin panel
-        if (in_array($username, ['owner', 'worker'], true)) {
-            abort(403, 'Access denied. Use your designated panel.');
+        // Only check these if it's the base Admin\Pemasukan component
+        if (!($this instanceof \App\Livewire\Owner\OwnerPemasukan)) {
+            // Block owner and worker users from admin panel
+            if (in_array($username, ['owner', 'worker'], true)) {
+                abort(403, 'Access denied. Use your designated panel.');
+            }
+
+            // Only admin can access here
+            if ($username !== 'admin') {
+                abort(403, 'Unauthorized access.');
+            }
         }
 
-        // Only admin can access here
-        if ($username !== 'admin') {
-            abort(403, 'Unauthorized access.');
-        }
+        // Default date range: current month
+        $this->startDate = now()->startOfMonth()->format('Y-m-d');
+        $this->endDate = now()->endOfMonth()->format('Y-m-d');
     }
+
     protected function getUserId(): int
     {
         return (int) Auth::id();
@@ -43,28 +56,61 @@ class Pemasukan extends Component
     #[Computed]
     public function pemasukans()
     {
-        return PemasukanModel::with('user')->latest('tanggal')->get();
+        $query = PemasukanModel::with('user');
+
+        if ($this->search) {
+            $query->where(function($q) {
+                $q->where('keterangan', 'like', '%' . $this->search . '%')
+                  ->orWhere('kategori', 'like', '%' . $this->search . '%')
+                  ->orWhere('catatan', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        if ($this->statusFilter) {
+            $query->where('status', $this->statusFilter);
+        }
+
+        if ($this->startDate) {
+            $query->whereDate('tanggal', '>=', $this->startDate);
+        }
+
+        if ($this->endDate) {
+            $query->whereDate('tanggal', '<=', $this->endDate);
+        }
+
+        return $query->latest('tanggal')->get();
     }
 
     #[Computed]
     public function totalPemasukan()
     {
-        return PemasukanModel::where('status', 'confirmed')->sum('jumlah');
+        // Sum of all delivered orders
+        return \App\Models\Pesanan::where('status', 'delivered')->sum('total_harga');
     }
 
     #[Computed]
     public function pemasukaBulanIni()
     {
-        return PemasukanModel::where('status', 'confirmed')
-            ->whereMonth('tanggal', now()->month)
-            ->whereYear('tanggal', now()->year)
-            ->sum('jumlah');
+        // Sum of delivered orders in current month
+        return \App\Models\Pesanan::where('status', 'delivered')
+            ->whereMonth('updated_at', now()->month)
+            ->whereYear('updated_at', now()->year)
+            ->sum('total_harga');
     }
 
     #[Computed]
     public function pemasukanPending()
     {
-        return PemasukanModel::where('status', 'pending')->sum('jumlah');
+        // Sum of orders accepted by admin but not yet delivered
+        return \App\Models\Pesanan::where('status', 'accepted')->sum('total_harga');
+    }
+
+    public function resetFilters()
+    {
+        $this->search = '';
+        $this->statusFilter = '';
+        $this->startDate = now()->startOfMonth()->format('Y-m-d');
+        $this->endDate = now()->endOfMonth()->format('Y-m-d');
     }
 
     public function confirmPemasukan($id)

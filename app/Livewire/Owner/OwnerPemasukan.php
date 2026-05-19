@@ -13,8 +13,9 @@ class OwnerPemasukan extends Pemasukan
     {
         if (!empty($owner)) {
             $this->owner = strtolower($owner);
-            $this->readonly = true;
             $this->ensureOwnerOnly();
+            // Don't set readonly = true here if we want owner to have control
+            $this->readonly = false;
         }
     }
 
@@ -23,18 +24,5 @@ class OwnerPemasukan extends Pemasukan
         return view('livewire.owner.pemasukan');
     }
 
-    public function confirmPemasukan($id)
-    {
-        abort(403, 'Owner users cannot confirm pemasukan.');
-    }
-
-    public function rejectPemasukan($id)
-    {
-        abort(403, 'Owner users cannot reject pemasukan.');
-    }
-
-    public function deletePemasukan($id)
-    {
-        abort(403, 'Owner users cannot delete pemasukan.');
-    }
+    // Remove the abort overrides so the parent methods (from Admin\Pemasukan) are used
 }

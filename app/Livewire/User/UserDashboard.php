@@ -11,6 +11,9 @@ use App\Models\Produk;
 #[Layout('layouts.user')]
 class UserDashboard extends Component
 {
+    public string $search = '';
+    public string $category = 'semua';
+
     public function mount(): void
     {
         $user = Auth::user();
@@ -25,7 +28,12 @@ class UserDashboard extends Component
     #[Computed]
     public function products()
     {
-        return Produk::all()
+        return Produk::query()
+            ->when($this->search, function ($query) {
+                $query->where('nama', 'like', '%' . $this->search . '%')
+                      ->orWhere('deskripsi', 'like', '%' . $this->search . '%');
+            })
+            ->get()
             ->groupBy(function ($item) {
                 return trim(strtolower($item->nama));
             })
@@ -41,9 +49,21 @@ class UserDashboard extends Component
                 return collect([$group->sortBy('harga')->first()]);
             })
             ->flatten(1)
+            ->filter(function ($item) {
+                if ($this->category === 'semua') return true;
+                return str_contains(strtolower($item->nama), $this->category);
+            })
             ->values()
             ->sortBy('nama')
             ->values();
+    }
+
+    #[Computed]
+    public function activeOrdersCount()
+    {
+        return \App\Models\Pesanan::where('user_id', Auth::id())
+            ->whereIn('status', ['pending', 'accepted'])
+            ->count();
     }
 
     public function render()

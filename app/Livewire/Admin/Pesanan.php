@@ -21,20 +21,12 @@ class Pesanan extends Component
         $user = Auth::user();
         $username = strtolower($user->username ?? '');
 
-        // If owner parameter passed, this is for owner panel - reject
-        if (!empty($owner)) {
-            abort(403, 'Invalid access. Use owner panel instead.');
-        }
-
-        // Block owner and worker users from admin panel
-        if (in_array($username, ['owner', 'worker'], true)) {
-            abort(403, 'Access denied. Use your designated panel.');
-        }
-
         // Only admin can access here
         if ($username !== 'admin') {
             abort(403, 'Unauthorized access.');
         }
+        
+        $this->readonly = false;
     }
     protected function getUserId(): int
     {
@@ -53,6 +45,7 @@ class Pesanan extends Component
     public $status = 'pending';
     public $description = '';
     public $produk_id = null;
+    public $no_whatsapp = '';
 
     protected $rules = [
         'nomor' => 'required|string|unique:pesanans,nomor',
@@ -64,6 +57,7 @@ class Pesanan extends Component
         'status' => 'required|in:pending,accepted,rejected,delivered',
         'description' => 'nullable|string',
         'produk_id' => 'required|exists:produks,id',
+        'no_whatsapp' => 'required|string|min:10',
     ];
 
     #[Computed(cache: true)]
@@ -72,11 +66,9 @@ class Pesanan extends Component
         return \App\Models\Produk::select('id', 'nama')->get();
     }
 
-    #[Computed]
-    public function pesanans()
+    public function getPesanansProperty()
     {
-        return PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'created_at', 'produk_id'])
-            ->with('user:id,name,username')
+        return PesananModel::with(['user', 'produk'])
             ->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
             ->latest()
             ->get();
@@ -119,11 +111,12 @@ class Pesanan extends Component
         $this->status = 'pending';
         $this->description = '';
         $this->produk_id = null;
+        $this->no_whatsapp = '';
     }
 
     public function editPesanan($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description', 'produk_id'])->findOrFail($id);
+        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description', 'produk_id', 'no_whatsapp'])->findOrFail($id);
         $this->editingId = $id;
         $this->nomor = $pesanan->nomor;
         $this->nama = $pesanan->nama;
@@ -134,6 +127,7 @@ class Pesanan extends Component
         $this->status = $pesanan->status;
         $this->description = $pesanan->description;
         $this->produk_id = $pesanan->produk_id;
+        $this->no_whatsapp = $pesanan->no_whatsapp;
         $this->showForm = true;
     }
 
@@ -153,6 +147,7 @@ class Pesanan extends Component
             'status' => $this->status,
             'description' => $this->description,
             'produk_id' => $this->produk_id,
+            'no_whatsapp' => $this->no_whatsapp,
             'harga' => $produk->harga,
             'total_harga' => $this->jumlah * $produk->harga,
         ];

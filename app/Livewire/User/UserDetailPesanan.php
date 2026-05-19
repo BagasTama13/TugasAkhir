@@ -59,7 +59,7 @@ class UserDetailPesanan extends Component
             $p = Produk::find($produkId);
             if ($p) {
                 $this->selectedProdukId = (int) $produkId;
-                $this->productCategory = trim(strtolower($p->nama));
+                $this->productCategory = $p->nama; // Keep original case for DB query
             }
         }
     }
@@ -67,14 +67,11 @@ class UserDetailPesanan extends Component
     #[Computed]
     public function produks()
     {
-        if ($this->productCategory) {
-            // Group variants by their normalized name to match the dashboard selection
-            return Produk::all()->filter(function($p) {
-                return trim(strtolower($p->nama)) === $this->productCategory;
-            })->values();
+        if (!$this->productCategory) {
+            return collect(); // Don't show anything if no category is selected
         }
-        
-        return Produk::all();
+
+        return Produk::where('nama', $this->productCategory)->get();
     }
 
     #[Computed]

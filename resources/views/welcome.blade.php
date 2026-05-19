@@ -1,446 +1,311 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>BPTrans - Bahan Bangunan Berkualitas Terbaik</title>
-        <!-- Google Fonts: Inter + Plus Jakarta Sans -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <style>
-            body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-            h1,h2,h3,h4,h5,h6,nav { font-family: 'Plus Jakarta Sans', sans-serif; }
-            .footer-brand { font-family: 'Plus Jakarta Sans', sans-serif; }
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BPTrans | Solusi Material Konstruksi Premium & Terpercaya</title>
 
-            @keyframes fadeInUp {
-                from { opacity: 0; transform: translateY(30px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in-up {
-                animation: fadeInUp 0.8s ease-out forwards;
-            }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
 
-            @keyframes float {
-                0%, 100% { transform: translateY(0) rotate(0deg); }
-                50% { transform: translateY(-20px) rotate(2deg); }
-            }
-            .animate-float {
-                animation: float 6s ease-in-out infinite;
-            }
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-            @keyframes bounceSlow {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-10px); }
-            }
-            .animate-bounce-slow {
-                animation: bounceSlow 3s ease-in-out infinite;
-            }
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
 
-            .glass-card {
-                background: rgba(255, 255, 255, 0.7);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-        </style>
-    </head>
-    <body class="text-gray-900 antialiased">
-        <!-- Navigation -->
-        <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md bg-white/70 border-b border-white/20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center h-20 justify-between">
-                    <!-- Logo -->
-                    <div class="flex items-center flex-shrink-0 group">
-                        <div class="relative">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                            <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="relative h-12 w-12 object-contain mr-3 transform group-hover:scale-110 transition duration-300">
-                        </div>
-                        <div>
-                            <h1 class="text-gray-900 text-2xl font-black tracking-tight leading-none">BP<span class="text-blue-600">Trans</span></h1>
-                            <p class="text-blue-600 text-[10px] font-bold tracking-[0.2em] uppercase">Material Solutions</p>
-                        </div>
+        .text-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: radial-gradient(circle, #E2E8F0 1px, transparent 1px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes blob {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+    </style>
+</head>
+<body class="bg-white text-slate-900 antialiased overflow-x-hidden">
+
+    <!-- Premium Navigation -->
+    <nav x-data="{ atTop: true }" 
+         @scroll.window="atTop = (window.pageYOffset > 20 ? false : true)"
+         :class="atTop ? 'bg-transparent py-6' : 'glass py-4 shadow-xl shadow-slate-200/50'"
+         class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="h-10 w-10 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-lg group-hover:scale-110 transition-transform">
+                        <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-full h-full object-contain p-1">
                     </div>
+                    <span :class="atTop ? 'text-slate-900' : 'text-slate-900'" class="text-xl font-display font-black tracking-tight uppercase italic">BPTrans</span>
+                </a>
 
-                    <!-- Navigation Menu -->
-                    <div class="hidden md:flex gap-10 items-center">
-                        <a href="#home" class="text-gray-700 hover:text-blue-600 font-bold text-sm uppercase tracking-wider transition duration-200 relative group">
-                            Home
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#tentang" class="text-gray-700 hover:text-blue-600 font-bold text-sm uppercase tracking-wider transition duration-200 relative group">
-                            Tentang
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#produk" class="text-gray-700 hover:text-blue-600 font-bold text-sm uppercase tracking-wider transition duration-200 relative group">
-                            Produk
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#footer" class="text-gray-700 hover:text-blue-600 font-bold text-sm uppercase tracking-wider transition duration-200 relative group">
-                            Kontak
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                    </div>
+                <!-- Nav Links -->
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="#home" class="text-sm font-bold uppercase tracking-widest text-slate-600 hover:text-indigo-600 transition-colors">Beranda</a>
+                    <a href="#produk" class="text-sm font-bold uppercase tracking-widest text-slate-600 hover:text-indigo-600 transition-colors">Produk</a>
+                    <a href="#tentang" class="text-sm font-bold uppercase tracking-widest text-slate-600 hover:text-indigo-600 transition-colors">Tentang</a>
+                    <a href="#kontak" class="text-sm font-bold uppercase tracking-widest text-slate-600 hover:text-indigo-600 transition-colors">Kontak</a>
+                </div>
 
-                    <!-- CTA Button -->
-                    <div class="flex items-center">
-                        <a href="{{ route('login.user') }}" class="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 hover:-translate-y-0.5 overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <svg class="relative w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            <span class="relative">Login User</span>
-                        </a>
-                    </div>
+                <!-- CTA -->
+                <div class="flex items-center gap-4">
+                    <a href="{{ route('login.user') }}" class="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-slate-900 text-white rounded-full text-xs font-black uppercase tracking-widest hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        Portal Member
+                    </a>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- Hero Section -->
-        <section id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-white">
-            <!-- Decorative Background Elements -->
-            <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-blue-50 rounded-full blur-3xl opacity-50"></div>
-            <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-3xl opacity-30"></div>
-            
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <!-- Left Content -->
-                    <div class="animate-fade-in-up">
-                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
-                            <span class="flex h-2 w-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
-                            Partner Konstruksi Terpercaya
-                        </div>
-                        <h2 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-[1.1]">
-                            Bangun Impian <br>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Tanpa Batas</span>
-                        </h2>
-                        <p class="text-lg md:text-xl text-gray-600 mb-10 leading-relaxed max-w-xl">
-                            Solusi bahan bangunan terlengkap dengan segala jenis dan kualitas untuk mewujudkan hunian yang kokoh dan estetis. Pengiriman cepat, harga kompetitif, dan pelayanan prima.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-5">
-                            <a href="#produk" class="px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-2xl shadow-blue-200 hover:bg-blue-700 hover:-translate-y-1 transition duration-300 flex items-center gap-2 group">
-                                Jelajahi Produk
-                                <svg class="w-5 h-5 group-hover:translate-x-1 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                            </a>
-                            <a href="#footer" class="px-8 py-4 bg-white text-gray-900 font-bold rounded-2xl border-2 border-gray-100 hover:border-blue-600 hover:text-blue-600 transition duration-300">
-                                Konsultasi Gratis
-                            </a>
-                        </div>
+    <!-- Professional Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <!-- Subtle Background Pattern -->
+        <div class="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-50/50 to-transparent -z-10"></div>
 
-                        <!-- Social Proof -->
-                        <div class="mt-12 flex items-center gap-6">
-                            <div class="flex -space-x-3">
-                                <div class="w-10 h-10 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-600">BT</div>
-                                <div class="w-10 h-10 rounded-full border-2 border-white bg-blue-200 flex items-center justify-center text-[10px] font-bold text-blue-700">BP</div>
-                                <div class="w-10 h-10 rounded-full border-2 border-white bg-blue-300 flex items-center justify-center text-[10px] font-bold text-blue-800">TW</div>
-                            </div>
-                            <div class="text-sm text-gray-500">
-                                <span class="font-bold text-gray-900">10,000+</span> Pelanggan Puas di Jepara
-                            </div>
-                        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <!-- Content -->
+                <div class="order-2 lg:order-1 text-center lg:text-left space-y-8">
+                    <div class="inline-flex items-center gap-3 px-4 py-2 bg-white rounded-2xl shadow-sm border border-slate-100">
+                        <span class="flex h-2 w-2 rounded-full bg-indigo-600"></span>
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Partner Konstruksi Terpercaya</span>
                     </div>
-
-                    <!-- Right Visual -->
-                    <div class="relative lg:block">
-                        <div class="relative z-10 animate-float">
-                            <div class="absolute inset-0 bg-blue-600/10 rounded-[2rem] blur-2xl -rotate-6 scale-95"></div>
-                            <div class="relative bg-gradient-to-br from-white to-blue-50 p-8 rounded-[2rem] border border-white shadow-2xl overflow-hidden group">
-                                <img src="{{ asset('images/colt.png') }}" alt="BPTrans Visual" class="w-full h-auto object-contain transform group-hover:scale-105 transition duration-700">
-                                
-                                <!-- Floating Badge -->
-                                <div class="absolute top-6 right-6 bg-white/90 backdrop-blur shadow-lg p-4 rounded-2xl border border-white/50 animate-bounce-slow">
-                                    <div class="text-blue-600 font-black text-xl leading-none">20+</div>
-                                    <div class="text-gray-500 text-[10px] font-bold uppercase tracking-tighter">Tahun Pengalaman</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Background Accent -->
-                        <svg class="absolute -top-10 -right-10 w-64 h-64 text-blue-50 opacity-50" fill="currentColor" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="40" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section (Company Info) -->
-        <section id="tentang" class="bg-slate-50 py-24 relative overflow-hidden">
-            <!-- Background Decoration -->
-            <div class="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
-                <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <path d="M 40 0 L 0 0 0 40" stroke="currentColor" stroke-width="1"/>
-                    </pattern>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                </svg>
-            </div>
-
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="text-center mb-16">
-                    <span class="text-blue-600 font-bold uppercase tracking-[0.3em] text-xs">Mengenal Kami</span>
-                    <h2 class="text-4xl font-black text-gray-900 mt-4 mb-6">Membangun Fondasi <br><span class="text-blue-600 text-3xl font-extrabold">Bersama BPTrans</span></h2>
-                    <div class="w-20 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- About -->
-                    <div class="group bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 border border-gray-100 hover:-translate-y-2">
-                        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-8 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-inner">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                        </div>
-                        <h3 class="text-2xl font-black text-gray-900 mb-4">Tentang BPTrans</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm">
-                            Distributor bahan bangunan terkemuka di Jepara dengan pengalaman <span class="text-blue-600 font-bold">20+ tahun</span>. Kami berdedikasi tinggi dalam melayani kebutuhan konstruksi lokal dengan komitmen segala jenis dan kualitas dengan harga yang tetap terjangkau.
-                        </p>
-                    </div>
-
-                    <!-- Vision -->
-                    <div class="group bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 border border-gray-100 hover:-translate-y-2">
-                        <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-8 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-inner">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                        </div>
-                        <h3 class="text-2xl font-black text-gray-900 mb-4">Visi Kami</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm">
-                            Menjadi partner strategis dan distributor bahan bangunan <span class="text-indigo-600 font-bold">pilihan utama</span> di Jepara. Kami terus berinovasi untuk menyediakan produk berstandar tinggi guna mendukung pertumbuhan infrastruktur yang berkelanjutan.
-                        </p>
-                    </div>
-
-                    <!-- Mission -->
-                    <div class="group bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 border border-gray-100 hover:-translate-y-2">
-                        <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-8 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500 shadow-inner">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
-                        </div>
-                        <h3 class="text-2xl font-black text-gray-900 mb-4">Misi Kami</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center gap-3 text-sm text-gray-500">
-                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">✓</span>
-                                <span>Segala jenis dan kualitas produk terjamin</span>
-                            </div>
-                            <div class="flex items-center gap-3 text-sm text-gray-500">
-                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">✓</span>
-                                <span>Harga kompetitif & transparan</span>
-                            </div>
-                            <div class="flex items-center gap-3 text-sm text-gray-500">
-                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">✓</span>
-                                <span>Layanan pelanggan responsif 24/7</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section id="produk" class="py-20 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h3 class="text-4xl font-bold text-gray-800 mb-4">Produk & Layanan Kami</h3>
-                    <p class="text-xl text-gray-600">Pilihan lengkap bahan bangunan berkualitas untuk proyek Anda</p>
-                </div>
-
-                @if ($products && $products->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        @foreach ($products as $product)
-                            <div class="group bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 overflow-hidden flex flex-col">
-                                <!-- Product Image -->
-                                <div class="relative h-64 bg-gray-50 overflow-hidden">
-                                    @if ($product->gambar)
-                                        <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                                    @else
-                                        <div class="w-full h-full flex flex-col items-center justify-center text-gray-300">
-                                            <svg class="w-20 h-20 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            <span class="text-xs font-bold uppercase tracking-widest">No Image</span>
-                                        </div>
-                                    @endif
-                                    
-                                    <!-- Price Tag -->
-                                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg border border-white/50">
-                                        <span class="text-blue-600 font-black text-lg">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
-                                        <span class="text-gray-400 text-[10px] font-bold uppercase">/ {{ $product->satuan ?? 'unit' }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Content -->
-                                <div class="p-8 flex-1 flex flex-col">
-                                    <h4 class="text-2xl font-black text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">{{ $product->nama }}</h4>
-                                    
-                                    <p class="text-gray-500 text-sm leading-relaxed mb-8 flex-1">
-                                        {{ $product->deskripsi ?? 'Deskripsi tidak tersedia untuk produk ini.' }}
-                                    </p>
-
-                                    <!-- Order Button -->
-                                    <a href="{{ route('login.user') }}" class="inline-flex items-center justify-center w-full py-4 bg-gray-900 text-white font-bold rounded-2xl hover:bg-blue-600 transform hover:-translate-y-1 transition-all duration-300 gap-2 group/btn shadow-lg shadow-gray-200">
-                                        Pesan Sekarang
-                                        <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                    </a>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-center py-12">
-                        <p class="text-gray-500 text-lg">Produk belum tersedia. Silakan kembali lagi nanti.</p>
-                    </div>
-                @endif
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer id="footer" class="bg-gray-900 text-gray-300" style="font-family: 'Inter', sans-serif;">
-            <!-- Top gradient accent -->
-            <div class="h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600"></div>
-
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-
-                    <!-- Kolom 1: Brand -->
-                    <div>
-                        <div class="flex items-center mb-5">
-                            <img src="{{ asset('images/colt.png') }}" alt="BPTrans Logo" class="h-12 w-12 object-contain mr-3 drop-shadow-lg">
-                            <div>
-                                <h5 class="text-white font-extrabold leading-tight tracking-tight"
-                                    style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35rem;">BPTrans</h5>
-                                <p class="text-blue-400 font-medium tracking-widest uppercase"
-                                   style="font-size: 0.65rem; letter-spacing: 0.1em;">Bahan Bangunan Terpercaya</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 leading-relaxed" style="font-size: 0.875rem; line-height: 1.75;">
-                            Distributor bahan bangunan berkualitas di Jepara dan sekitarnya. Berpengalaman 20+ tahun melayani kebutuhan konstruksi lokal dengan dedikasi tinggi dan harga kompetitif.
-                        </p>
-                        <div class="flex gap-3 mt-6">
-                            <a href="https://wa.me/+628587765358" target="_blank"
-                               class="w-10 h-10 rounded-full bg-gray-700 hover:bg-green-600 flex items-center justify-center transition duration-200"
-                               title="WhatsApp" style="font-size: 1rem;">
-                                📱
-                            </a>
-                            <a href="mailto:infobptrans@gmail.com"
-                               class="w-10 h-10 rounded-full bg-gray-700 hover:bg-blue-600 flex items-center justify-center transition duration-200"
-                               title="Email" style="font-size: 1rem;">
-                                ✉️
-                            </a>
-                            <a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank"
-                               class="w-10 h-10 rounded-full bg-gray-700 hover:bg-red-600 flex items-center justify-center transition duration-200"
-                               title="Lokasi" style="font-size: 1rem;">
-                                📍
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Kolom 2: Navigasi -->
-                    <div>
-                        <h5 class="text-white font-bold mb-5 pb-3 border-b border-gray-700"
-                            style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">
-                            Navigasi
-                        </h5>
-                        <ul class="space-y-3">
-                            <li>
-                                <a href="#home" class="text-gray-400 hover:text-blue-400 transition duration-200 flex items-center gap-2"
-                                   style="font-size: 0.9rem; font-weight: 400;">
-                                    <span class="text-blue-500 font-bold text-lg leading-none">›</span> Beranda
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#tentang" class="text-gray-400 hover:text-blue-400 transition duration-200 flex items-center gap-2"
-                                   style="font-size: 0.9rem; font-weight: 400;">
-                                    <span class="text-blue-500 font-bold text-lg leading-none">›</span> Tentang Kami
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#produk" class="text-gray-400 hover:text-blue-400 transition duration-200 flex items-center gap-2"
-                                   style="font-size: 0.9rem; font-weight: 400;">
-                                    <span class="text-blue-500 font-bold text-lg leading-none">›</span> Produk & Layanan
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#kontak" class="text-gray-400 hover:text-blue-400 transition duration-200 flex items-center gap-2"
-                                   style="font-size: 0.9rem; font-weight: 400;">
-                                    <span class="text-blue-500 font-bold text-lg leading-none">›</span> Kontak
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('login.user') }}" class="text-gray-400 hover:text-blue-400 transition duration-200 flex items-center gap-2"
-                                   style="font-size: 0.9rem; font-weight: 400;">
-                                    <span class="text-blue-500 font-bold text-lg leading-none">›</span> Login Member
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('login.admin') }}" class="text-gray-500 hover:text-red-400 transition duration-200 flex items-center gap-2 mt-4"
-                                   style="font-size: 0.8rem; font-weight: 400;">
-                                    <span class="text-gray-600 font-bold text-lg leading-none">›</span> Login Admin
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Kolom 3: Kontak -->
-                    <div>
-                        <h5 class="text-white font-bold mb-5 pb-3 border-b border-gray-700"
-                            style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;">
-                            Kontak Kami
-                        </h5>
-                        <ul class="space-y-5">
-                            <!-- Telepon -->
-                            <li>
-                                <a href="tel:+628587765358"
-                                   class="flex items-start gap-3 hover:text-blue-400 transition duration-200 group">
-                                    <span class="flex-shrink-0 leading-none" style="font-size: 1rem; margin-top: 2px;">📞</span>
-                                    <div>
-                                        <p class="text-gray-500 mb-1" style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;">Telepon / WhatsApp</p>
-                                        <span class="group-hover:text-blue-400 transition text-gray-200" style="font-size: 0.9rem; font-weight: 500; line-height: 1.4;">+62 858-7765-3585</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <!-- Email -->
-                            <li>
-                                <a href="mailto:infobptrans@gmail.com"
-                                   class="flex items-start gap-3 hover:text-blue-400 transition duration-200 group">
-                                    <span class="flex-shrink-0 leading-none" style="font-size: 1rem; margin-top: 2px;">✉️</span>
-                                    <div>
-                                        <p class="text-gray-500 mb-1" style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;">Email</p>
-                                        <span class="group-hover:text-blue-400 transition text-gray-200" style="font-size: 0.9rem; font-weight: 500; line-height: 1.4;">infobptrans@gmail.com</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <!-- Alamat -->
-                            <li>
-                                <a href="https://maps.app.goo.gl/RgmK5rZsd5Ce3RVz7" target="_blank"
-                                   class="flex items-start gap-3 hover:text-blue-400 transition duration-200 group">
-                                    <span class="flex-shrink-0 leading-none" style="font-size: 1rem; margin-top: 2px;">📍</span>
-                                    <div>
-                                        <p class="text-gray-500 mb-1" style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;">Alamat</p>
-                                        <span class="group-hover:text-blue-400 transition text-gray-200" style="font-size: 0.9rem; font-weight: 500; line-height: 1.7;">Dusun 2, Gemiring Kidul, Kec. Nalumsari, Kab. Jepara, Jawa Tengah 59466</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- Bottom bar -->
-                <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-                    <p class="text-gray-500 text-center md:text-left" style="font-size: 0.82rem;">
-                        &copy; {{ date('Y') }} <span class="text-gray-300 font-semibold">BPTrans</span>. Semua hak dilindungi.
-                    </p>
-                    <p class="text-gray-600" style="font-size: 0.75rem; letter-spacing: 0.03em;">
-                        Distributor Bahan Bangunan Terpercaya di Jepara
-                    </p>
-                </div>
-            </div>
-        </footer>
-        <script>
-            window.addEventListener('scroll', function() {
-                const nav = document.querySelector('nav');
-                if (window.scrollY > 50) {
-                    nav.classList.add('bg-white/90', 'shadow-md');
-                    nav.classList.remove('bg-white/70');
-                } else {
-                    nav.classList.add('bg-white/70');
-                    nav.classList.remove('bg-white/90', 'shadow-md');
-                }
-            });
-        </script>
-    </body>
-</html>
                     
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-display font-black text-slate-900 leading-tight">
+                        Membangun Fondasi, <br>
+                        <span class="text-indigo-600">Mengantar Solusi.</span>
+                    </h1>
+                    
+                    <p class="text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        Solusi pengadaan material konstruksi Grade A untuk proyek pembangunan Anda. Kami menjamin kualitas material terbaik dengan sistem logistik yang presisi dan cepat.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#produk" class="px-10 py-5 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all transform hover:-translate-y-1">
+                            Mulai Belanja Material
+                        </a>
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $no_whatsapp ?? '085877653585') }}" class="px-10 py-5 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all">
+                            Konsultasi WhatsApp
+                        </a>
+                    </div>
+
+                    <!-- Trust Bar -->
+                    <div class="flex flex-wrap justify-center lg:justify-start items-center gap-8 pt-10 border-t border-slate-100 mt-12">
+                        <div class="text-center lg:text-left">
+                            <p class="text-xl font-black text-slate-900 leading-none">10k+</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Customers</p>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <p class="text-xl font-black text-slate-900 leading-none">20+</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Experience</p>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <p class="text-xl font-black text-slate-900 leading-none">Jepara</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Region Hub</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual (Ultra Clean) -->
+                <div class="order-1 lg:order-2 relative px-10">
+                    <!-- Decorative Circle -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full aspect-square bg-indigo-600/5 rounded-full -z-10 border border-indigo-600/10"></div>
+                    
+                    <div class="relative transform hover:scale-105 transition-transform duration-700 ease-out">
+                        <img src="{{ asset('images/colt.png') }}" alt="BPTrans" class="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
+                        
+                        <!-- Mini Badges -->
+                        <div class="absolute top-0 right-0 bg-white p-4 rounded-2xl shadow-xl border border-slate-50 hidden md:block">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 bg-emerald-500 text-white rounded-lg flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-[10px] font-black text-slate-900 uppercase">Trusted Quality</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section (Tentang Kami) -->
+    <section id="tentang" class="py-32 bg-slate-50 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
+                <p class="text-indigo-600 font-black text-xs uppercase tracking-[0.3em]">Mengapa Memilih Kami</p>
+                <h2 class="text-4xl font-display font-black text-slate-900 leading-tight">Solusi Terbaik Untuk Kebutuhan Konstruksi Anda</h2>
+                <div class="w-20 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="group bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-100 transition-all duration-500 hover:-translate-y-2">
+                    <div class="h-16 w-16 bg-slate-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-4">Material Terlengkap</h3>
+                    <p class="text-slate-500 leading-relaxed">Dari pasir, batu pecah, hingga bata merah. Segala jenis material konstruksi tersedia dengan berbagai varian kualitas.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="group bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-100 transition-all duration-500 hover:-translate-y-2">
+                    <div class="h-16 w-16 bg-slate-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-4">Harga Kompetitif</h3>
+                    <p class="text-slate-500 leading-relaxed">Kami menjamin harga terbaik langsung dari sumbernya, memungkinkan efisiensi biaya proyek pembangunan Anda.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="group bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-100 transition-all duration-500 hover:-translate-y-2">
+                    <div class="h-16 w-16 bg-slate-50 text-amber-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-amber-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-4">Jangkauan Luas</h3>
+                    <p class="text-slate-500 leading-relaxed">Armada kami siap mengirimkan pesanan Anda ke seluruh wilayah Jepara dan sekitarnya dengan tepat waktu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Grid Section -->
+    <section id="produk" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div class="max-w-xl space-y-4">
+                    <p class="text-indigo-600 font-black text-xs uppercase tracking-[0.3em]">Katalog Material</p>
+                    <h2 class="text-4xl font-display font-black text-slate-900">Produk Unggulan Kami</h2>
+                </div>
+                <a href="{{ route('login.user') }}" class="inline-flex items-center gap-2 text-sm font-black text-indigo-600 uppercase tracking-widest hover:translate-x-2 transition-transform">
+                    Lihat Semua Produk
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                @forelse($products->take(6) as $product)
+                    <div class="group bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col">
+                        <div class="relative h-64 overflow-hidden bg-slate-50">
+                            @if($product->gambar)
+                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            @else
+                                <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
+                                    <svg class="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">No Image</span>
+                                </div>
+                            @endif
+                            <div class="absolute bottom-4 right-4 glass px-4 py-2 rounded-xl border border-white/50">
+                                <span class="text-indigo-600 font-black text-lg">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
+                                <span class="text-slate-400 text-[10px] font-bold">/ {{ $product->satuan ?? 'rit' }}</span>
+                            </div>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col">
+                            <h3 class="text-xl font-black text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">{{ $product->nama }}</h3>
+                            <p class="text-sm text-slate-500 line-clamp-2 mb-8 flex-1">{{ $product->deskripsi ?? 'Material konstruksi berkualitas tinggi untuk kebutuhan pembangunan Anda.' }}</p>
+                            <a href="{{ route('login.user') }}" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-center hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-slate-200">
+                                Pesan Sekarang
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <!-- Placeholder cards if no products -->
+                    <div class="col-span-full py-20 text-center">
+                        <p class="text-slate-400 italic">Belum ada produk untuk ditampilkan.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="kontak" class="bg-slate-900 text-slate-400 pt-24 pb-12 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-16 mb-20">
+                <!-- Brand -->
+                <div class="col-span-2 space-y-8">
+                    <a href="#" class="flex items-center gap-3">
+                        <div class="h-12 w-12 bg-white rounded-xl flex items-center justify-center overflow-hidden p-1">
+                            <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-full h-full object-contain">
+                        </div>
+                        <span class="text-2xl font-display font-black text-white tracking-tight uppercase italic">BPTrans</span>
+                    </a>
+                    <p class="text-lg leading-relaxed max-w-md">Distributor bahan bangunan terpercaya di Jepara dengan pengalaman lebih dari 20 tahun melayani kebutuhan konstruksi lokal.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-white hover:bg-indigo-600 transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                        <a href="#" class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-white hover:bg-pink-600 transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204 013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-8">Navigasi</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#home" class="hover:text-white transition-colors">Beranda</a></li>
+                        <li><a href="#produk" class="hover:text-white transition-colors">Katalog Produk</a></li>
+                        <li><a href="#tentang" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="{{ route('login.admin') }}" class="text-slate-600 hover:text-rose-500 transition-colors">Admin Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-8">Kontak</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="text-indigo-500">📍</span>
+                            <span class="text-sm">Gemiring Kidul, Kec. Nalumsari, Kab. Jepara, Jawa Tengah</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-indigo-500">📞</span>
+                            <span class="text-sm">+62 858-7765-3585</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-indigo-500">✉️</span>
+                            <span class="text-sm">infobptrans@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs">&copy; {{ date('Y') }} BPTrans Logistik & Material. Seluruh hak dilindungi.</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">Membangun Fondasi, Mengantar Solusi</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

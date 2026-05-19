@@ -9,8 +9,9 @@ class WorkerDashboard extends Dashboard
 {
     use WorkerAccess;
 
-    public function mount(string $worker = ''): void
+    public function mount(string $owner = '', string $worker = ''): void
     {
+        parent::mount($owner, $worker);
         if (!empty($worker)) {
             $this->worker = strtolower($worker);
             $this->ensureWorkerOnly();

@@ -9,8 +9,9 @@ class OwnerDashboard extends Dashboard
 {
     use OwnerAccess;
 
-    public function mount(string $owner = ''): void
+    public function mount(string $owner = '', string $worker = ''): void
     {
+        parent::mount($owner, $worker);
         if (!empty($owner)) {
             $this->owner = strtolower($owner);
             $this->readonly = true;

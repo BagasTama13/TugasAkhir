@@ -16,24 +16,41 @@ class Dashboard extends Component
 {
     use OwnerAccess;
 
-    public function mount(string $owner = ''): void
+    public string $panelPrefix = '';
+
+    public function mount(string $owner = '', string $worker = ''): void
     {
         $user = Auth::user();
         $username = strtolower($user->username ?? '');
 
-        // If owner parameter passed, this is for owner panel - redirect
-        if (!empty($owner)) {
+        // Calculate panel prefix based on segments
+        $segment1 = request()->segment(1);
+        $segment2 = request()->segment(2);
+        
+        if ($segment1 === 'owner') {
+            $this->panelPrefix = '/owner/' . $segment2;
+        } elseif ($segment1 === 'worker') {
+            $this->panelPrefix = '/worker/' . $segment2;
+        } else {
+            $this->panelPrefix = '';
+        }
+
+        // If owner parameter passed, this is for owner panel - redirect if not owner segment
+        if (!empty($owner) && $segment1 !== 'owner') {
             abort(403, 'Invalid access. Use owner panel instead.');
         }
 
-        // Block owner and worker users from admin panel
-        if (in_array($username, ['owner', 'worker'], true)) {
-            abort(403, 'Access denied. Use your designated panel.');
+        // Block unauthorized users (unless they match the segment)
+        if ($segment1 === 'owner' && $username !== 'owner' && $username !== 'admin') {
+            abort(403, 'Access denied.');
+        }
+        
+        if ($segment1 === 'worker' && $username !== 'worker' && $username !== 'admin') {
+            abort(403, 'Access denied.');
         }
 
-        // Only admin can access here
-        if ($username !== 'admin') {
-            abort(403, 'Unauthorized access.');
+        if (!$segment1 && $username !== 'admin') {
+            abort(403, 'Access denied. Use your designated panel.');
         }
     }
     #[Computed]
@@ -43,39 +60,27 @@ class Dashboard extends Component
     }
 
     #[Computed]
-    public function pesananPending()
+    public function pesananTertunda()
     {
-        return Pesanan::where('status', 'pending')->count();
+        return Pesanan::whereIn('status', ['pending', 'accepted'])->count();
     }
 
     #[Computed]
-    public function pesananAccepted()
-    {
-        return Pesanan::where('status', 'accepted')->count();
-    }
-
-    #[Computed]
-    public function pesananDelivered()
-    {
-        return Pesanan::where('status', 'delivered')->count();
-    }
-
-    #[Computed]
-    public function totalProduk()
+    public function totalEtalase()
     {
         return Produk::count();
     }
 
     #[Computed]
-    public function recentActivities()
+    public function totalUser()
     {
-        return Activity::with('user')->latest()->limit(5)->get();
+        return \App\Models\User::count();
     }
 
     #[Computed]
-    public function todayActivities()
+    public function recentActivities()
     {
-        return Activity::whereDate('created_at', today())->count();
+        return Activity::with('user')->latest()->limit(10)->get();
     }
 
     public function render()
