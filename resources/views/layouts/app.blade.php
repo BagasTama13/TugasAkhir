@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50/50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,10 @@
         @endphp
     </title>
 
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -32,7 +32,7 @@
         }
     </style>
 </head>
-<body class="h-full text-slate-900 antialiased overflow-hidden">
+<body class="h-full text-slate-900 antialiased overflow-hidden selection:bg-indigo-500 selection:text-white">
 
     <div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
         
@@ -59,22 +59,22 @@
 
         <!-- Mobile Sidebar -->
         <div x-show="sidebarOpen" x-cloak class="fixed inset-0 flex z-40 md:hidden">
-            <div @click="sidebarOpen = false" class="fixed inset-0 bg-slate-600 bg-opacity-75 transition-opacity"></div>
-            <div class="relative flex-1 flex flex-col max-w-xs w-full bg-slate-900 transition duration-300 transform">
+            <div @click="sidebarOpen = false" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"></div>
+            <div class="relative flex-1 flex flex-col max-w-xs w-full bg-slate-950 transition duration-300 transform">
                 <div class="absolute top-0 right-0 -mr-12 pt-2">
                     <button @click="sidebarOpen = false" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                         <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
                 <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                    <div class="flex-shrink-0 flex items-center px-4">
-                        <img class="h-8 w-auto" src="{{ asset('images/colt.png') }}" alt="BPTrans">
-                        <span class="ml-3 text-white text-lg font-bold tracking-tight">BPTRANS</span>
+                    <div class="flex-shrink-0 flex items-center px-6">
+                        <img class="h-9 w-auto" src="{{ asset('images/colt.png') }}" alt="BPTrans">
+                        <span class="ml-3 text-white text-xl font-display font-black tracking-widest uppercase italic">BPTRANS</span>
                     </div>
-                    <nav class="mt-5 px-2 space-y-1">
+                    <nav class="mt-6 px-4 space-y-1.5">
                         @foreach($navItems as $item)
-                            <a href="{{ $item['link'] }}" class="{{ $item['active'] ? 'bg-slate-800 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }} group flex items-center px-2 py-2 text-base font-medium rounded-md">
-                                <svg class="mr-4 h-6 w-6 text-slate-400 group-hover:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}" /></svg>
+                            <a href="{{ $item['link'] }}" class="{{ $item['active'] ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-400 hover:bg-slate-900 hover:text-white' }} group flex items-center px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-300">
+                                <svg class="mr-4 h-5 w-5 {{ $item['active'] ? 'text-white' : 'text-slate-500 group-hover:text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}" /></svg>
                                 {{ $item['name'] }}
                             </a>
                         @endforeach
@@ -85,28 +85,32 @@
 
         <!-- Desktop Sidebar -->
         <aside class="hidden md:flex md:flex-shrink-0">
-            <div class="flex flex-col w-64 bg-slate-900">
+            <div class="flex flex-col w-68 bg-slate-950 border-r border-slate-900">
                 <div class="flex flex-col h-0 flex-1">
-                    <div class="flex items-center h-16 flex-shrink-0 px-4 bg-slate-900 border-b border-slate-800">
-                        <img class="h-8 w-auto" src="{{ asset('images/colt.png') }}" alt="BPTrans">
-                        <span class="ml-3 text-white text-lg font-bold tracking-tight">BPTRANS</span>
+                    <div class="flex items-center h-20 flex-shrink-0 px-6 border-b border-slate-900 bg-slate-950">
+                        <div class="h-10 w-10 bg-white rounded-2xl flex items-center justify-center p-1.5 shadow-lg shadow-white/5">
+                            <img src="{{ asset('images/colt.png') }}" alt="BPTrans" class="w-full h-full object-contain">
+                        </div>
+                        <span class="ml-3 text-white text-xl font-display font-black tracking-widest uppercase italic bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">BPTRANS</span>
                     </div>
-                    <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+                    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-hide">
                         @foreach($navItems as $item)
-                            <a href="{{ $item['link'] }}" class="{{ $item['active'] ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all">
-                                <svg class="mr-3 h-5 w-5 {{ $item['active'] ? 'text-white' : 'text-slate-500 group-hover:text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}" /></svg>
+                            <a href="{{ $item['link'] }}" class="{{ $item['active'] ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-[1.02] premium-glow-active' : 'text-slate-400 hover:bg-slate-900/60 hover:text-white hover:scale-[1.01] active:scale-95' }} group flex items-center px-4 py-3.5 text-sm font-bold rounded-2xl transition-all duration-300">
+                                <svg class="mr-3 h-5 w-5 {{ $item['active'] ? 'text-white' : 'text-slate-500 group-hover:text-slate-400' }} transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}" /></svg>
                                 {{ $item['name'] }}
                             </a>
                         @endforeach
                     </nav>
-                    <div class="flex-shrink-0 flex bg-slate-800 p-4">
+                    <div class="flex-shrink-0 flex bg-slate-900/30 border-t border-slate-900 p-5">
                         <div class="flex items-center">
-                            <div class="inline-block h-9 w-9 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center text-white font-bold">
+                            <div class="inline-block h-10 w-10 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/10">
                                 {{ substr(auth()->user()->name, 0, 1) }}
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-white">{{ auth()->user()->name }}</p>
-                                <p class="text-xs font-medium text-slate-400 group-hover:text-slate-300">Operational</p>
+                                <p class="text-sm font-bold text-white leading-none">{{ auth()->user()->name }}</p>
+                                <span class="inline-block text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-md mt-1.5 border border-indigo-500/20 uppercase tracking-wider">
+                                    {{ $isOwner ? 'Owner' : ($isWorker ? 'Worker' : 'Administrator') }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -116,31 +120,36 @@
 
         <!-- Main Content Area -->
         <div class="flex flex-col w-0 flex-1 overflow-hidden">
-            <header class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow-sm border-b border-slate-200">
-                <button @click="sidebarOpen = true" class="px-4 border-r border-slate-200 text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden">
+            <header class="relative z-10 flex-shrink-0 flex h-20 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm">
+                <button @click="sidebarOpen = true" class="px-6 border-r border-slate-200 text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
-                <div class="flex-1 px-4 flex justify-between">
+                <div class="flex-1 px-6 flex justify-between">
                     <div class="flex-1 flex items-center">
-                        <span class="text-sm font-medium text-slate-500 italic">Membangun Fondasi, Mengantar Solusi</span>
+                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full border border-indigo-100/50">
+                            <span class="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                            Membangun Fondasi, Mengantar Solusi
+                        </span>
                     </div>
-                    <div class="ml-4 flex items-center md:ml-6 space-x-4">
-                        <div class="text-sm text-slate-500 font-medium">
+                    <div class="ml-4 flex items-center md:ml-6 space-x-6">
+                        <div class="text-sm font-bold text-slate-700 flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             {{ now()->translatedFormat('l, d F Y') }}
                         </div>
                         <div class="h-6 w-px bg-slate-200"></div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-sm font-medium text-rose-600 hover:text-rose-700 focus:outline-none">
-                                Sign Out
+                            <button type="submit" class="inline-flex items-center gap-2 text-sm font-bold text-rose-600 hover:text-rose-700 transition-colors bg-rose-50 hover:bg-rose-100/50 px-4 py-2 rounded-2xl border border-rose-100/30">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                Keluar
                             </button>
                         </form>
                     </div>
                 </div>
             </header>
 
-            <main class="flex-1 relative overflow-y-auto focus:outline-none bg-slate-50 p-6">
-                <div class="max-w-7xl mx-auto">
+            <main class="flex-1 relative overflow-y-auto focus:outline-none bg-slate-50/50 p-8">
+                <div class="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-500">
                     {{ $slot }}
                 </div>
             </main>

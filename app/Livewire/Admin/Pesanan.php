@@ -44,6 +44,7 @@ class Pesanan extends Component
     public $alamat_pengiriman = '';
     public $status = 'pending';
     public $description = '';
+    public $durasi = '';
     public $produk_id = null;
     public $no_whatsapp = '';
 
@@ -58,7 +59,7 @@ class Pesanan extends Component
             'alamat_pengiriman' => 'required|string|min:5',
             'status' => 'required|in:pending,accepted,rejected,delivered',
             'description' => 'nullable|string',
-            'produk_id' => 'required|exists:produks,id',
+            'durasi' => 'required_if:tipe,sewa|integer|min:1',
             'no_whatsapp' => 'required|string|min:10',
         ];
     }
@@ -66,7 +67,7 @@ class Pesanan extends Component
     #[Computed(cache: true)]
     public function produks()
     {
-        return \App\Models\Produk::select('id', 'nama')->get();
+        return \App\Models\Produk::select('id', 'nama', 'harga')->get();
     }
 
     #[Computed]
@@ -118,15 +119,15 @@ class Pesanan extends Component
         $this->jumlah = '';
         $this->alamat_penjemputan = '';
         $this->alamat_pengiriman = '';
-        $this->status = 'pending';
         $this->description = '';
+        $this->durasi = '';
         $this->produk_id = null;
         $this->no_whatsapp = '';
     }
 
     public function editPesanan($id)
     {
-        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description', 'produk_id', 'no_whatsapp'])->findOrFail($id);
+        $pesanan = PesananModel::select(['id', 'nomor', 'nama', 'tipe', 'jumlah', 'alamat_penjemputan', 'alamat_pengiriman', 'status', 'description', 'produk_id', 'no_whatsapp', 'durasi'])->findOrFail($id);
         $this->editingId = $id;
         $this->nomor = $pesanan->nomor;
         $this->nama = $pesanan->nama;
@@ -134,7 +135,7 @@ class Pesanan extends Component
         $this->jumlah = $pesanan->jumlah;
         $this->alamat_penjemputan = $pesanan->alamat_penjemputan;
         $this->alamat_pengiriman = $pesanan->alamat_pengiriman;
-        $this->status = $pesanan->status;
+        $this->durasi = $pesanan->durasi;
         $this->description = $pesanan->description;
         $this->produk_id = $pesanan->produk_id;
         $this->no_whatsapp = $pesanan->no_whatsapp;
@@ -158,9 +159,17 @@ class Pesanan extends Component
             'description' => $this->description,
             'produk_id' => $this->produk_id,
             'no_whatsapp' => $this->no_whatsapp,
-            'harga' => $produk->harga,
-            'total_harga' => $this->jumlah * $produk->harga,
+            'durasi' => $this->durasi,
         ];
+
+        if ($this->tipe === 'carter') {
+            $totalHarga = $this->calculateCarterPrice($this);
+        } elseif ($this->tipe === 'sewa') {
+            $totalHarga = $this->durasi * config('pricing.sewa_per_day', 300000);
+        } else {
+            $totalHarga = $this->jumlah * $produk->harga;
+        }
+        $data['total_harga'] = $totalHarga;
 
         if ($this->editingId) {
             $pesanan = PesananModel::findOrFail($this->editingId);
@@ -233,13 +242,15 @@ class Pesanan extends Component
         
         $pesanan->update(['status' => 'delivered']);
 
-        // Calculate total price: quantity * product price
-        $totalHarga = 0;
-        if ($pesanan->produk) {
-            $totalHarga = $pesanan->jumlah * $pesanan->produk->harga;
+        // Calculate total price based on tipe
+        if ($pesanan->tipe === 'carter') {
+            $totalHarga = $this->calculateCarterPrice($pesanan);
+        } elseif ($pesanan->tipe === 'sewa') {
+            $totalHarga = $pesanan->durasi * config('pricing.sewa_per_day', 300000);
+        } else {
+            $totalHarga = $pesanan->jumlah * ($pesanan->produk->harga ?? 0);
         }
 
-        // Create Pemasukan entry automatically
         Pemasukan::create([
             'tanggal' => today(),
             'jumlah' => $totalHarga,
@@ -259,6 +270,35 @@ class Pesanan extends Component
         
         $this->invalidatePesananCache();
         session()->flash('success', 'Pesanan ditandai terkirim & data pemasukan dicatat!');
+    }
+
+    private function calculateCarterPrice($pesanan)
+    {
+        // Placeholder distance calculation. In production, integrate with a geolocation API.
+        $distanceKm = $this->getDistanceInKm($pesanan->alamat_penjemputan, $pesanan->alamat_pengiriman);
+        $basePrice = 100000;
+        if ($distanceKm <= 20) {
+            return $basePrice;
+        }
+        $extraKm = $distanceKm - 20;
+        return $basePrice + ($extraKm * 20000);
+    }
+
+    private function getDistanceInKm($origin, $destination)
+    {
+        // Simple Haversine formula assuming coordinates are provided as "lat,lon" strings.
+        // For addresses, this should be replaced with a geocoding service.
+        $originParts = explode(',', $origin);
+        $destParts = explode(',', $destination);
+        if (count($originParts) < 2 || count($destParts) < 2) return 0;
+        [$lat1, $lon1] = array_map('floatval', $originParts);
+        [$lat2, $lon2] = array_map('floatval', $destParts);
+        $earthRadius = 6371; // km
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon/2) * sin($dLon/2);
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+        return $earthRadius * $c;
     }
 
     public function deletePesanan($id)
