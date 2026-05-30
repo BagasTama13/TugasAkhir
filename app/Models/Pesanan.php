@@ -20,6 +20,7 @@ class Pesanan extends Model
         'harga',
         'total_harga',
         'catatan',
+        'durasi',
         'no_whatsapp',
     ];
 

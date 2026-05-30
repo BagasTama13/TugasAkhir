@@ -8,7 +8,13 @@
         font-family: 'Outfit', 'Inter', sans-serif;
     }
 
-    h1, h2, h3, h4, h5, h6, .font-display {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .font-display {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 }
@@ -18,12 +24,12 @@
         @apply bg-white border border-slate-100 rounded-3xl transition-all duration-300;
         box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
     }
-    
+
     .card-standard:hover {
         box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.08);
         @apply border-indigo-100;
     }
-    
+
     .btn-primary {
         @apply bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 transition-all duration-300 px-6 py-2.5 rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:shadow-indigo-200/50 flex items-center justify-center gap-2;
     }
@@ -84,10 +90,13 @@
 
 /* Keyframe Animations */
 @keyframes pulse-glow {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0.6;
         transform: scale(1);
     }
+
     50% {
         opacity: 1;
         transform: scale(1.05);
@@ -97,4 +106,3 @@
 .animate-pulse-glow {
     animation: pulse-glow 3s infinite ease-in-out;
 }
-

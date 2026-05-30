@@ -15,32 +15,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin BPTrans',
+        $admin = User::updateOrCreate([
             'username' => 'Admin',
+        ], [
+            'name' => 'Admin BPTrans',
             'email' => 'admin@bptrans.com',
             'password' => bcrypt('BPTrans'),
         ]);
 
-        User::create([
-            'name' => 'Owner Satu',
-            'username' => 'owner1',
-            'email' => 'owner1@bptrans.com',
-            'password' => bcrypt('Owner123'),
+        if (! $admin->hasVerifiedEmail()) {
+            $admin->markEmailAsVerified();
+        }
+
+        $owner = User::updateOrCreate([
+            'username' => 'owner',
+        ], [
+            'name' => 'Owner BPTrans',
+            'email' => 'owner@bptrans.com',
+            'password' => bcrypt('bptrans'),
         ]);
 
-        User::create([
-            'name' => 'Owner Dua',
-            'username' => 'owner2',
-            'email' => 'owner2@bptrans.com',
-            'password' => bcrypt('Owner123'),
+        if (! $owner->hasVerifiedEmail()) {
+            $owner->markEmailAsVerified();
+        }
+
+        $worker = User::updateOrCreate([
+            'username' => 'worker',
+        ], [
+            'name' => 'Worker BPTrans',
+            'email' => 'worker@bptrans.com',
+            'password' => bcrypt('bptrans'),
         ]);
 
-        User::create([
-            'name' => 'Owner Tiga',
-            'username' => 'owner3',
-            'email' => 'owner3@bptrans.com',
-            'password' => bcrypt('Owner123'),
-        ]);
+        if (! $worker->hasVerifiedEmail()) {
+            $worker->markEmailAsVerified();
+        }
     }
 }

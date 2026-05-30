@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Livewire\Admin\Activity;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Etalase;
@@ -52,7 +53,7 @@ Route::get('/', function () {
     return view('welcome', ['products' => $products]);
 })->name('welcome');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/pesanan', Pesanan::class)->name('pesanan');
     Route::get('/pemasukan', Pemasukan::class)->name('pemasukan');
@@ -60,9 +61,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/activity', Activity::class)->name('activity');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 Route::pattern('owner', 'owner[0-9]*');
 
-Route::middleware('auth')->prefix('owner/{owner}')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('owner/{owner}')->group(function () {
     Route::get('/', function () {
         return redirect()->route('owner.dashboard', ['owner' => request()->route('owner')]);
     });
@@ -76,7 +83,7 @@ Route::middleware('auth')->prefix('owner/{owner}')->group(function () {
 
 Route::pattern('worker', 'worker[0-9]*');
 
-Route::middleware('auth')->prefix('worker/{worker}')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('worker/{worker}')->group(function () {
     Route::get('/', function () {
         return redirect()->route('worker.dashboard', ['worker' => request()->route('worker')]);
     });
@@ -87,7 +94,7 @@ Route::middleware('auth')->prefix('worker/{worker}')->group(function () {
 });
 
 // User Panel Routes
-Route::middleware('auth')->prefix('user')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('user')->group(function () {
     Route::get('/', function () {
         return redirect()->route('user.dashboard');
     });

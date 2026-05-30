@@ -55,6 +55,14 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (! $user->hasVerifiedEmail()) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'name' => __('Please verify your email address before logging in.'),
+            ]);
+        }
+
         // Manually authenticate the user
         Auth::login($user, $this->boolean('remember'));
         RateLimiter::clear($this->throttleKey());

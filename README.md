@@ -54,6 +54,28 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## Local Mail Setup
+
+For local development, use Gmail SMTP in your `.env` file:
+
+```env
+MAIL_MAILER=smtp
+MAIL_SCHEME=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your@gmail.com
+MAIL_PASSWORD=your_google_app_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="no-reply@yourdomain.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+Google requires an App Password with 2FA enabled:
+
+- enable 2-step verification on your Google account
+- generate an App Password at `https://myaccount.google.com/apppasswords`
+- set `MAIL_USERNAME` to your Gmail address and `MAIL_PASSWORD` to the app password
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
