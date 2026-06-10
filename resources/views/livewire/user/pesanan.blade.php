@@ -64,16 +64,18 @@
                                 @php
                                     $statusStyles = [
                                         'pending' => 'bg-amber-50 text-amber-600 border-amber-100',
-                                        'accepted' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                                        'accepted' => 'bg-blue-50 text-blue-600 border-blue-100',
                                         'rejected' => 'bg-rose-50 text-rose-600 border-rose-100',
-                                        'delivered' => 'bg-indigo-50 text-indigo-600 border-indigo-100',
+                                        'perlu_dibayar' => 'bg-orange-50 text-orange-600 border-orange-100',
+                                        'terbayar' => 'bg-emerald-50 text-emerald-600 border-emerald-100',
                                     ][$pesanan->status] ?? 'bg-slate-50 text-slate-600 border-slate-100';
 
                                     $statusLabels = [
-                                        'pending' => 'Menunggu',
-                                        'accepted' => 'Pesanan Diterima',
+                                        'pending' => 'Menunggu Konfirmasi',
+                                        'accepted' => 'Diproses',
                                         'rejected' => 'Ditolak',
-                                        'delivered' => 'Pesanan Terkirim',
+                                        'perlu_dibayar' => 'Perlu Dibayar',
+                                        'terbayar' => 'Selesai / Terbayar',
                                     ];
                                     $statusLabel = $statusLabels[$pesanan->status] ?? $pesanan->status;
                                 @endphp
@@ -121,10 +123,11 @@
                             <span class="h-2 w-2 rounded-full bg-emerald-400 mr-2"></span>
                             @php
                                 $modalStatusLabels = [
-                                    'pending' => 'Menunggu',
-                                    'accepted' => 'Pesanan Diterima',
+                                    'pending' => 'Menunggu Konfirmasi',
+                                    'accepted' => 'Diproses',
                                     'rejected' => 'Ditolak',
-                                    'delivered' => 'Pesanan Terkirim',
+                                    'perlu_dibayar' => 'Perlu Dibayar',
+                                    'terbayar' => 'Selesai / Terbayar',
                                 ];
                                 $modalStatusLabel = $modalStatusLabels[$this->selectedPesanan->status] ?? $this->selectedPesanan->status;
                             @endphp

@@ -11,8 +11,7 @@ use App\Models\Produk;
 #[Layout('layouts.user')]
 class UserDashboard extends Component
 {
-    public string $search = '';
-    public string $category = 'semua';
+    public string $category = 'all';
 
     public function mount(): void
     {
@@ -29,10 +28,6 @@ class UserDashboard extends Component
     public function products()
     {
         return Produk::query()
-            ->when($this->search, function ($query) {
-                $query->where('nama', 'like', '%' . $this->search . '%')
-                      ->orWhere('deskripsi', 'like', '%' . $this->search . '%');
-            })
             ->get()
             ->groupBy(function ($item) {
                 return trim(strtolower($item->nama));
@@ -50,8 +45,20 @@ class UserDashboard extends Component
             })
             ->flatten(1)
             ->filter(function ($item) {
-                if ($this->category === 'semua') return true;
-                return str_contains(strtolower($item->nama), $this->category);
+                // Custom filter based on selected category
+                if ($this->category === 'bahan_bakar') {
+                    $allowed = ['kayu', 'kayu bakar', 'serbuk gergaji'];
+                    return in_array(strtolower($item->nama), $allowed);
+                }
+                if ($this->category === 'sewa_mobil') {
+                    return str_contains(strtolower($item->nama), 'sewa');
+                }
+                if ($this->category === 'bahan_bangunan') {
+                    $allowed = ['genteng', 'batu bata'];
+                    return in_array(strtolower($item->nama), $allowed);
+                }
+                // Default: show all
+                return true;
             })
             ->values()
             ->sortBy('nama')

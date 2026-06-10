@@ -44,7 +44,8 @@ class WorkerPesanan extends Pesanan
     // Workers can reject orders if needed
     // public function rejectPesanan($id) - allow inherited
 
-    // Workers can accept and mark as delivered
+    // Workers can accept, mark as delivered (perlu dibayar), and mark as paid (terbayar)
     // public function acceptPesanan($id) - allow inherited
-    // public function markDelivered($id) - allow inherited
+    // public function markPerluDibayar($id) - allow inherited
+    // public function markTerbayar($id) - allow inherited
 }

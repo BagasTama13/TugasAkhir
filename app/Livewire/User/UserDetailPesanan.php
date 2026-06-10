@@ -19,6 +19,10 @@ class UserDetailPesanan extends Component
     public $alamat = '';
     public $catatan = '';
     public $no_whatsapp = '';
+    public $latitude = '';
+    public $longitude = '';
+    public $jarak = 0;
+    public $ongkos_kirim = 0;
 
     protected $rules = [
         'nama_pembeli' => 'required|string|min:3',
@@ -90,9 +94,35 @@ class UserDetailPesanan extends Component
         $this->selectedProdukId = (int) $id;
     }
 
+    public function updatedJarak(): void
+    {
+        $this->calculateShippingFee();
+    }
+
+    public function calculateShippingFee(): void
+    {
+        if ($this->jarak <= 0) {
+            $this->ongkos_kirim = 0;
+            return;
+        }
+
+        // Formula: Base Rp 15,000 for the first 3 km + Rp 5,000 per km after 3 km
+        $baseDistance = 3; // km
+        $basePrice = 15000;
+        $perKmPrice = 5000;
+
+        if ($this->jarak <= $baseDistance) {
+            $this->ongkos_kirim = $basePrice;
+        } else {
+            $extraDistance = $this->jarak - $baseDistance;
+            $this->ongkos_kirim = $basePrice + (int) ceil($extraDistance * $perKmPrice);
+        }
+    }
+
     public function kirimPesanan()
     {
         $this->validate();
+        $this->calculateShippingFee();
 
         $produk = Produk::findOrFail($this->selectedProdukId);
         $nomor = 'USR-' . strtoupper(uniqid());
@@ -102,14 +132,14 @@ class UserDetailPesanan extends Component
             'nama' => $this->nama_pembeli,
             'tipe' => $produk->jenis,
             'jumlah' => $this->jumlah,
-            'alamat_penjemputan' => '-',
+            'alamat_penjemputan' => $this->latitude && $this->longitude ? "{$this->latitude},{$this->longitude}" : '-',
             'alamat_pengiriman' => $this->alamat,
             'status' => 'pending',
-            'description' => "Produk: {$produk->nama} ({$produk->jenis})",
+            'description' => "Produk: {$produk->nama} ({$produk->jenis}) | Jarak: {$this->jarak} km | Ongkir: Rp" . number_format($this->ongkos_kirim, 0, ',', '.'),
             'user_id' => Auth::id(),
             'produk_id' => $produk->id,
             'harga' => $produk->harga,
-            'total_harga' => $this->jumlah * $produk->harga,
+            'total_harga' => ($this->jumlah * $produk->harga) + $this->ongkos_kirim,
             'catatan' => $this->catatan,
             'no_whatsapp' => $this->no_whatsapp,
         ]);

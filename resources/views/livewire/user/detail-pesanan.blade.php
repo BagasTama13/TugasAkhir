@@ -72,30 +72,17 @@
                         </div>
 
                         <!-- Logistics -->
-                        <div class="space-y-6">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Logistik & Lokasi</label>
-                            
-                            <!-- Search & Map -->
-                            <div class="space-y-4" wire:ignore>
-                                <div class="relative group">
-                                    <div class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                    </div>
-                                    <input type="text" id="map-search" class="w-full pl-14 pr-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white shadow-sm" placeholder="Cari alamat atau pin di peta...">
-                                </div>
-
-                                <div id="map-container" class="w-full h-80 rounded-[2.5rem] border-8 border-slate-50 shadow-inner overflow-hidden relative z-0">
-                                    <div id="map" class="w-full h-full"></div>
-                                    <div id="map-placeholder" class="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-500">
-                                        <div class="w-10 h-10 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Menyiapkan Navigasi...</p>
-                                    </div>
-                                </div>
-
-                                <textarea id="alamat-textarea" wire:model="alamat" rows="3" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white" placeholder="Ketik alamat pengiriman lengkap Anda di sini..."></textarea>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Alamat Pengiriman</label>
+                            </div>
+                            <!-- Manual Address Input -->
+                            <div class="space-y-4">
+                                <textarea wire:model="alamat" rows="4" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white shadow-sm" placeholder="Masukkan alamat pengiriman lengkap (jalan, nomor rumah, RT/RW, kecamatan, kabupaten/kota)..."></textarea>
                             </div>
                             @error('alamat') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
+
 
                         <!-- WhatsApp -->
                         <div class="bg-emerald-50/50 p-8 rounded-[2.5rem] border border-emerald-100/50 space-y-4">
@@ -143,10 +130,24 @@
                                         <span class="font-bold text-slate-400 uppercase tracking-widest">Jumlah</span>
                                         <span class="font-black text-slate-900">{{ number_format((float)($jumlah ?: 0)) }} {{ $this->selectedProduk?->satuan ?? 'unit' }}</span>
                                     </div>
+                                    <div class="flex justify-between items-center text-xs pt-2 border-t border-dashed border-slate-100">
+                                        <span class="font-bold text-slate-400 uppercase tracking-widest">Total Material</span>
+                                        <span class="font-bold text-slate-700">Rp{{ number_format(($this->selectedProduk?->harga ?? 0) * (float)($jumlah ?: 0), 0, ',', '.') }}</span>
+                                    </div>
+                                    @if($jarak)
+                                        <div class="flex justify-between items-center text-xs">
+                                            <span class="font-bold text-slate-400 uppercase tracking-widest">Jarak</span>
+                                            <span class="font-bold text-slate-700">{{ $jarak }} km</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs">
+                                            <span class="font-bold text-slate-400 uppercase tracking-widest">Ongkos Kirim</span>
+                                            <span class="font-bold text-emerald-600">Rp{{ number_format($ongkos_kirim, 0, ',', '.') }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="pt-6 border-t border-slate-100 flex flex-col items-center text-center">
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Total Estimasi</span>
-                                    <p class="text-3xl font-black text-indigo-600">Rp{{ number_format(($this->selectedProduk?->harga ?? 0) * (float)($jumlah ?: 0), 0, ',', '.') }}</p>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Total Estimasi Pembayaran</span>
+                                    <p class="text-3xl font-black text-indigo-600">Rp{{ number_format((($this->selectedProduk?->harga ?? 0) * (float)($jumlah ?: 0)) + $ongkos_kirim, 0, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +156,7 @@
                         <div class="bg-indigo-600 rounded-3xl p-8 text-white shadow-xl shadow-indigo-100">
                             <svg class="w-8 h-8 mb-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <h5 class="text-lg font-bold mb-2">Bantuan Cepat</h5>
-                            <p class="text-xs text-indigo-100 leading-relaxed font-medium">Jika Anda mengalami kendala saat mengisi alamat di peta, pastikan izin lokasi browser Anda sudah aktif atau gunakan fitur pencarian alamat.</p>
+                            <p class="text-xs text-indigo-100 leading-relaxed font-medium">Tuliskan alamat pengiriman Anda selengkap mungkin (termasuk kelurahan, kecamatan, nomor rumah, atau patokan jalan) untuk memudahkan verifikasi pesanan oleh admin kami.</p>
                         </div>
                     </div>
                 </div>
@@ -163,99 +164,4 @@
         </div>
     </div>
 
-    <!-- Google Maps Scripts -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places" async defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let map, marker, autocomplete, geocoder;
-            const defaultLocation = { lat: -6.65, lng: 110.75 };
-
-            function initMap() {
-                if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                    console.error('Google Maps API not loaded.');
-                    return;
-                }
-                
-                const placeholder = document.getElementById('map-placeholder');
-                if (placeholder) {
-                    placeholder.style.opacity = '0';
-                    setTimeout(() => placeholder.style.display = 'none', 500);
-                }
-
-                geocoder = new google.maps.Geocoder();
-                
-                const mapEl = document.getElementById('map');
-                if (mapEl) {
-                    map = new google.maps.Map(mapEl, {
-                        center: defaultLocation,
-                        zoom: 13,
-                        mapTypeControl: false,
-                        streetViewControl: false,
-                        fullscreenControl: false,
-                        styles: [
-                            { "featureType": "poi", "stylers": [{ "visibility": "off" }] },
-                            { "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#444444" }] },
-                            { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#cce3f5" }, { "visibility": "on" }] }
-                        ]
-                    });
-
-                    marker = new google.maps.Marker({
-                        map: map,
-                        draggable: true,
-                        position: defaultLocation,
-                        icon: {
-                            url: 'https://maps.google.com/mapfiles/ms/icons/indigo-dot.png'
-                        }
-                    });
-
-                    map.addListener('click', function(event) {
-                        marker.setPosition(event.latLng);
-                        getAddressFromLatLng(event.latLng);
-                    });
-
-                    marker.addListener('dragend', function(event) {
-                        getAddressFromLatLng(event.latLng);
-                    });
-                }
-
-                const input = document.getElementById('map-search');
-                if (input && typeof google.maps.places !== 'undefined') {
-                    autocomplete = new google.maps.places.Autocomplete(input);
-                    autocomplete.bindTo('bounds', map);
-
-                    autocomplete.addListener('place_changed', function() {
-                        const place = autocomplete.getPlace();
-                        if (!place.geometry) return;
-                        if (place.geometry.viewport) { map.fitBounds(place.geometry.viewport); } 
-                        else { map.setCenter(place.geometry.location); map.setZoom(17); }
-                        marker.setPosition(place.geometry.location);
-                        updateAddress(place.geometry.location, place.formatted_address);
-                    });
-                }
-            }
-
-            function getAddressFromLatLng(latLng) {
-                if (!geocoder) return;
-                geocoder.geocode({ 'location': latLng }, function(results, status) {
-                    if (status === 'OK' && results[0]) {
-                        updateAddress(latLng, results[0].formatted_address);
-                    }
-                });
-            }
-
-            function updateAddress(latLng, address) {
-                const textarea = document.getElementById('alamat-textarea');
-                textarea.value = address;
-                @this.set('alamat', address);
-                document.getElementById('map-search').value = address;
-            }
-
-            if (typeof google !== 'undefined') { initMap(); } 
-            else {
-                const checkGoogle = setInterval(() => {
-                    if (typeof google !== 'undefined') { initMap(); clearInterval(checkGoogle); }
-                }, 500);
-            }
-        });
-    </script>
 </div>

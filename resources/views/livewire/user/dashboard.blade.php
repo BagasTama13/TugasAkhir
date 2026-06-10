@@ -13,22 +13,23 @@
         </div>
     </div>
 
-    <!-- Simple Search & Filter -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-4 items-center">
-        <div class="relative flex-1 w-full">
-            <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari material (contoh: Pasir, Batu)..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            </div>
-        </div>
-        <div class="flex flex-wrap gap-2">
-            @foreach(['semua' => 'Semua', 'batu' => 'Batu', 'pasir' => 'Pasir', 'kayu' => 'Kayu'] as $key => $label)
-                <button wire:click="$set('category', '{{ $key }}')" class="px-4 py-2 text-xs font-semibold rounded-lg border {{ $category === $key ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50' }} transition-all">
-                    {{ $label }}
-                </button>
-            @endforeach
-        </div>
+<!-- Simple Search & Filter -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-4 items-center">
+    <div class="flex flex-wrap gap-2">
+        <button wire:click="$set('category','all')" class="px-4 py-2 text-xs font-semibold rounded-lg border {{ $category === 'all' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50' }} transition-all">
+            Semua
+        </button>
+        <button wire:click="$set('category','bahan_bakar')" class="px-4 py-2 text-xs font-semibold rounded-lg border {{ $category === 'bahan_bakar' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50' }} transition-all">
+            Bahan Bakar
+        </button>
+        <button wire:click="$set('category','sewa_mobil')" class="px-4 py-2 text-xs font-semibold rounded-lg border {{ $category === 'sewa_mobil' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50' }} transition-all">
+            Sewa Mobil
+        </button>
+        <button wire:click="$set('category','bahan_bangunan')" class="px-4 py-2 text-xs font-semibold rounded-lg border {{ $category === 'bahan_bangunan' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50' }} transition-all">
+            Bahan Bangunan
+        </button>
     </div>
+</div>
 
     <!-- Product Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -43,7 +44,7 @@
                         </div>
                     @endif
                     <div class="absolute bottom-2 right-2 bg-indigo-600 text-white px-2 py-1 rounded text-sm font-bold shadow-sm">
-                        Rp {{ number_format($etalase->harga, 0, ',', '.') }}
+                        Rp {{ number_format($etalase->harga, 0, ',', '.') }}/{{ $etalase->satuan }}
                     </div>
                 </div>
                 <div class="p-4 flex-1 flex flex-col">

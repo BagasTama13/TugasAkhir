@@ -58,9 +58,14 @@ class OwnerPesanan extends Pesanan
         abort(403, 'Owner users cannot reject pesanan.');
     }
 
-    public function markDelivered($id)
+    public function markPerluDibayar($id)
     {
-        abort(403, 'Owner users cannot update pesanan status.');
+        abort(403, 'Owner users cannot mark pesanan as delivered.');
+    }
+
+    public function markTerbayar($id)
+    {
+        return parent::markTerbayar($id);
     }
 
     public function deletePesanan($id)

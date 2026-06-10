@@ -33,4 +33,9 @@ class Pesanan extends Model
     {
         return $this->belongsTo(Produk::class);
     }
+
+    public function pemasukan()
+    {
+        return $this->hasOne(Pemasukan::class);
+    }
 }

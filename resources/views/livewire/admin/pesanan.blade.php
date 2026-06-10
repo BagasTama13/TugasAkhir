@@ -28,7 +28,7 @@
     </div>
 
     <!-- Quick Stats Grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Pesanan</p>
             <p class="text-2xl font-bold text-slate-900 mt-1">{{ $this->pesanans->count() }}</p>
@@ -37,13 +37,17 @@
             <p class="text-[10px] font-bold text-amber-500 uppercase tracking-widest">Menunggu</p>
             <p class="text-2xl font-bold text-slate-900 mt-1">{{ $this->pesanans->where('status', 'pending')->count() }}</p>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
-            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Diterima</p>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-indigo-500">
+            <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">Diproses</p>
             <p class="text-2xl font-bold text-slate-900 mt-1">{{ $this->pesanans->where('status', 'accepted')->count() }}</p>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-blue-500">
-            <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Terkirim</p>
-            <p class="text-2xl font-bold text-slate-900 mt-1">{{ $this->pesanans->where('status', 'delivered')->count() }}</p>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-orange-500">
+            <p class="text-[10px] font-bold text-orange-500 uppercase tracking-widest">Perlu Dibayar</p>
+            <p class="text-2xl font-bold text-slate-900 mt-1">{{ $this->pesanans->where('status', 'perlu_dibayar')->count() }}</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
+            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Terbayar</p>
+            <p class="text-2xl font-bold text-slate-900 mt-1">{{ $this->pesanans->where('status', 'terbayar')->count() }}</p>
         </div>
     </div>
 
@@ -153,9 +157,10 @@
                                 @php
                                     $statusMap = [
                                         'pending' => ['label' => 'Menunggu', 'class' => 'bg-amber-100 text-amber-700 border-amber-200'],
-                                        'accepted' => ['label' => 'Diterima', 'class' => 'bg-emerald-100 text-emerald-700 border-emerald-200'],
+                                        'accepted' => ['label' => 'Diproses', 'class' => 'bg-indigo-100 text-indigo-700 border-indigo-200'],
                                         'rejected' => ['label' => 'Ditolak', 'class' => 'bg-rose-100 text-rose-700 border-rose-200'],
-                                        'delivered' => ['label' => 'Terkirim', 'class' => 'bg-blue-100 text-blue-700 border-blue-200'],
+                                        'perlu_dibayar' => ['label' => 'Perlu Dibayar', 'class' => 'bg-orange-100 text-orange-700 border-orange-200'],
+                                        'terbayar' => ['label' => 'Terbayar', 'class' => 'bg-emerald-100 text-emerald-700 border-emerald-200'],
                                     ];
                                     $currentStatus = $statusMap[$pesanan->status] ?? ['label' => $pesanan->status, 'class' => 'bg-slate-100 text-slate-600 border-slate-200'];
                                 @endphp
@@ -165,7 +170,27 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex justify-center items-center gap-2">
-                                    @if(!$this->readonly && !isset($isWorkerView))
+                                    @if(isset($isOwnerView))
+                                        {{-- Owner Actions --}}
+                                        @if($pesanan->status === 'perlu_dibayar')
+                                            <button type="button" wire:click="markTerbayar({{ $pesanan->id }})" wire:key="btn-bayar-owner-{{ $pesanan->id }}" class="px-4 py-1.5 bg-emerald-600 text-white text-[10px] font-bold rounded-lg hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-sm">Bayar</button>
+                                        @elseif($pesanan->status === 'terbayar')
+                                            <span class="text-[10px] font-black text-emerald-600 uppercase italic tracking-wider">Lunas</span>
+                                        @else
+                                            <span class="text-[10px] font-black text-slate-400 uppercase italic tracking-wider">Hanya Baca</span>
+                                        @endif
+                                    @elseif(isset($isWorkerView))
+                                        {{-- Worker Actions --}}
+                                        @if($pesanan->status === 'accepted')
+                                            <button type="button" wire:click="markPerluDibayar({{ $pesanan->id }})" wire:key="btn-kirim-worker-{{ $pesanan->id }}" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-sm">Kirim</button>
+                                        @elseif($pesanan->status === 'perlu_dibayar')
+                                            <button type="button" wire:click="markTerbayar({{ $pesanan->id }})" wire:key="btn-bayar-worker-{{ $pesanan->id }}" class="px-4 py-1.5 bg-emerald-600 text-white text-[10px] font-bold rounded-lg hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-sm">Bayar</button>
+                                        @elseif($pesanan->status === 'terbayar')
+                                            <span class="text-[10px] font-black text-emerald-600 uppercase italic tracking-wider">Lunas</span>
+                                        @else
+                                            <span class="text-[10px] font-black text-slate-400 uppercase italic tracking-wider">Proses</span>
+                                        @endif
+                                    @else
                                         {{-- Admin Actions --}}
                                         @if($pesanan->status === 'pending')
                                             <button type="button" title="Terima Pesanan" wire:click="acceptPesanan({{ $pesanan->id }})" wire:key="btn-accept-{{ $pesanan->id }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-sm border border-emerald-100 group">
@@ -174,16 +199,15 @@
                                             <button type="button" title="Tolak Pesanan" wire:click="rejectPesanan({{ $pesanan->id }})" wire:key="btn-reject-{{ $pesanan->id }}" class="p-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100 group">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
-                                        @endif
-                                    @elseif(isset($isWorkerView))
-                                        {{-- Worker Actions --}}
-                                        @if($pesanan->status === 'accepted')
-                                            <button type="button" wire:click="markDelivered({{ $pesanan->id }})" wire:key="btn-kirim-{{ $pesanan->id }}" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-sm">Kirim</button>
+                                        @elseif($pesanan->status === 'accepted')
+                                            <button type="button" wire:click="markPerluDibayar({{ $pesanan->id }})" wire:key="btn-kirim-admin-{{ $pesanan->id }}" class="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-all uppercase tracking-widest shadow-sm">Kirim</button>
+                                        @elseif($pesanan->status === 'perlu_dibayar')
+                                            <button type="button" wire:click="markTerbayar({{ $pesanan->id }})" wire:key="btn-bayar-admin-{{ $pesanan->id }}" class="px-4 py-1.5 bg-emerald-600 text-white text-[10px] font-bold rounded-lg hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-sm">Bayar</button>
+                                        @elseif($pesanan->status === 'terbayar')
+                                            <span class="text-[10px] font-black text-emerald-600 uppercase italic tracking-wider">Lunas</span>
                                         @else
                                             <span class="text-[10px] font-black text-slate-400 uppercase italic tracking-wider">Selesai</span>
                                         @endif
-                                    @else
-                                        <span class="text-[10px] font-black text-slate-400 uppercase italic tracking-wider">Hanya Baca</span>
                                     @endif
                                 </div>
                             </td>
@@ -198,7 +222,7 @@
         </div>
         <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex items-center gap-2">
             <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <p class="text-[10px] text-slate-400 font-medium italic">Pesanan yang sudah terkirim akan otomatis dicatat dalam Laporan Pemasukan.</p>
+            <p class="text-[10px] text-slate-400 font-medium italic">Pesanan yang sudah terbayar akan otomatis dicatat & ditambahkan ke laporan pemasukan.</p>
         </div>
     </div>
 </div>

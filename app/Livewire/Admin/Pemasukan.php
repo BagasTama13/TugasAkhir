@@ -84,15 +84,15 @@ class Pemasukan extends Component
     #[Computed]
     public function totalPemasukan()
     {
-        // Sum of all delivered orders
-        return \App\Models\Pesanan::where('status', 'delivered')->sum('total_harga');
+        // Sum of all paid orders
+        return \App\Models\Pesanan::where('status', 'terbayar')->sum('total_harga');
     }
 
     #[Computed]
     public function pemasukaBulanIni()
     {
-        // Sum of delivered orders in current month
-        return \App\Models\Pesanan::where('status', 'delivered')
+        // Sum of paid orders in current month
+        return \App\Models\Pesanan::where('status', 'terbayar')
             ->whereMonth('updated_at', now()->month)
             ->whereYear('updated_at', now()->year)
             ->sum('total_harga');
@@ -101,8 +101,8 @@ class Pemasukan extends Component
     #[Computed]
     public function pemasukanPending()
     {
-        // Sum of orders accepted by admin but not yet delivered
-        return \App\Models\Pesanan::where('status', 'accepted')->sum('total_harga');
+        // Sum of orders received but not yet paid (potensi pendapatan)
+        return \App\Models\Pesanan::where('status', 'perlu_dibayar')->sum('total_harga');
     }
 
     public function resetFilters()
@@ -118,7 +118,17 @@ class Pemasukan extends Component
         $pemasukan = PemasukanModel::findOrFail($id);
         $oldStatus = $pemasukan->status;
 
-        $pemasukan->update(['status' => 'confirmed']);
+        $pemasukan->update([
+            'status' => 'confirmed',
+            'user_id' => $this->getUserId()
+        ]);
+
+        if ($pemasukan->pesanan_id) {
+            $pesanan = \App\Models\Pesanan::find($pemasukan->pesanan_id);
+            if ($pesanan && $pesanan->status !== 'terbayar') {
+                $pesanan->update(['status' => 'terbayar']);
+            }
+        }
 
         Activity::create([
             'user_id' => $this->getUserId(),
@@ -136,7 +146,17 @@ class Pemasukan extends Component
         $pemasukan = PemasukanModel::findOrFail($id);
         $oldStatus = $pemasukan->status;
 
-        $pemasukan->update(['status' => 'rejected']);
+        $pemasukan->update([
+            'status' => 'rejected',
+            'user_id' => $this->getUserId()
+        ]);
+
+        if ($pemasukan->pesanan_id) {
+            $pesanan = \App\Models\Pesanan::find($pemasukan->pesanan_id);
+            if ($pesanan && $pesanan->status !== 'rejected') {
+                $pesanan->update(['status' => 'rejected']);
+            }
+        }
 
         Activity::create([
             'user_id' => $this->getUserId(),

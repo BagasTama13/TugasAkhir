@@ -14,6 +14,7 @@ class Pemasukan extends Model
         'status',
         'catatan',
         'user_id',
+        'pesanan_id',
     ];
 
     protected $casts = [
@@ -26,5 +27,10 @@ class Pemasukan extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function pesanan()
+    {
+        return $this->belongsTo(Pesanan::class);
     }
 }

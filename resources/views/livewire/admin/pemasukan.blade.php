@@ -32,8 +32,8 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center text-xs text-indigo-100">
-                        <span class="bg-indigo-500/40 px-2 py-0.5 rounded mr-2">Status Terkirim</span>
-                        <span>Total dari seluruh pesanan selesai</span>
+                        <span class="bg-indigo-500/40 px-2 py-0.5 rounded mr-2">Status Terbayar</span>
+                        <span>Total dari seluruh pesanan lunas</span>
                     </div>
                 </div>
 
@@ -50,7 +50,7 @@
                     </div>
                     <div class="mt-4 flex items-center text-xs text-slate-500">
                         <span class="text-blue-600 font-medium mr-1">{{ now()->format('F Y') }}</span>
-                        <span>• Pesanan terkirim bulan ini</span>
+                        <span>• Pesanan lunas bulan ini</span>
                     </div>
                 </div>
 
@@ -66,8 +66,8 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center text-xs text-slate-500">
-                        <span class="text-amber-600 font-medium mr-1">Pending Pengiriman</span>
-                        <span>• Diterima admin, belum dikirim</span>
+                        <span class="text-amber-600 font-medium mr-1">Belum Dibayar</span>
+                        <span>• Pesanan diterima, belum dibayar</span>
                     </div>
                 </div>
             </div>

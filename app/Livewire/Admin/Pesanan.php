@@ -57,7 +57,7 @@ class Pesanan extends Component
             'jumlah' => 'required|integer|min:1',
             'alamat_penjemputan' => 'required|string',
             'alamat_pengiriman' => 'required|string|min:5',
-            'status' => 'required|in:pending,accepted,rejected,delivered',
+            'status' => 'required|in:pending,accepted,rejected,perlu_dibayar,terbayar',
             'description' => 'nullable|string',
             'durasi' => 'required_if:tipe,sewa|integer|min:1',
             'no_whatsapp' => 'required|string|min:10',
@@ -77,7 +77,7 @@ class Pesanan extends Component
 
         $username = strtolower(Auth::user()->username ?? '');
         if (str_starts_with($username, 'worker')) {
-            $query->whereIn('status', ['accepted', 'delivered']);
+            $query->whereIn('status', ['accepted', 'perlu_dibayar', 'terbayar']);
         }
 
         return $query->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
@@ -235,12 +235,12 @@ class Pesanan extends Component
         session()->flash('success', 'Pesanan ditolak!');
     }
 
-    public function markDelivered($id)
+    public function markPerluDibayar($id)
     {
         $pesanan = PesananModel::with('produk')->findOrFail($id);
-        if ($pesanan->status === 'delivered') return;
+        if ($pesanan->status === 'perlu_dibayar') return;
         
-        $pesanan->update(['status' => 'delivered']);
+        $pesanan->update(['status' => 'perlu_dibayar']);
 
         // Calculate total price based on tipe
         if ($pesanan->tipe === 'carter') {
@@ -251,25 +251,70 @@ class Pesanan extends Component
             $totalHarga = $pesanan->jumlah * ($pesanan->produk->harga ?? 0);
         }
 
-        Pemasukan::create([
-            'tanggal' => today(),
-            'jumlah' => $totalHarga,
-            'keterangan' => "Penjualan: {$pesanan->nomor} ({$pesanan->nama})",
-            'kategori' => 'penjualan',
-            'status' => 'confirmed',
-            'user_id' => $this->getUserId(),
-        ]);
+        // We create or update the Pemasukan record as 'pending'
+        Pemasukan::updateOrCreate(
+            ['pesanan_id' => $pesanan->id],
+            [
+                'tanggal' => today(),
+                'jumlah' => $totalHarga,
+                'keterangan' => "Penjualan: {$pesanan->nomor} ({$pesanan->nama})",
+                'kategori' => 'penjualan',
+                'status' => 'pending',
+                'user_id' => $this->getUserId(),
+            ]
+        );
 
         Activity::create([
             'user_id' => $this->getUserId(),
             'action' => 'update',
             'entity_type' => 'Pesanan',
             'entity_id' => $pesanan->id,
-            'description' => "Selesai/Terkirim: #{$pesanan->nomor}",
+            'description' => "Kirim/Perlu dibayar: #{$pesanan->nomor}",
         ]);
         
         $this->invalidatePesananCache();
-        session()->flash('success', 'Pesanan ditandai terkirim & data pemasukan dicatat!');
+        session()->flash('success', 'Pesanan ditandai terkirim (perlu dibayar)!');
+    }
+
+    public function markTerbayar($id)
+    {
+        $pesanan = PesananModel::with('produk')->findOrFail($id);
+        if ($pesanan->status === 'terbayar') return;
+        
+        $pesanan->update(['status' => 'terbayar']);
+
+        // Calculate total price based on tipe
+        if ($pesanan->tipe === 'carter') {
+            $totalHarga = $this->calculateCarterPrice($pesanan);
+        } elseif ($pesanan->tipe === 'sewa') {
+            $totalHarga = $pesanan->durasi * config('pricing.sewa_per_day', 300000);
+        } else {
+            $totalHarga = $pesanan->jumlah * ($pesanan->produk->harga ?? 0);
+        }
+
+        // We find the existing Pemasukan or create it, then mark as 'confirmed' and update the user_id (petugas)
+        $pemasukan = Pemasukan::updateOrCreate(
+            ['pesanan_id' => $pesanan->id],
+            [
+                'tanggal' => today(),
+                'jumlah' => $totalHarga,
+                'keterangan' => "Penjualan: {$pesanan->nomor} ({$pesanan->nama})",
+                'kategori' => 'penjualan',
+                'status' => 'confirmed',
+                'user_id' => $this->getUserId(),
+            ]
+        );
+
+        Activity::create([
+            'user_id' => $this->getUserId(),
+            'action' => 'update',
+            'entity_type' => 'Pesanan',
+            'entity_id' => $pesanan->id,
+            'description' => "Pesanan terbayar: #{$pesanan->nomor}",
+        ]);
+        
+        $this->invalidatePesananCache();
+        session()->flash('success', 'Pesanan berhasil ditandai terbayar & status pembayaran dicatat!');
     }
 
     private function calculateCarterPrice($pesanan)
