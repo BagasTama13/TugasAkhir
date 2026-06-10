@@ -101,8 +101,8 @@ class Pemasukan extends Component
     #[Computed]
     public function pemasukanPending()
     {
-        // Sum of orders received but not yet paid (potensi pendapatan)
-        return \App\Models\Pesanan::where('status', 'perlu_dibayar')->sum('total_harga');
+        // Sum of orders accepted or marked as need payment, but not yet paid
+        return \App\Models\Pesanan::whereIn('status', ['accepted', 'perlu_dibayar'])->sum('total_harga');
     }
 
     public function resetFilters()

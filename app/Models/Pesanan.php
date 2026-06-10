@@ -6,23 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pesanan extends Model
 {
-    protected $fillable = [
-        'nomor',
-        'nama',
-        'tipe',
-        'jumlah',
-        'alamat_penjemputan',
-        'alamat_pengiriman',
-        'status',
-        'description',
-        'user_id',
-        'produk_id',
-        'harga',
-        'total_harga',
-        'catatan',
-        'durasi',
-        'no_whatsapp',
-    ];
+  protected $fillable = [
+    'nomor',
+    'nama',
+    'tipe',
+    'jumlah',
+    'alamat_penjemputan',
+    'alamat_pengiriman',
+    'status',
+    'description',
+    'user_id',
+    'produk_id',
+    'harga',
+    'total_harga',
+    'catatan',
+    'durasi',
+    'no_whatsapp',
+
+    'payment_status',
+    'snap_token',
+    'midtrans_transaction_id',
+    'paid_at',
+];
 
     public function user()
     {

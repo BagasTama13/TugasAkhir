@@ -105,3 +105,22 @@ Route::middleware(['auth', 'verified'])->prefix('user')->group(function () {
     Route::get('/profile', UserProfile::class)->name('user.profile');
     Route::get('/profile/edit', UserEditProfile::class)->name('user.profile.edit');
 });
+
+// Payment Routes
+
+use App\Http\Controllers\PaymentController;
+
+Route::get('/pesanan/{id}/bayar', [PaymentController::class, 'bayar'])
+    ->name('pesanan.bayar');
+
+
+Route::get('/test-midtrans', function () {
+    return [
+        'server_key' => config('midtrans.server_key'),
+        'client_key' => config('midtrans.client_key'),
+        'is_production' => config('midtrans.is_production'),
+    ];
+});
+
+
+Route::get('/midtrans-test', [PaymentController::class, 'test']);

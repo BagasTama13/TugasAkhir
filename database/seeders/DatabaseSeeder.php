@@ -50,5 +50,19 @@ class DatabaseSeeder extends Seeder
         if (! $worker->hasVerifiedEmail()) {
             $worker->markEmailAsVerified();
         }
+
+        $wamilo = User::updateOrCreate([
+            'username' => 'wamilo',
+        ], [
+            'name' => 'Wamilo User',
+            'email' => 'wamilo@bptrans.com',
+            'password' => bcrypt('wamilo123'),
+            'alamat' => 'Jl. Test Wamilo No. 1',
+            'no_hp' => '081234567890',
+        ]);
+
+        if (! $wamilo->hasVerifiedEmail()) {
+            $wamilo->markEmailAsVerified();
+        }
     }
 }
