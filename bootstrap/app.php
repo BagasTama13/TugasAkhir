@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Exempt Midtrans webhook from CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'midtrans/notification',
+        ]);
+
         $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
             $user = \Illuminate\Support\Facades\Auth::user();
             if ($user && strtolower($user->username) === 'admin') {

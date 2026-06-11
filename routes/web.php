@@ -107,20 +107,25 @@ Route::middleware(['auth', 'verified'])->prefix('user')->group(function () {
 });
 
 // Payment Routes
-
 use App\Http\Controllers\PaymentController;
 
-Route::get('/pesanan/{id}/bayar', [PaymentController::class, 'bayar'])
-    ->name('pesanan.bayar');
+// Generate Snap Token for a pesanan (AJAX, auth required)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/pesanan/{id}/snap-token', [PaymentController::class, 'getSnapToken'])
+        ->name('pesanan.snap-token');
+});
 
+// Midtrans webhook notification (no auth, must be CSRF-exempt via bootstrap/app.php)
+Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification'])
+    ->name('midtrans.notification');
 
+// Dev test routes
 Route::get('/test-midtrans', function () {
     return [
-        'server_key' => config('midtrans.server_key'),
-        'client_key' => config('midtrans.client_key'),
+        'server_key'   => config('midtrans.server_key'),
+        'client_key'   => config('midtrans.client_key'),
         'is_production' => config('midtrans.is_production'),
     ];
 });
-
 
 Route::get('/midtrans-test', [PaymentController::class, 'test']);
