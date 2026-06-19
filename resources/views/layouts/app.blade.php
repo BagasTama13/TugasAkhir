@@ -128,7 +128,7 @@
                     <div class="flex-1 flex items-center">
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full border border-indigo-100/50">
                             <span class="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                            Membangun Fondasi, Mengantar Solusi
+                            Suplai Material Premium, Solusi Logistik Terpadu
                         </span>
                     </div>
                     <div class="ml-4 flex items-center md:ml-6 space-x-6">
@@ -149,8 +149,18 @@
             </header>
 
             <main class="flex-1 relative overflow-y-auto focus:outline-none bg-slate-50/50 p-8">
-                <div class="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-500">
-                    {{ $slot }}
+                <div class="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-6 duration-500 flex flex-col min-h-[calc(100vh-8rem)]">
+                    <div class="flex-1">
+                        {{ $slot }}
+                    </div>
+                    
+                    <footer class="mt-auto border-t border-slate-200/60 pt-6 pb-2">
+                        <div class="flex items-center justify-center text-center">
+                            <p class="text-xs font-semibold text-slate-400">
+                                &copy; {{ date('Y') }} BPTrans Logistik & Material. Developed by <a href="https://github.com/BagasTama13" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-500 transition-colors">BagasTama13</a>.
+                            </p>
+                        </div>
+                    </footer>
                 </div>
             </main>
         </div>

@@ -37,6 +37,9 @@ class Pesanan extends Component
     public $showForm = false;
     public $editingId = null;
 
+    public $showRejectModal = false;
+    public $rejectingId = null;
+
     public $nomor = '';
     public $nama = '';
     public $tipe = '';
@@ -242,12 +245,37 @@ class Pesanan extends Component
         session()->flash('success', 'Pesanan dikonfirmasi & masuk antrian!');
     }
 
-    public function rejectPesanan($id)
+    public function openRejectModal($id)
     {
-        $pesanan = PesananModel::findOrFail($id);
+        $this->rejectingId = $id;
+        $this->showRejectModal = true;
+    }
+
+    public function closeRejectModal()
+    {
+        $this->showRejectModal = false;
+        $this->rejectingId = null;
+    }
+
+    public function confirmReject($reasonKey)
+    {
+        if (!$this->rejectingId) return;
+
+        $pesanan = PesananModel::findOrFail($this->rejectingId);
         if ($pesanan->status === 'rejected') return;
 
-        $pesanan->update(['status' => 'rejected']);
+        $reasons = [
+            'jarak' => 'Mohon maaf pesanan anda telah ditolak, karena alamat pengiriman anda berada diluar jangkauan pengiriman kami.',
+            'sedikit' => "Mohon maaf pesanan anda telah ditolak, karena jumlah barang yang anda pesan dibawah batas minimal pesanan dari produk yang anda pilih,\na. Grajen dan kayu sak = 50 - 120 sak jika pesanan lebih dari 120 sak silahkan lakukan pemesanan lagi dengan item yang sama\nb. Kayu Bak = 1 - 5 bak jika pesanan lebih dari 5 bak silahkan lakukan pemesanan lagi dengan item yang sama\nc. Batu bata dan genteng = 1000 - 4000 pcs jika pesanan lebih dari 4000 pcs silahkan lakukan 2x pemesanan",
+            'banyak' => "Mohon maaf pesanan anda telah ditolak, karena jumlah barang yang anda pesan diatas batas maksimal pesanan dari produk yang anda pilih,\na. Grajen dan kayu sak = 50 - 120 sak jika pesanan lebih dari 120 sak silahkan lakukan pemesanan lagi dengan item yang sama\nb. Kayu Bak = 1 - 5 bak jika pesanan lebih dari 5 bak silahkan lakukan pemesanan lagi dengan item yang sama\nc. Batu bata dan genteng = 1000 - 4000 pcs jika pesanan lebih dari 4000 pcs silahkan lakukan 2x pemesanan",
+        ];
+
+        if (!array_key_exists($reasonKey, $reasons)) return;
+
+        $pesanan->update([
+            'status' => 'rejected',
+            'alasan_penolakan' => $reasons[$reasonKey]
+        ]);
 
         Activity::create([
             'user_id'     => $this->getUserId(),
@@ -258,7 +286,9 @@ class Pesanan extends Component
         ]);
 
         $this->invalidatePesananCache();
-        session()->flash('success', 'Pesanan ditolak!');
+        
+        $this->closeRejectModal();
+        session()->flash('success', 'Pesanan berhasil ditolak dengan alasan yang dipilih.');
     }
 
     /**

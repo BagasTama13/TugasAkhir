@@ -26,6 +26,7 @@ class Pesanan extends Model
         'snap_token',
         'midtrans_transaction_id',
         'paid_at',
+        'alasan_penolakan',
     ];
 
     protected $casts = [

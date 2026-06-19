@@ -60,6 +60,21 @@
                                         <p class="text-sm font-bold text-slate-700">{{ auth()->user()->email ?? 'Tidak ada email' }}</p>
                                     </div>
                                 </div>
+                                
+                                <div class="flex items-center gap-4 group">
+                                    <div class="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Alamat Domisili</p>
+                                        <p class="text-sm font-bold text-slate-700">{{ auth()->user()->alamat ?? 'Belum diatur' }}</p>
+                                        @if(auth()->user()->gmaps_link)
+                                            <a href="{{ auth()->user()->gmaps_link }}" target="_blank" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 mt-1 inline-block">Buka di Google Maps &rarr;</a>
+                                        @elseif(auth()->user()->latitude && auth()->user()->longitude)
+                                            <a href="https://www.google.com/maps?q={{ auth()->user()->latitude }},{{ auth()->user()->longitude }}" target="_blank" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 mt-1 inline-block">Lihat Titik Peta &rarr;</a>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

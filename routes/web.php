@@ -26,29 +26,32 @@ require __DIR__.'/auth.php';
 
 // Public Routes
 Route::get('/', function () {
-    // Get all products, group by nama
-    // For batu bata & genteng: show only cheapest
-    // For kayu: show all types
-    $products = \App\Models\Produk::all()
-        ->groupBy(function ($item) {
-            return trim(strtolower($item->nama));
-        })
-        ->map(function ($group) {
-            $nama = trim(strtolower($group->first()->nama));
-            
-            // For kayu (wood), show all types sorted by price
-            if ($nama === 'kayu') {
-                return $group->sortBy('harga')->values();
-            }
-            
-            // For others (batu bata, genteng), show only the cheapest
-            return collect([$group->sortBy('harga')->first()]);
-        })
-        ->flatten(1)
-        ->values()
-        ->sortBy('nama')
-        ->slice(0, 8) // Increased slice to show more variety if available
-        ->values();
+    $products = \Illuminate\Support\Facades\Cache::remember('welcome_products', now()->addHours(12), function () {
+        // Get products, group by nama
+        // For batu bata & genteng: show only cheapest
+        // For kayu: show all types
+        return \App\Models\Produk::select('id', 'nama', 'harga', 'satuan', 'deskripsi', 'gambar')
+            ->get()
+            ->groupBy(function ($item) {
+                return trim(strtolower($item->nama));
+            })
+            ->map(function ($group) {
+                $nama = trim(strtolower($group->first()->nama));
+                
+                // For kayu (wood), show all types sorted by price
+                if ($nama === 'kayu') {
+                    return $group->sortBy('harga')->values();
+                }
+                
+                // For others (batu bata, genteng), show only the cheapest
+                return collect([$group->sortBy('harga')->first()]);
+            })
+            ->flatten(1)
+            ->values()
+            ->sortBy('nama')
+            ->slice(0, 8) // Increased slice to show more variety if available
+            ->values();
+    });
     
     return view('welcome', ['products' => $products]);
 })->name('welcome');
@@ -129,3 +132,11 @@ Route::get('/test-midtrans', function () {
 });
 
 Route::get('/midtrans-test', [PaymentController::class, 'test']);
+
+// Language Switcher Route
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');

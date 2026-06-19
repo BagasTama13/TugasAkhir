@@ -71,14 +71,21 @@
                             @error('jumlah') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Logistics -->
+                        <!-- Logistics (Map & Address) -->
+                        <div class="space-y-4" wire:ignore>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Titik Pengiriman (Peta)</label>
+                            </div>
+                            <div id="map" class="w-full h-64 rounded-2xl border border-slate-200 z-10"></div>
+                            <p class="text-xs text-slate-500 ml-1">Geser pin lokasi ke alamat Anda untuk menghitung jarak dan ongkos kirim secara otomatis.</p>
+                        </div>
+                        
                         <div class="space-y-4">
                             <div class="flex items-center justify-between ml-1">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Alamat Pengiriman</label>
+                                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Alamat Lengkap</label>
                             </div>
-                            <!-- Manual Address Input -->
                             <div class="space-y-4">
-                                <textarea wire:model="alamat" rows="4" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white shadow-sm" placeholder="Masukkan alamat pengiriman lengkap (jalan, nomor rumah, RT/RW, kecamatan, kabupaten/kota)..."></textarea>
+                                <textarea wire:model="alamat" id="alamat" rows="4" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white shadow-sm" placeholder="Masukkan alamat pengiriman lengkap (jalan, nomor rumah, RT/RW, kecamatan, kabupaten/kota)..."></textarea>
                             </div>
                             @error('alamat') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
@@ -165,3 +172,73 @@
     </div>
 
 </div>
+
+@script
+<script>
+    const warehouseLat = -6.5888;
+    const warehouseLng = 110.6684;
+
+    // Cek apakah user sudah punya koordinat bawaan dari profil
+    const userLat = $wire.get('latitude');
+    const userLng = $wire.get('longitude');
+    
+    const initLat = userLat ? userLat : warehouseLat;
+    const initLng = userLng ? userLng : warehouseLng;
+
+    const map = L.map('map').setView([initLat, initLng], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    const marker = L.marker([initLat, initLng], { draggable: true }).addTo(map);
+
+    function updateDistanceAndAddress(lat, lng) {
+        fetch(`https://router.project-osrm.org/route/v1/driving/${warehouseLng},${warehouseLat};${lng},${lat}?overview=false`)
+            .then(response => response.json())
+            .then(data => {
+                if(data.routes && data.routes.length > 0) {
+                    const distanceInKm = (data.routes[0].distance / 1000).toFixed(1);
+                    $wire.set('jarak', distanceInKm);
+                    $wire.set('latitude', lat);
+                    $wire.set('longitude', lng);
+                }
+            })
+            .catch(err => console.error("OSRM Error:", err));
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            .then(response => response.json())
+            .then(data => {
+                if(data && data.display_name) {
+                    $wire.set('alamat', data.display_name);
+                }
+            })
+            .catch(err => console.error("Nominatim Error:", err));
+    }
+
+    // Jika sudah ada koordinat user bawaan, hitung jarak awal
+    if (userLat && userLng) {
+        updateDistanceAndAddress(userLat, userLng);
+        map.setView([userLat, userLng], 14);
+    }
+
+    marker.on('dragend', function (e) {
+        const position = marker.getLatLng();
+        updateDistanceAndAddress(position.lat, position.lng);
+    });
+
+    // Jika belum punya koordinat, coba ambil dari GPS browser
+    if (!userLat && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const gpsLat = position.coords.latitude;
+            const gpsLng = position.coords.longitude;
+            map.setView([gpsLat, gpsLng], 14);
+            marker.setLatLng([gpsLat, gpsLng]);
+            updateDistanceAndAddress(gpsLat, gpsLng);
+        }, function(error) {
+            console.log("Geolocation disabled or error", error);
+        });
+    }
+</script>
+@endscript

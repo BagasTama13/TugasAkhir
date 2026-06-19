@@ -14,6 +14,9 @@ class UserEditProfile extends Component
 
     public $name = '';
     public $alamat = '';
+    public $latitude = '';
+    public $longitude = '';
+    public $gmaps_link = '';
     public $no_hp = '';
     public $email = '';
     public $photo;
@@ -22,6 +25,9 @@ class UserEditProfile extends Component
     protected $rules = [
         'name' => 'required|string|min:2|max:255',
         'alamat' => 'nullable|string|max:500',
+        'latitude' => 'nullable|numeric',
+        'longitude' => 'nullable|numeric',
+        'gmaps_link' => 'nullable|string|max:500',
         'no_hp' => 'nullable|string|max:20',
         'email' => 'required|email|max:255',
         'photo' => 'nullable|image|max:2048', // Max 2MB
@@ -38,6 +44,9 @@ class UserEditProfile extends Component
 
         $this->name = $user->name;
         $this->alamat = $user->alamat ?? '';
+        $this->latitude = $user->latitude ?? '';
+        $this->longitude = $user->longitude ?? '';
+        $this->gmaps_link = $user->gmaps_link ?? '';
         $this->no_hp = $user->no_hp ?? '';
         $this->email = $user->email;
         $this->currentAvatar = $user->avatar;
@@ -59,6 +68,9 @@ class UserEditProfile extends Component
         $data = [
             'name' => $this->name,
             'alamat' => $this->alamat,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'gmaps_link' => $this->gmaps_link,
             'no_hp' => $this->no_hp,
             'email' => $this->email,
         ];

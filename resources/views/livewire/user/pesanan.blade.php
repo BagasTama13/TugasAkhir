@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-[#F8FAFC] pb-12">
+<div class="min-h-screen bg-[#F8FAFC] pb-12" wire:poll.5s>
     <!-- Header Section -->
     <div class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -177,6 +177,20 @@
 
                 <!-- Body -->
                 <div class="p-10 space-y-10">
+                    @if($sp->status === 'rejected' && $sp->alasan_penolakan)
+                        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-sm">
+                            <div class="flex items-start gap-4">
+                                <div class="mt-0.5 text-rose-500">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-rose-900 mb-1">Pesanan Ditolak</h4>
+                                    <div class="text-sm text-rose-700 whitespace-pre-line leading-relaxed">{{ $sp->alasan_penolakan }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <!-- Left: Product Info -->
                         <div class="space-y-6">

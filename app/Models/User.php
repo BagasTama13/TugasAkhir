@@ -26,6 +26,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'alamat',
         'no_hp',
         'avatar',
+        'latitude',
+        'longitude',
+        'gmaps_link',
     ];
 
     public function pesanans()

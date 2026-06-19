@@ -74,10 +74,30 @@
                         </div>
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Alamat Domisili</label>
-                        <textarea wire:model="alamat" rows="3" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white resize-none" placeholder="Tulis alamat lengkap Anda..."></textarea>
-                        @error('alamat') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
+                    <!-- Location Section -->
+                    <div class="space-y-6 pt-6 border-t border-slate-100">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900">Lokasi & Alamat</h3>
+                            <p class="text-xs text-slate-500 font-medium">Tentukan titik kordinat domisili Anda untuk mempermudah pengiriman.</p>
+                        </div>
+
+                        <div class="space-y-4" wire:ignore>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Pilih Titik di Peta</label>
+                            <div id="map" class="w-full h-64 rounded-2xl border border-slate-200 z-10"></div>
+                            <p class="text-xs text-slate-500 ml-1">Geser pin ke lokasi alamat rumah/proyek Anda.</p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Link Google Maps (Opsional)</label>
+                            <input type="text" wire:model="gmaps_link" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white" placeholder="Atau paste link Google Maps di sini (https://maps.app.goo.gl/...)">
+                            @error('gmaps_link') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Alamat Lengkap</label>
+                            <textarea wire:model="alamat" id="alamat" rows="3" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-700 bg-slate-50 focus:bg-white resize-none" placeholder="Tulis alamat lengkap Anda (Jalan, RT/RW, Desa, Kecamatan)..."></textarea>
+                            @error('alamat') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
+                        </div>
                     </div>
 
                     <!-- Action Buttons -->
@@ -94,3 +114,53 @@
         </div>
     </div>
 </div>
+
+@script
+<script>
+    // Koordinat Awal (jika user sudah punya koordinat, pakai itu, kalau belum pakai default Jepara)
+    const initLat = $wire.get('latitude') || -6.5888;
+    const initLng = $wire.get('longitude') || 110.6684;
+
+    const map = L.map('map').setView([initLat, initLng], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    const marker = L.marker([initLat, initLng], { draggable: true }).addTo(map);
+
+    function updateAddress(lat, lng) {
+        $wire.set('latitude', lat);
+        $wire.set('longitude', lng);
+
+        // Reverse Geocoding untuk dapat alamat teks
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            .then(response => response.json())
+            .then(data => {
+                if(data && data.display_name) {
+                    $wire.set('alamat', data.display_name);
+                }
+            })
+            .catch(err => console.error("Nominatim Error:", err));
+    }
+
+    marker.on('dragend', function (e) {
+        const position = marker.getLatLng();
+        updateAddress(position.lat, position.lng);
+    });
+
+    // Jika belum punya koordinat, coba ambil lokasi terkini user
+    if (!$wire.get('latitude') && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            map.setView([userLat, userLng], 14);
+            marker.setLatLng([userLat, userLng]);
+            updateAddress(userLat, userLng);
+        }, function(error) {
+            console.log("Geolocation disabled or error", error);
+        });
+    }
+</script>
+@endscript

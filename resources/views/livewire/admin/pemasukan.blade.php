@@ -10,16 +10,83 @@
                     <p class="text-sm text-slate-500 mt-1">Kelola dan pantau arus pendapatan bisnis Anda</p>
                 </div>
                 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3" x-data="{ showExportModal: false }">
                     <button wire:click="resetFilters" class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-all duration-200 shadow-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         Reset Filter
                     </button>
+                    
+                    <button @click="showExportModal = true" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Export Laporan
+                    </button>
+
+                    <!-- Modal Export -->
+                    <div x-show="showExportModal" 
+                         class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm"
+                         x-transition.opacity
+                         style="display: none;">
+                        <div @click.away="showExportModal = false" class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 transform transition-all"
+                             x-show="showExportModal"
+                             x-transition:enter="ease-out duration-300"
+                             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                             x-transition:leave="ease-in duration-200"
+                             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                            
+                            <div class="flex justify-between items-center mb-5">
+                                <h3 class="text-lg font-bold text-slate-900">Export Laporan Bulanan</h3>
+                                <button @click="showExportModal = false" class="text-slate-400 hover:text-slate-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Bulan</label>
+                                    <select wire:model="exportMonth" class="w-full border-slate-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        @foreach(range(1, 12) as $m)
+                                            <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}">{{ \Carbon\Carbon::createFromFormat('m', $m)->translatedFormat('F') }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Tahun</label>
+                                    <select wire:model="exportYear" class="w-full border-slate-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        @foreach(range(date('Y') - 2, date('Y') + 1) as $y)
+                                            <option value="{{ $y }}">{{ $y }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Format</label>
+                                    <select wire:model="exportFormat" class="w-full border-slate-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="pdf">PDF Document (.pdf)</option>
+                                        <option value="excel">Excel / CSV (.csv)</option>
+                                        <option value="word">Word Document (.doc)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 flex justify-end gap-3">
+                                <button @click="showExportModal = false" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">
+                                    Batal
+                                </button>
+                                <button wire:click="exportData" @click="showExportModal = false" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    Download File
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Quick Stats Summary -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
+            <div wire:poll.5s class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
                 <!-- Total Card -->
                 <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-5 text-white shadow-lg shadow-indigo-200">
                     <div class="flex justify-between items-start">
@@ -113,7 +180,7 @@
         </div>
 
         <!-- Table Container -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div wire:poll.5s class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>

@@ -93,6 +93,13 @@
                 @endif
             @endif
         </div>
+        
+        <!-- Footer -->
+        <div class="absolute bottom-4 w-full text-center">
+            <p class="text-xs font-semibold text-gray-500">
+                &copy; {{ date('Y') }} BPTrans Logistik & Material. Developed by <a href="https://github.com/BagasTama13" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-500 transition-colors">BagasTama13</a>.
+            </p>
+        </div>
 
         <!-- Auto reload script for development -->
         @if(app()->environment('local'))

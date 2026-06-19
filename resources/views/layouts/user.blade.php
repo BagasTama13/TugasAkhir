@@ -14,6 +14,10 @@
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     {{-- Midtrans Snap.js --}}
     <script
         src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
@@ -120,12 +124,12 @@
                         <img class="h-6 w-auto" src="{{ asset('images/colt.png') }}" alt="BPTrans">
                         <span class="text-sm font-display font-extrabold tracking-wider text-slate-900 uppercase italic">BPTrans Jepara</span>
                     </div>
-                    <p class="text-xs font-semibold text-slate-400">&copy; {{ date('Y') }} BPTrans Jepara. Seluruh hak cipta dilindungi.</p>
+                    <p class="text-xs font-semibold text-slate-400">&copy; {{ date('Y') }} BPTrans Jepara. Developed by <a href="https://github.com/BagasTama13" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-500 transition-colors">BagasTama13</a>.</p>
                 </div>
                 <div class="mt-6 border-t border-slate-100 pt-6 text-center">
                     <span class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-full border border-indigo-100/50 uppercase tracking-widest">
                         <span class="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                        Membangun Fondasi, Mengantar Solusi
+                        Suplai Material Premium, Solusi Logistik Terpadu
                     </span>
                 </div>
             </div>

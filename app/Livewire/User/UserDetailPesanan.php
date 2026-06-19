@@ -56,6 +56,8 @@ class UserDetailPesanan extends Component
         $this->nama_pembeli = $user->name;
         $this->no_whatsapp = $user->no_hp ?? '';
         $this->alamat = $user->alamat ?? '';
+        $this->latitude = $user->latitude ?? '';
+        $this->longitude = $user->longitude ?? '';
 
         // Pre-select product if passed via query parameter
         $produkId = request()->query('produk');
