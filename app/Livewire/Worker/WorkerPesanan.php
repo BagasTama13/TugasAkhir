@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 
+// Class WorkerPesanan mewarisi fungsionalitas dari Admin\Pesanan (OOP Inheritance).
+// Pekerja (Worker/Driver) menggunakan sistem yang sama dengan Admin, namun ada limitasi fungsional.
 #[Layout('layouts.app')]
 class WorkerPesanan extends Pesanan
 {
@@ -26,7 +28,10 @@ class WorkerPesanan extends Pesanan
     }
 
     /**
-     * Worker hanya melihat pesanan yang sudah dikonfirmasi admin (bukan pending/rejected)
+     * Override Data Query:
+     * Filter data secara dinamis. Worker TIDAK BOLEH melihat pesanan 'pending' atau 'rejected'.
+     * Worker hanya memproses pesanan yang sudah mendapat lampu hijau dari Admin,
+     * yaitu pesanan bersatus: 'dalam_antrian' (siap angkut), 'diproses' (sedang di jalan), atau 'terkirim' (sudah selesai).
      */
     #[Computed]
     public function pesanans()
@@ -69,8 +74,9 @@ class WorkerPesanan extends Pesanan
     }
 
     /**
-     * Worker memulai proses pengiriman (Flow 1, 2, 3, 4)
-     * Status: dalam_antrian → diproses
+     * Logika Aksi Operasional 1 (Mulai Pengiriman):
+     * Worker mengklik "Proses" ketika barang mulai dinaikkan ke truk atau siap meluncur ke lokasi pembeli.
+     * Status berubah: dalam_antrian → diproses
      */
     public function proseskan($id)
     {
@@ -91,8 +97,9 @@ class WorkerPesanan extends Pesanan
     }
 
     /**
-     * Worker mengkonfirmasi pengiriman selesai (Flow 1, 2, 3, 4)
-     * Status: diproses → terkirim
+     * Logika Aksi Operasional 2 (Selesai Pengiriman):
+     * Worker mengklik "Konfirmasi Kirim" ketika barang fisik sudah mendarat di lokasi pelanggan.
+     * Status berubah: diproses → terkirim
      */
     public function konfirmasiKirim($id)
     {
@@ -113,8 +120,10 @@ class WorkerPesanan extends Pesanan
     }
 
     /**
-     * Worker mengkonfirmasi pembayaran COD (Flow 3)
-     * payment_status: belum_dibayar → telah_dibayar
+     * Logika Keuangan Lapangan (Skenario COD):
+     * Worker berwenang untuk menarik tunai dari pembeli secara langsung di lokasi (Cash on Delivery).
+     * Saat di-klik, status pembayaran pesanan menjadi lunas ('telah_dibayar'),
+     * dan otomatis menambahkan uang tunai ini ke catatan kas/pemasukan sebagai 'confirmed' (Valid).
      */
     public function konfirmasiCOD($id)
     {

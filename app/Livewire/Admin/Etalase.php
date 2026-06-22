@@ -13,12 +13,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
+// #[Layout] mendefinisikan layout blade yang membungkus komponen ini (Master Template untuk Admin)
 #[Layout('layouts.app')]
 class Etalase extends Component
 {
+    // Menggunakan trait OwnerAccess untuk pengecekan level user, dan WithFileUploads agar Livewire bisa menangani unggahan gambar
     use OwnerAccess;
     use WithFileUploads;
 
+    // Method mount() dipanggil saat komponen admin ini diinisialisasi pertama kali. Berisi Middleware/Pengecekan Akses (Authorization).
     public function mount(string $owner = ''): void
     {
         $user = Auth::user();
@@ -45,11 +48,13 @@ class Etalase extends Component
         return (int) Auth::id();
     }
 
+    // Variabel publik ini akan ter-binding (Data Binding) secara reaktif dengan form input di View
     public $nama, $jenis, $harga, $satuan, $deskripsi, $gambar;
     public $showForm = false;
-    public $editingId = null;
+    public $editingId = null; // Menyimpan ID produk yang sedang diedit. Jika null, berarti mode tambah produk.
     private $produkCache = null;
 
+    // Aturan validasi (Server-side validation) sebelum menyimpan data ke database
     protected $rules = [
         'nama' => 'required',
         'jenis' => 'required',
@@ -57,10 +62,12 @@ class Etalase extends Component
         'satuan' => 'required',
     ];
 
+    // Method produk() menggunakan #[Computed] agar datanya di-cache selama request (mengurangi load ke database)
     #[Computed]
     public function produk()
     {
         if ($this->produkCache === null) {
+            // Pengambilan data produk dari database (Read/Select)
             $this->produkCache = Produk::select(['id', 'nama', 'jenis', 'harga', 'satuan', 'gambar'])
                 ->orderByDesc('id')
                 ->get();
@@ -73,11 +80,13 @@ class Etalase extends Component
         $this->produkCache = null;
     }
 
+    // Menampilkan/menyembunyikan form di halaman Admin
     public function toggleForm()
     {
         $this->showForm = !$this->showForm;
     }
 
+    // Menutup form dan mereset nilai inputannya
     public function closeForm()
     {
         $this->showForm = false;
@@ -97,6 +106,7 @@ class Etalase extends Component
         ]);
     }
 
+    // Mengambil data spesifik produk untuk diedit dan memasukkannya ke properti form (Data Binding)
     public function editProduk($id)
     {
         $produk = Produk::find($id);
@@ -111,11 +121,13 @@ class Etalase extends Component
         }
     }
 
+    // Logika Penghapusan Data (Delete)
     public function deleteProduk($id)
     {
         $produk = Produk::select(['id', 'nama', 'gambar'])->find($id);
         if (!$produk) return;
         
+        // Menghapus file gambar fisik dari local storage sebelum menghapus data dari database
         if ($produk->gambar) {
             Storage::disk('public')->delete($produk->gambar);
         }
@@ -123,6 +135,7 @@ class Etalase extends Component
         $produk->delete();
         $this->invalidateProdukCache();
         
+        // Menyimpan log bahwa admin menghapus produk (Audit Trail)
         Activity::create([
             'user_id' => $this->getUserId(),
             'action' => 'delete',
@@ -134,6 +147,7 @@ class Etalase extends Component
         session()->flash('success', 'Produk berhasil dihapus!');
     }
 
+    // Logika Penambahan dan Pembaruan Data (Create & Update)
     public function tambahProduk()
     {
         // 1. Validasi Keamanan (Security Check)
@@ -161,6 +175,7 @@ class Etalase extends Component
         // 3. Penulisan ke Database Produk (Mencetak Data Baru atau Update)
         if ($this->editingId) {
             $produk = Produk::find($this->editingId);
+            // Hapus gambar lama jika admin mengunggah gambar baru
             if ($produk && $produk->gambar && $path) {
                 Storage::disk('public')->delete($produk->gambar);
             }

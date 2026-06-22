@@ -11,11 +11,13 @@ use App\Models\Pemasukan;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
 
+// #[Layout] mengatur template yang membungkus komponen ini (Master Admin Layout)
 #[Layout('layouts.app')]
 class Pesanan extends Component
 {
     use OwnerAccess;
 
+    // Method mount() berfungsi sebagai constructor/middleware. Melakukan verifikasi apakah user benar-benar admin.
     public function mount(string $owner = ''): void
     {
         $user = Auth::user();
@@ -52,6 +54,7 @@ class Pesanan extends Component
     public $produk_id = null;
     public $no_whatsapp = '';
 
+    // rules() mendefinisikan aturan validasi input pada backend sebelum pesanan dapat ditambahkan atau diperbarui (Server-side Validation)
     public function rules()
     {
         return [
@@ -68,12 +71,15 @@ class Pesanan extends Component
         ];
     }
 
+    // #[Computed] men-cache hasil query daftar produk di memori server agar tidak bolak-balik memanggil database setiap komponen dirender ulang (optimasi resource)
     #[Computed(cache: true)]
     public function produks()
     {
         return \App\Models\Produk::select('id', 'nama', 'harga')->get();
     }
 
+    // #[Computed] mengambil semua daftar pesanan beserta data relasinya (Eager Loading: with user & produk)
+    // Diurutkan berdasarkan status 'pending' agar pesanan baru selalu berada di urutan paling atas (prioritas UI)
     #[Computed]
     public function pesanans()
     {
@@ -200,11 +206,10 @@ class Pesanan extends Component
     }
 
     /**
-     * Admin mengkonfirmasi pesanan:
-     * - status: pending → dalam_antrian
-     * - payment_status: → belum_dibayar
-     * - Buat Pemasukan record (status pending) agar masuk "Pemasukan Pending"
-     * - Pesanan tampil di panel worker
+     * Logika Inti Konfirmasi Pesanan oleh Admin:
+     * - Merubah status pesanan dari 'pending' menjadi 'dalam_antrian' dan payment_status menjadi 'belum_dibayar'
+     * - Secara otomatis membuat record/catatan di tabel Pemasukan (Keuangan) dengan status 'pending'
+     * - Setelah ini dieksekusi, pesanan akan diteruskan dan muncul di panel Pekerja (Worker)
      */
     public function acceptPesanan($id)
     {
@@ -292,7 +297,8 @@ class Pesanan extends Component
     }
 
     /**
-     * Admin mengkonfirmasi pembayaran manual (Flow 4 - bayar di kantor).
+     * Konfirmasi Pembayaran Manual (Skenario Offline / Bayar di kantor):
+     * Mengubah status payment menjadi 'telah_dibayar' dan mencatatnya ke dalam tabel Pemasukan sebagai 'confirmed' (Uang Kas Masuk Real)
      */
     public function konfirmasiPembayaranAdmin($id)
     {
@@ -328,6 +334,8 @@ class Pesanan extends Component
         session()->flash('success', 'Pembayaran dikonfirmasi!');
     }
 
+    // Algoritma internal untuk mengkalkulasi harga otomatis secara dinamis 
+    // berdasarkan tipe pesanan (Carter Jarak, Sewa Harian, atau Beli Produk Satuan)
     private function hitungTotalHarga(PesananModel $pesanan): float|int
     {
         if ($pesanan->tipe === 'carter') {

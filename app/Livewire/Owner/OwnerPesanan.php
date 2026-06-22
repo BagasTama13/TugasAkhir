@@ -5,6 +5,7 @@ namespace App\Livewire\Owner;
 use App\Livewire\Admin\Pesanan;
 use App\Livewire\Traits\OwnerAccess;
 
+// Class OwnerPesanan mewarisi keseluruhan sistem transaksi dari Admin\Pesanan (OOP Inheritance).
 class OwnerPesanan extends Pesanan
 {
     use OwnerAccess;
@@ -38,6 +39,12 @@ class OwnerPesanan extends Pesanan
         return;
     }
 
+    // =========================================================================
+    // OVERRIDE METHODS (Security & Role-Based Access Control)
+    // Sebagian besar metode eksekusi diganti dengan abort(403) agar Owner hanya berstatus sebagai "Pengamat/Peninjau" (Read-Only)
+    // Owner tidak bisa mengedit, menghapus, atau menerima pesanan layaknya Admin.
+    // =========================================================================
+
     public function editPesanan($id)
     {
         abort(403, 'Owner users cannot modify pesanan.');
@@ -63,6 +70,8 @@ class OwnerPesanan extends Pesanan
         abort(403, 'Owner users cannot mark pesanan as delivered.');
     }
 
+    // Pengecualian: Owner mungkin sesekali diperbolehkan mengkonfirmasi uang yang masuk / tagihan dibayar
+    // Oleh karena itu, method ini tetap memanggil logika bawaan parent (Admin)
     public function markTerbayar($id)
     {
         return parent::markTerbayar($id);

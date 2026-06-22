@@ -1,5 +1,7 @@
+<!-- Wrapper utama halaman dengan min-height full screen dan background abu-abu terang. Terdapat wire:poll untuk me-refresh komponen secara otomatis setiap 5 detik. -->
 <div class="min-h-screen bg-[#F8FAFC] pb-12" wire:poll.5s>
     <!-- Header Section -->
+    <!-- Bagian Header (Judul & Tombol) yang melayang (sticky) di bagian atas layar saat di-scroll, menggunakan z-30 agar tidak tertumpuk elemen lain -->
     <div class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -19,6 +21,7 @@
 
         {{-- Flash success --}}
         @if(session('success'))
+            <!-- Notifikasi sukses (Flash message) menggunakan Alpine.js (x-data) yang akan hilang otomatis setelah 4 detik (timeout) menggunakan efek memudar (fade-in) -->
             <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
                  class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-700 px-5 py-4 rounded-2xl flex justify-between items-center shadow-sm animate-in fade-in">
                 <div class="flex items-center gap-2 font-bold text-sm">
@@ -31,8 +34,10 @@
 
         <!-- Orders List -->
         <div class="space-y-6">
+            {{-- Melakukan looping (perulangan) pada seluruh data pesanan user. Jika kosong akan menampilkan "Belum Ada Riwayat" --}}
             @forelse($this->pesanans as $index => $pesanan)
                 @php
+                    // Array $statusStyles dan $statusLabels digunakan untuk memetakan status bahasa database ke label dan warna UI
                     $statusStyles = [
                         'pending'       => 'bg-amber-50 text-amber-600 border-amber-100',
                         'dalam_antrian' => 'bg-blue-50 text-blue-600 border-blue-100',
@@ -50,14 +55,18 @@
                     ];
                     $statusLabel = $statusLabels[$pesanan->status] ?? $pesanan->status;
 
+                    // $canPay digunakan sebagai flag (penanda) apakah tombol bayar / tagihan dapat dimunculkan
+                    // Syarat: pesanan bukan 'pending' (sudah di-acc) dan payment_status masih 'belum_dibayar'
                     $canPay = in_array($pesanan->status, ['dalam_antrian', 'diproses', 'terkirim'])
                               && $pesanan->payment_status === 'belum_dibayar';
                 @endphp
+                <!-- Kartu daftar pesanan individu. Memiliki efek bayangan (shadow) saat dihover dan animasi masuk dari bawah (slide-in) ke atas secara bergiliran menggunakan gaya (style) delay index -->
                 <div wire:click="showDetail({{ $pesanan->id }})"
                      class="bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-indigo-50/50 hover:border-indigo-200 transition-all duration-300 cursor-pointer group animate-in fade-in slide-in-from-bottom-4"
                      style="animation-delay: {{ $index * 0.05 }}s">
                     <div class="flex flex-col md:flex-row md:items-center gap-6 p-6">
                         <!-- Product Visual -->
+                        <!-- Box tempat gambar produk dengan sudut melengkung (rounded). Terdapat animasi membesar secara perlahan (group-hover:scale-105 transition-transform) jika kartu pesanan dihover -->
                         <div class="w-20 h-20 rounded-2xl bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0 border border-slate-100 shadow-inner group-hover:scale-105 transition-transform duration-500">
                             @if($pesanan->produk && $pesanan->produk->gambar)
                                 <img src="{{ asset('storage/' . $pesanan->produk->gambar) }}"
@@ -69,6 +78,7 @@
                         </div>
 
                         <!-- Info Grid -->
+                        <!-- Grid layout untuk detail text pesanan. Responsif: dibagi menjadi 2 kolom untuk HP, dan 4 kolom untuk Desktop (lg:grid-cols-4) -->
                         <div class="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-6">
                             <div>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">ID Pesanan</p>
@@ -112,6 +122,7 @@
                     </div>
                 </div>
             @empty
+                <!-- Tampilan Empty State (Keadaan Kosong). Ditampilkan jika user belum pernah melakukan pemesanan sama sekali -->
                 <div class="bg-white rounded-[3rem] border border-slate-200 p-20 text-center shadow-sm">
                     <div class="h-24 w-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
@@ -126,6 +137,7 @@
         </div>
 
         <!-- DETAIL MODAL -->
+        <!-- Blok ini merender Modal Popup Detail Pesanan, muncul hanya jika variabel selectedPesanan berisi id. -->
         @if($this->selectedPesanan)
         @php
             $sp = $this->selectedPesanan;
@@ -141,11 +153,14 @@
             ];
             $modalStatusLabel = $modalStatusLabels[$sp->status] ?? $sp->status;
         @endphp
+        <!-- Kontainer pembungkus utama Modal Popup dengan z-[60] memastikannya berada di posisi paling atas menutupi semua elemen halaman -->
         <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 overflow-y-auto">
             <!-- Backdrop -->
+            <!-- Latar belakang gelap transparan (Backdrop) dengan efek blur (backdrop-blur-md). Klik pada area gelap ini akan menutup popup (memanggil wire:click closeDetail) -->
             <div wire:click="closeDetail" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity duration-500 animate-in fade-in"></div>
 
             <!-- Modal Content -->
+            <!-- Kotak utama konten popup dengan border sangat melengkung (rounded-[3rem]). Menggunakan animasi membesar secara pop-up (zoom-in-95) saat pertama kali dirender -->
             <div class="relative bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-white animate-in zoom-in-95 duration-300">
                 <!-- Header -->
                 <div class="bg-slate-900 p-8 text-white relative">
@@ -284,10 +299,12 @@
 </div>
 
 {{-- Midtrans Snap Handler Script --}}
+{{-- Skrip JavaScript ini digunakan untuk memanggil popup pembayaran Midtrans secara Asynchronous (SPA style) --}}
 <script>
 // Guard: prevent snap.pay() from being called while popup is already open
 let _snapIsOpen = false;
 
+// Fungsi yang dipanggil dari tombol 'Bayar Sekarang' di dalam HTML
 function bayarSekarang(pesananId, csrfToken) {
     // Block if Snap popup is already showing
     if (_snapIsOpen) {
@@ -298,9 +315,11 @@ function bayarSekarang(pesananId, csrfToken) {
     const btn = document.getElementById('pay-btn-' + pesananId);
     if (btn) {
         btn.disabled = true;
+        // Ubah teks tombol menjadi state 'Loading' agar user tidak menekan berkali-kali
         btn.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memuat...';
     }
 
+    // Mengambil (Fetch) snap_token terbaru dari backend server (Controller) menggunakan AJAX
     fetch('/pesanan/' + pesananId + '/snap-token', {
         method: 'POST',
         headers: {
@@ -331,12 +350,14 @@ function bayarSekarang(pesananId, csrfToken) {
 
         _snapIsOpen = true;
 
+        // Memanggil interface / UI pembayaran dari Midtrans (SDK midtrans-snap)
         window.snap.pay(data.snap_token, {
             onSuccess: function(result) {
                 console.log('Payment success', result);
                 _snapIsOpen = false;
                 resetBtn(btn);
                 // Update DB langsung (bypass webhook untuk localhost)
+                // Memanggil backend Livewire secara reaktif (@this merujuk ke instance Livewire PHP)
                 const txId = result.transaction_id || result.order_id || '';
                 @this.confirmPaymentFromClient(pesananId, txId);
             },

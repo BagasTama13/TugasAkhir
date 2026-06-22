@@ -44,11 +44,13 @@ class UserDetailPesanan extends Component
 
     public $productCategory = '';
 
+    // Method mount() bertindak sebagai inisialisasi awal saat pengguna membuka halaman checkout ini
     public function mount(): void
     {
         $user = Auth::user();
         $username = strtolower($user->username ?? '');
 
+        // Middleware Hak Akses: Memblokir staf/admin agar tidak mengakses halaman transaksi pelanggan
         if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
             abort(403, 'Use your designated panel.');
         }
@@ -101,6 +103,7 @@ class UserDetailPesanan extends Component
         $this->calculateShippingFee();
     }
 
+    // Algoritma Penentuan Ongkos Kirim Dinamis berdasarkan radius jarak pengantaran
     public function calculateShippingFee(): void
     {
         if ($this->jarak <= 0) {
@@ -108,7 +111,9 @@ class UserDetailPesanan extends Component
             return;
         }
 
-        // Formula: Base Rp 15,000 for the first 3 km + Rp 5,000 per km after 3 km
+        // Rumus Bisnis:
+        // Harga Dasar = Rp 15,000 untuk 3 KM pertama
+        // Tambahan Ongkir = Rp 5,000 per KM berikutnya
         $baseDistance = 3; // km
         $basePrice = 15000;
         $perKmPrice = 5000;
@@ -117,18 +122,30 @@ class UserDetailPesanan extends Component
             $this->ongkos_kirim = $basePrice;
         } else {
             $extraDistance = $this->jarak - $baseDistance;
+            // Dibulatkan ke atas (ceil) agar kelebihan 0.x KM tetap dihitung sebagai 1 KM tambahan
             $this->ongkos_kirim = $basePrice + (int) ceil($extraDistance * $perKmPrice);
         }
     }
 
+    /**
+     * Logika Inti 'Checkout' Pesanan:
+     * - Memvalidasi keranjang belanja & menghitung total biaya (termasuk ongkir)
+     * - Mengenerate nomor resi/nomor pesanan (Contoh: USR-X8A9B)
+     * - Menyimpan transaksi ke tabel Pesanans dengan status awal 'pending'
+     * - Merekam jejak aktivitas ke dalam tabel Activity Log
+     */
     public function kirimPesanan()
     {
+        // 1. Verifikasi (Backend Validation) & Kalkulasi Ongkir
         $this->validate();
         $this->calculateShippingFee();
 
         $produk = Produk::findOrFail($this->selectedProdukId);
+        
+        // 2. Generator Unique ID untuk Nomor Pesanan (Format: USR-***)
         $nomor = 'USR-' . strtoupper(uniqid());
 
+        // 3. Menyimpan Transaksi (Create Record Database)
         $pesanan = Pesanan::create([
             'nomor' => $nomor,
             'nama' => $this->nama_pembeli,
@@ -136,7 +153,7 @@ class UserDetailPesanan extends Component
             'jumlah' => $this->jumlah,
             'alamat_penjemputan' => $this->latitude && $this->longitude ? "{$this->latitude},{$this->longitude}" : '-',
             'alamat_pengiriman' => $this->alamat,
-            'status' => 'pending',
+            'status' => 'pending', // Status 'pending' menandakan belum dikonfirmasi admin
             'description' => "Produk: {$produk->nama} ({$produk->jenis}) | Jarak: {$this->jarak} km | Ongkir: Rp" . number_format($this->ongkos_kirim, 0, ',', '.'),
             'user_id' => Auth::id(),
             'produk_id' => $produk->id,
@@ -146,6 +163,7 @@ class UserDetailPesanan extends Component
             'no_whatsapp' => $this->no_whatsapp,
         ]);
 
+        // 4. Mencatat Riwayat Audit (Activity Trailing)
         Activity::create([
             'user_id' => Auth::id(),
             'action' => 'create',
@@ -154,6 +172,7 @@ class UserDetailPesanan extends Component
             'description' => "User order: #{$nomor} - {$produk->nama}",
         ]);
 
+        // 5. Menyimpan pesan sukses dan me-redirect antarmuka pengguna ke halaman riwayat pesanannya
         session()->flash('success', 'Pesanan berhasil dikirim! Nomor pesanan: ' . $nomor);
         return redirect()->route('user.pesanan');
     }

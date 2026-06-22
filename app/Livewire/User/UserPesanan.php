@@ -11,11 +11,13 @@ use App\Models\Pesanan;
 #[Layout('layouts.user')]
 class UserPesanan extends Component
 {
+    // Method mount() sebagai constructor komponen
     public function mount(): void
     {
         $user     = Auth::user();
         $username = strtolower($user->username ?? '');
 
+        // Middleware keamanan: Memastikan staf admin, owner, dan worker tidak bisa mengakses halaman user
         if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
             abort(403, 'Use your designated panel.');
         }
@@ -52,8 +54,9 @@ class UserPesanan extends Component
     }
 
     /**
-     * Called by Livewire after the user successfully paid via Midtrans Snap.
-     * Refreshes the component so payment_status is updated.
+     * Listener Livewire (Webhook Call):
+     * Dipanggil secara asinkron saat Midtrans mengirimkan sinyal pembayaran berhasil.
+     * Ini me-refresh status pesanan pada komponen agar status "Lunas" langsung ter-update di layar pelanggan.
      */
     public function handlePaymentSuccess($pesananId): void
     {
@@ -64,8 +67,10 @@ class UserPesanan extends Component
     }
 
     /**
-     * Called directly from JS onSuccess callback to mark payment as paid.
-     * This is the fallback for when webhook cannot reach localhost.
+     * Logika Pembayaran Alternatif (Client-Side Callback):
+     * Terkadang webhook API (Server-to-Server) gagal menjangkau server lokal.
+     * Fungsi ini bertindak sebagai skenario fallback yang dipicu lewat JavaScript (window.snap.pay -> onSuccess),
+     * memastikan pesanan tetap terverifikasi dan uang masuk dicatat.
      */
     public function confirmPaymentFromClient(int $pesananId, string $transactionId = '')
     {
@@ -86,13 +91,13 @@ class UserPesanan extends Component
             'paid_at'                 => now(),
         ]);
 
-        // Update or create Pemasukan as confirmed
+        // Membuat Laporan Keuangan (Pemasukan) karena uang digital telah masuk (Confirmed)
         \App\Models\Pemasukan::updateOrCreate(
             ['pesanan_id' => $pesanan->id],
             [
                 'tanggal'    => today(),
                 'jumlah'     => $pesanan->total_harga,
-                'keterangan' => "Pembayaran Online: {$pesanan->nomor} ({$pesanan->nama})",
+                'keterangan' => "Pembayaran Online (Midtrans): {$pesanan->nomor} ({$pesanan->nama})",
                 'kategori'   => 'penjualan',
                 'status'     => 'confirmed',
                 'user_id'    => Auth::id(),

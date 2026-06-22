@@ -8,44 +8,52 @@ use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Produk;
 
+// Mendefinisikan template utama (layout) yang digunakan oleh halaman panel pengguna (User Panel)
 #[Layout('layouts.user')]
 class UserDashboard extends Component
 {
+    // Kategori terpilih dari antarmuka (default: 'all')
     public string $category = 'all';
 
+    // Method mount() berfungsi sebagai constructor/middleware tingkat komponen
     public function mount(): void
     {
         $user = Auth::user();
         $username = strtolower($user->username ?? '');
 
-        // Block admin, owner, worker from user panel
+        // Middleware: Memblokir pengguna dengan hak akses admin, owner, dan worker 
+        // agar tidak mengakses halaman dasbor user biasa
         if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
             abort(403, 'Use your designated panel.');
         }
     }
 
+    // #[Computed] men-cache daftar produk di sisi server untuk satu siklus request
     #[Computed]
     public function products()
     {
         return Produk::query()
             ->get()
+            // Melakukan pengelompokan (grouping) data berdasarkan nama produk (mengabaikan kapitalisasi huruf)
             ->groupBy(function ($item) {
                 return trim(strtolower($item->nama));
             })
             ->map(function ($group) {
                 $nama = trim(strtolower($group->first()->nama));
                 
-                // For kayu (wood), show all types sorted by price
+                // Aturan khusus: Untuk produk 'kayu', tampilkan seluruh jenisnya diurutkan berdasarkan harga
                 if ($nama === 'kayu') {
                     return $group->sortBy('harga')->values();
                 }
                 
-                // For others (batu bata, genteng), show only the cheapest
+                // Aturan khusus: Untuk produk lain (misal: batu bata, genteng), 
+                // hanya tampilkan 1 produk dengan harga termurah (sebagai etalase utama)
                 return collect([$group->sortBy('harga')->first()]);
             })
+            // Meratakan (flatten) array hasil mapping yang sebelumnya bersarang
             ->flatten(1)
             ->filter(function ($item) {
-                // Custom filter based on selected category
+                // Logika Filter Dinamis berdasarkan pilihan kategori di antarmuka (UI)
                 if ($this->category === 'bahan_bakar') {
                     $allowed = ['kayu', 'kayu bakar', 'serbuk gergaji'];
                     return in_array(strtolower($item->nama), $allowed);
@@ -57,7 +65,7 @@ class UserDashboard extends Component
                     $allowed = ['genteng', 'batu bata'];
                     return in_array(strtolower($item->nama), $allowed);
                 }
-                // Default: show all
+                // Jika kategori 'all' atau tidak dikenali: tampilkan semua
                 return true;
             })
             ->values()
@@ -65,6 +73,7 @@ class UserDashboard extends Component
             ->values();
     }
 
+    // #[Computed] Mengambil total jumlah pesanan yang masih aktif (belum selesai) milik user yang sedang login
     #[Computed]
     public function activeOrdersCount()
     {
