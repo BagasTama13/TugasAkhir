@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Model Pesanan merepresentasikan tabel 'pesanans' di database.
 // Model ini adalah jantung dari aplikasi pemesanan karena menyimpan seluruh data transaksi.
 class Pesanan extends Model
 {
+    use SoftDeletes;
     // $fillable menentukan kolom-kolom mana saja yang diizinkan untuk diisi secara massal (Mass Assignment).
     // Ini adalah fitur keamanan dari Laravel untuk mencegah user memanipulasi kolom yang tidak seharusnya.
     protected $fillable = [
@@ -22,6 +24,8 @@ class Pesanan extends Model
         'user_id', // Relasi ke user pemesan
         'produk_id', // Relasi ke produk katalog (jika ada)
         'harga', // Harga per satuan
+        'ongkos_kirim', // Ongkos kirim
+        'jarak', // Jarak pengiriman (km)
         'total_harga', // Total harga keseluruhan
         'catatan', // Catatan tambahan dari pembeli
         'durasi', // Estimasi waktu pengerjaan/pengiriman

@@ -6,17 +6,14 @@ use Illuminate\Support\Facades\Auth;
 
 trait OwnerAccess
 {
-    protected array $allowedOwners = [
-        'owner',
-    ];
-
     public bool $readonly = false;
     public string $owner = '';
 
     public function isOwnerUser(): bool
     {
-        $username = strtolower(Auth::user()->username ?? '');
-        return str_starts_with($username, 'owner') || in_array($username, $this->allowedOwners, true);
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        return $user && $user->hasRole('owner');
     }
 
     public function ensureAdminOnly(): void
@@ -28,8 +25,9 @@ trait OwnerAccess
 
     public function ensureOwnerOnly(): void
     {
-        $owner = strtolower($this->owner ?? '');
-        if ((!str_starts_with($owner, 'owner') && !in_array($owner, $this->allowedOwners, true)) || strtolower(Auth::user()->username ?? '') !== $owner) {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('owner')) {
             abort(403, 'Hanya owner yang dapat mengakses panel ini.');
         }
     }

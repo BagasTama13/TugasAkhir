@@ -56,7 +56,7 @@ Route::get('/', function () {
     return view('welcome', ['products' => $products]);
 })->name('welcome');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/pesanan', Pesanan::class)->name('pesanan');
     Route::get('/pemasukan', Pemasukan::class)->name('pemasukan');
@@ -72,7 +72,7 @@ Route::middleware('auth')->group(function () {
 
 Route::pattern('owner', 'owner[0-9]*');
 
-Route::middleware(['auth', 'verified'])->prefix('owner/{owner}')->group(function () {
+Route::middleware(['auth', 'verified', 'role:owner'])->prefix('owner/{owner}')->group(function () {
     Route::get('/', function () {
         return redirect()->route('owner.dashboard', ['owner' => request()->route('owner')]);
     });
@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified'])->prefix('owner/{owner}')->group(function
 
 Route::pattern('worker', 'worker[0-9]*');
 
-Route::middleware(['auth', 'verified'])->prefix('worker/{worker}')->group(function () {
+Route::middleware(['auth', 'verified', 'role:worker'])->prefix('worker/{worker}')->group(function () {
     Route::get('/', function () {
         return redirect()->route('worker.dashboard', ['worker' => request()->route('worker')]);
     });
@@ -97,7 +97,7 @@ Route::middleware(['auth', 'verified'])->prefix('worker/{worker}')->group(functi
 });
 
 // User Panel Routes
-Route::middleware(['auth', 'verified'])->prefix('user')->group(function () {
+Route::middleware(['auth', 'verified', 'role:user'])->prefix('user')->group(function () {
     Route::get('/', function () {
         return redirect()->route('user.dashboard');
     });
@@ -113,7 +113,7 @@ Route::middleware(['auth', 'verified'])->prefix('user')->group(function () {
 use App\Http\Controllers\PaymentController;
 
 // Generate Snap Token for a pesanan (AJAX, auth required)
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::post('/pesanan/{id}/snap-token', [PaymentController::class, 'getSnapToken'])
         ->name('pesanan.snap-token');
 });
@@ -121,17 +121,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Midtrans webhook notification (no auth, must be CSRF-exempt via bootstrap/app.php)
 Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification'])
     ->name('midtrans.notification');
-
-// Dev test routes
-Route::get('/test-midtrans', function () {
-    return [
-        'server_key'   => config('midtrans.server_key'),
-        'client_key'   => config('midtrans.client_key'),
-        'is_production' => config('midtrans.is_production'),
-    ];
-});
-
-Route::get('/midtrans-test', [PaymentController::class, 'test']);
 
 // Language Switcher Route
 Route::get('/lang/{locale}', function ($locale) {

@@ -11,23 +11,17 @@ use App\Models\Pemasukan;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
 
+use Livewire\WithPagination;
+
 // #[Layout] mengatur template yang membungkus komponen ini (Master Admin Layout)
 #[Layout('layouts.app')]
 class Pesanan extends Component
 {
-    use OwnerAccess;
+    use OwnerAccess, WithPagination;
 
     // Method mount() berfungsi sebagai constructor/middleware. Melakukan verifikasi apakah user benar-benar admin.
     public function mount(string $owner = ''): void
     {
-        $user = Auth::user();
-        $username = strtolower($user->username ?? '');
-
-        // Only admin can access here
-        if ($username !== 'admin') {
-            abort(403, 'Unauthorized access.');
-        }
-
         $this->readonly = false;
     }
 
@@ -86,7 +80,19 @@ class Pesanan extends Component
         return PesananModel::with(['user', 'produk'])
             ->orderByRaw("CASE WHEN status = 'pending' THEN 0 ELSE 1 END")
             ->latest()
-            ->get();
+            ->paginate(15);
+    }
+
+    #[Computed]
+    public function pesananStats()
+    {
+        return PesananModel::selectRaw("
+            count(*) as total,
+            sum(case when status = 'pending' then 1 else 0 end) as pending,
+            sum(case when status = 'dalam_antrian' then 1 else 0 end) as dalam_antrian,
+            sum(case when status = 'diproses' then 1 else 0 end) as diproses,
+            sum(case when status = 'terkirim' then 1 else 0 end) as terkirim
+        ")->first();
     }
 
     private function invalidatePesananCache()
@@ -224,6 +230,14 @@ class Pesanan extends Component
             'payment_status' => 'belum_dibayar',
             'total_harga'    => $totalHarga,
         ]);
+
+        // PRE-GENERATE MIDTRANS SNAP TOKEN (Optimization)
+        // Dijalankan di background saat admin menerima pesanan agar user tidak menunggu loading lama saat klik Bayar
+        $midtransService = app(\App\Services\MidtransService::class);
+        $snapToken = $midtransService->generateSnapToken($pesanan);
+        if ($snapToken) {
+            $pesanan->update(['snap_token' => $snapToken]);
+        }
 
         // Create Pemasukan as pending (will show in "Pemasukan Pending")
         Pemasukan::updateOrCreate(

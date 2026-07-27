@@ -33,13 +33,34 @@ class User extends Authenticatable implements MustVerifyEmail
         'gmaps_link', // Tautan menuju lokasi Google Maps
     ];
 
-    /**
-     * Relasi Database: One-to-Many
-     * 1 User dapat memiliki banyak Pesanan
-     */
     public function pesanans()
     {
         return $this->hasMany(\App\Models\Pesanan::class);
+    }
+
+    /**
+     * Relasi Database: Many-to-Many
+     * 1 User dapat memiliki banyak Role
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(\App\Models\Role::class);
+    }
+
+    /**
+     * Cek apakah user memiliki role tertentu
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    /**
+     * Cek apakah user memiliki salah satu dari daftar role
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return $this->roles()->whereIn('name', $roles)->exists();
     }
 
     /**

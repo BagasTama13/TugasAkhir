@@ -35,12 +35,8 @@ class UserEditProfile extends Component
 
     public function mount(): void
     {
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $username = strtolower($user->username ?? '');
-
-        if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
-            abort(403, 'Use your designated panel.');
-        }
 
         $this->name = $user->name;
         $this->alamat = $user->alamat ?? '';
@@ -56,7 +52,12 @@ class UserEditProfile extends Component
     {
         $this->validate();
 
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(403, 'Unauthorized.');
+        }
 
         // Check email uniqueness (excluding self)
         if ($this->email !== $user->email) {

@@ -21,11 +21,10 @@ class Dashboard extends Component
     // Menyimpan path prefix panel aktif (contoh: /owner/admin atau /worker/admin)
     public string $panelPrefix = '';
 
-    // Method mount() dieksekusi saat komponen Livewire pertama kali diinisialisasi
     public function mount(string $owner = '', string $worker = ''): void
     {
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $username = strtolower($user->username ?? '');
 
         // Menghitung (parse) segment URL (misal dari /owner/dashboard -> segment 1: owner, segment 2: dashboard)
         $segment1 = request()->segment(1);
@@ -44,18 +43,18 @@ class Dashboard extends Component
             abort(403, 'Invalid access. Use owner panel instead.');
         }
 
-        // Blokir akses bagi user yang bukan berawalan 'owner' atau bukan 'admin' di segment owner
-        if ($segment1 === 'owner' && !str_starts_with($username, 'owner') && $username !== 'admin') {
+        // Blokir akses bagi user yang bukan owner atau admin di segment owner
+        if ($segment1 === 'owner' && !$user->hasRole('owner') && !$user->hasRole('admin')) {
             abort(403, 'Access denied.');
         }
         
-        // Blokir akses bagi user yang bukan berawalan 'worker' atau bukan 'admin' di segment worker
-        if ($segment1 === 'worker' && !str_starts_with($username, 'worker') && $username !== 'admin') {
+        // Blokir akses bagi user yang bukan worker atau admin di segment worker
+        if ($segment1 === 'worker' && !$user->hasRole('worker') && !$user->hasRole('admin')) {
             abort(403, 'Access denied.');
         }
 
-        // Jika URL tanpa prefix (admin asli) namun username bukan admin, blokir akses
-        if (!$segment1 && $username !== 'admin') {
+        // Jika URL tanpa prefix (admin asli) namun user bukan admin, blokir akses
+        if (!$segment1 && !$user->hasRole('admin')) {
             abort(403, 'Access denied. Use your designated panel.');
         }
     }
@@ -72,7 +71,7 @@ class Dashboard extends Component
     #[Computed]
     public function pesananTertunda()
     {
-        return Pesanan::whereIn('status', ['pending', 'accepted'])->count(); // Menghitung pesanan yang belum diproses/tertunda
+        return Pesanan::where('status', 'pending')->count(); // Menghitung pesanan yang belum diproses/tertunda
     }
 
     #[Computed]

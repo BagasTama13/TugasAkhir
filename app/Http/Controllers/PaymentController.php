@@ -12,19 +12,15 @@ use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
 
+use App\Services\MidtransService;
+
 class PaymentController extends Controller
 {
-    private function setupMidtrans(): void
+    protected $midtransService;
+
+    public function __construct(MidtransService $midtransService)
     {
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-        Config::$curlOptions = [
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_HTTPHEADER    => [],
-        ];
+        $this->midtransService = $midtransService;
     }
 
     /**
@@ -45,42 +41,22 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Pesanan sudah dibayar.'], 422);
         }
 
-        // If there's already a valid snap_token, reuse it
+        // Reuse stored snap_token for instant response (DB lookup vs API call).
+        // Expired/cancelled tokens are cleared by the Midtrans webhook handler below.
+        // If a user reports a failed popup, they can simply refresh the page to get a fresh token.
         if ($pesanan->snap_token) {
             return response()->json(['snap_token' => $pesanan->snap_token]);
         }
 
-        $this->setupMidtrans();
+        // No stored token yet — call Midtrans API to generate one
+        $snapToken = $this->midtransService->generateSnapToken($pesanan);
 
-        $totalHarga = (int) ($pesanan->total_harga ?? ($pesanan->jumlah * ($pesanan->produk->harga ?? 0)));
-
-        $params = [
-            'transaction_details' => [
-                'order_id'    => $pesanan->nomor . '-' . time(),
-                'gross_amount' => $totalHarga,
-            ],
-            'customer_details' => [
-                'first_name' => $pesanan->nama,
-                'phone'      => $pesanan->no_whatsapp,
-            ],
-            'item_details' => [
-                [
-                    'id'       => $pesanan->produk_id ?? 'PRODUK',
-                    'price'    => $totalHarga,
-                    'quantity' => 1,
-                    'name'     => ($pesanan->produk->nama ?? 'Pesanan') . ' - ' . $pesanan->nomor,
-                ],
-            ],
-        ];
-
-        try {
-            $snapToken = Snap::getSnapToken($params);
+        if ($snapToken) {
             $pesanan->update(['snap_token' => $snapToken]);
             return response()->json(['snap_token' => $snapToken]);
-        } catch (\Exception $e) {
-            Log::error('Midtrans getSnapToken error: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal menghubungi Midtrans: ' . $e->getMessage()], 500);
         }
+
+        return response()->json(['error' => 'Gagal menghubungi Midtrans. Coba lagi.'], 500);
     }
 
     /**
@@ -89,15 +65,19 @@ class PaymentController extends Controller
      */
     public function handleNotification(Request $request)
     {
-        $this->setupMidtrans();
-
         try {
-            $notification = new Notification();
+            $data = $this->midtransService->parseNotification();
 
-            $transactionStatus = $notification->transaction_status;
-            $orderId           = $notification->order_id; // e.g. "USR-XXXX-timestamp"
-            $fraudStatus       = $notification->fraud_status;
-            $transactionId     = $notification->transaction_id;
+            // Security check: Verify Midtrans Signature Key to prevent webhook forgery
+            if (empty($data['is_valid_signature'])) {
+                Log::warning('Midtrans notification: Invalid signature key for order_id=' . ($data['order_id'] ?? 'unknown'));
+                return response()->json(['message' => 'Invalid signature key'], 403);
+            }
+
+            $transactionStatus = $data['transaction_status'];
+            $orderId           = $data['order_id']; // e.g. "USR-XXXX-timestamp"
+            $fraudStatus       = $data['fraud_status'];
+            $transactionId     = $data['transaction_id'];
 
             // Extract original nomor from order_id (strip the -timestamp suffix)
             $nomor = preg_replace('/-\d+$/', '', $orderId);
@@ -166,26 +146,4 @@ class PaymentController extends Controller
         ]);
     }
 
-    /**
-     * Test endpoint – kept for development.
-     */
-    public function test()
-    {
-        $this->setupMidtrans();
-
-        $params = [
-            'transaction_details' => [
-                'order_id'    => 'TEST-' . time(),
-                'gross_amount' => 10000,
-            ],
-            'customer_details' => [
-                'first_name' => 'Bagas',
-                'phone'      => '08123456789',
-            ],
-        ];
-
-        $snapToken = Snap::getSnapToken($params);
-
-        return view('payment.test', compact('snapToken'));
-    }
 }

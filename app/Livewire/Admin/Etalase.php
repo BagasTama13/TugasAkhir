@@ -24,21 +24,16 @@ class Etalase extends Component
     // Method mount() dipanggil saat komponen admin ini diinisialisasi pertama kali. Berisi Middleware/Pengecekan Akses (Authorization).
     public function mount(string $owner = ''): void
     {
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $username = strtolower($user->username ?? '');
 
         // If owner parameter passed, this is for owner panel - reject
         if (!empty($owner)) {
             abort(403, 'Invalid access. Use owner panel instead.');
         }
 
-        // Block owner and worker users from admin panel
-        if (str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
-            abort(403, 'Access denied. Use your designated panel.');
-        }
-
         // Only admin can access here
-        if ($username !== 'admin') {
+        if (!$user->hasRole('admin')) {
             abort(403, 'Unauthorized access.');
         }
     }
@@ -78,6 +73,7 @@ class Etalase extends Component
     private function invalidateProdukCache()
     {
         $this->produkCache = null;
+        \Illuminate\Support\Facades\Cache::forget('welcome_products');
     }
 
     // Menampilkan/menyembunyikan form di halaman Admin

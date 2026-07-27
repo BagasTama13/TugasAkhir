@@ -1,5 +1,5 @@
 <!-- Wrapper utama halaman dengan min-height full screen dan background abu-abu terang. Terdapat wire:poll untuk me-refresh komponen secara otomatis setiap 5 detik. -->
-<div class="min-h-screen bg-[#F8FAFC] pb-12" wire:poll.5s>
+<div class="min-h-screen bg-[#F8FAFC] pb-12">
     <!-- Header Section -->
     <!-- Bagian Header (Judul & Tombol) yang melayang (sticky) di bagian atas layar saat di-scroll, menggunakan z-30 agar tidak tertumpuk elemen lain -->
     <div class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
@@ -134,6 +134,11 @@
                     </a>
                 </div>
             @endforelse
+        </div>
+
+        <!-- Pagination Links -->
+        <div class="mt-8 flex justify-center">
+            {{ $this->pesanans->links() }}
         </div>
 
         <!-- DETAIL MODAL -->
@@ -276,9 +281,10 @@
                         </button>
 
                         @if($canPayModal)
-                            {{-- Tombol Bayar Sekarang – trigger Midtrans Snap --}}
+                            {{-- Tombol Bayar Sekarang – token sudah disertakan di data-attribute agar instan --}}
                             <button
                                 id="pay-btn-{{ $sp->id }}"
+                                data-snap-token="{{ $sp->snap_token ?? '' }}"
                                 onclick="bayarSekarang({{ $sp->id }}, '{{ csrf_token() }}')"
                                 class="px-10 py-3 bg-indigo-600 text-white text-sm font-bold rounded-[2rem] hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all duration-300 flex items-center gap-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
@@ -296,103 +302,92 @@
         </div>
         @endif
     </div>
-</div>
+    {{-- Midtrans Snap Popup Handler --}}
+    {{-- @script harus berada di dalam root element Livewire --}}
+    @script
+    <script>
+    let _snapIsOpen = false;
+    const _tokenCache = {};
+    const _wire = $wire;
 
-{{-- Midtrans Snap Handler Script --}}
-{{-- Skrip JavaScript ini digunakan untuk memanggil popup pembayaran Midtrans secara Asynchronous (SPA style) --}}
-<script>
-// Guard: prevent snap.pay() from being called while popup is already open
-let _snapIsOpen = false;
-
-// Fungsi yang dipanggil dari tombol 'Bayar Sekarang' di dalam HTML
-function bayarSekarang(pesananId, csrfToken) {
-    // Block if Snap popup is already showing
-    if (_snapIsOpen) {
-        console.warn('Snap popup already open.');
-        return;
-    }
-
-    const btn = document.getElementById('pay-btn-' + pesananId);
-    if (btn) {
-        btn.disabled = true;
-        // Ubah teks tombol menjadi state 'Loading' agar user tidak menekan berkali-kali
-        btn.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memuat...';
-    }
-
-    // Mengambil (Fetch) snap_token terbaru dari backend server (Controller) menggunakan AJAX
-    fetch('/pesanan/' + pesananId + '/snap-token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken,
-        },
-        body: JSON.stringify({ pesanan_id: pesananId }),
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) {
-            alert('Error: ' + data.error);
-            resetBtn(btn);
-            return;
-        }
-
-        if (typeof window.snap === 'undefined') {
-            alert('Midtrans Snap tidak tersedia. Pastikan koneksi internet aktif.');
-            resetBtn(btn);
-            return;
-        }
-
-        // Double-check guard before calling snap.pay
-        if (_snapIsOpen) {
-            resetBtn(btn);
-            return;
-        }
-
-        _snapIsOpen = true;
-
-        // Memanggil interface / UI pembayaran dari Midtrans (SDK midtrans-snap)
-        window.snap.pay(data.snap_token, {
-            onSuccess: function(result) {
-                console.log('Payment success', result);
-                _snapIsOpen = false;
-                resetBtn(btn);
-                // Update DB langsung (bypass webhook untuk localhost)
-                // Memanggil backend Livewire secara reaktif (@this merujuk ke instance Livewire PHP)
-                const txId = result.transaction_id || result.order_id || '';
-                @this.confirmPaymentFromClient(pesananId, txId);
-            },
-            onPending: function(result) {
-                console.log('Payment pending', result);
-                _snapIsOpen = false;
-                resetBtn(btn);
-                alert('Pembayaran dalam proses. Silakan selesaikan pembayaran Anda.');
-            },
-            onError: function(result) {
-                console.error('Payment error', result);
-                _snapIsOpen = false;
-                resetBtn(btn);
-                alert('Pembayaran gagal. Silakan coba lagi.');
-            },
-            onClose: function() {
-                console.log('Snap popup closed by user.');
-                _snapIsOpen = false;
-                resetBtn(btn);
-            }
-        });
-    })
-    .catch(err => {
-        console.error('Error fetching snap token', err);
-        _snapIsOpen = false;
-        resetBtn(btn);
-        alert('Terjadi kesalahan. Silakan coba lagi.');
+    // Pre-fetch token saat modal dibuka agar popup langsung muncul saat tombol diklik
+    Livewire.on('prefetch-snap-token', ({ pesananId, csrfToken }) => {
+        if (_tokenCache[pesananId]) return;
+        fetch('/pesanan/' + pesananId + '/snap-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: JSON.stringify({ pesanan_id: pesananId }),
+        })
+        .then(res => res.json())
+        .then(data => { if (data.snap_token) _tokenCache[pesananId] = data.snap_token; })
+        .catch(err => console.warn('Pre-fetch snap token failed:', err));
     });
-}
 
-function resetBtn(btn) {
-    if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg> Bayar Sekarang';
-    }
-}
-</script>
+    window.bayarSekarang = function(pesananId, csrfToken) {
+        if (_snapIsOpen) return;
 
+        const btn = document.getElementById('pay-btn-' + pesananId);
+
+        // Cek token dari data-attribute (sudah ada di DOM sejak render)
+        const domToken = btn ? btn.getAttribute('data-snap-token') : '';
+        if (domToken) _tokenCache[pesananId] = domToken;
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memuat...';
+        }
+
+        // Gunakan cached token (dari DOM atau pre-fetch), fallback ke fetch API
+        const tokenPromise = _tokenCache[pesananId]
+            ? Promise.resolve({ snap_token: _tokenCache[pesananId] })
+            : fetch('/pesanan/' + pesananId + '/snap-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: JSON.stringify({ pesanan_id: pesananId }),
+            }).then(res => res.json());
+
+        tokenPromise
+        .then(data => {
+            if (data.error) { alert('Error: ' + data.error); window.resetBtn(btn); return; }
+            if (typeof window.snap === 'undefined') {
+                alert('Midtrans Snap tidak tersedia. Pastikan koneksi internet aktif dan refresh halaman.');
+                window.resetBtn(btn); return;
+            }
+            if (_snapIsOpen) { window.resetBtn(btn); return; }
+            if (data.snap_token) _tokenCache[pesananId] = data.snap_token;
+            _snapIsOpen = true;
+            window.snap.pay(data.snap_token, {
+                onSuccess: function(result) {
+                    _snapIsOpen = false;
+                    delete _tokenCache[pesananId];
+                    window.resetBtn(btn);
+                    _wire.confirmPaymentFromClient(pesananId, result.transaction_id || result.order_id || '');
+                },
+                onPending: function() {
+                    _snapIsOpen = false; window.resetBtn(btn);
+                    alert('Pembayaran dalam proses. Silakan selesaikan pembayaran Anda.');
+                },
+                onError: function() {
+                    _snapIsOpen = false;
+                    delete _tokenCache[pesananId];
+                    window.resetBtn(btn);
+                    alert('Pembayaran gagal. Silakan coba lagi.');
+                },
+                onClose: function() { _snapIsOpen = false; window.resetBtn(btn); }
+            });
+        })
+        .catch(err => {
+            console.error(err); _snapIsOpen = false; window.resetBtn(btn);
+            alert('Terjadi kesalahan. Silakan coba lagi.');
+        });
+    };
+
+    window.resetBtn = function(btn) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg> Bayar Sekarang';
+        }
+    };
+    </script>
+    @endscript
+</div>

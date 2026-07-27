@@ -17,21 +17,16 @@ class Activity extends Component
 
     public function mount(string $owner = ''): void
     {
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $username = strtolower($user->username ?? '');
 
         // If owner parameter passed, this is for owner panel - reject
         if (!empty($owner)) {
             abort(403, 'Invalid access. Use owner panel instead.');
         }
 
-        // Block owner and worker users from admin panel
-        if (str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
-            abort(403, 'Access denied. Use your designated panel.');
-        }
-
         // Only admin can access here
-        if ($username !== 'admin') {
+        if (!$user->hasRole('admin')) {
             abort(403, 'Unauthorized access.');
         }
     }
@@ -45,9 +40,7 @@ class Activity extends Component
     #[Computed]
     public function activities()
     {
-        $query = ActivityModel::select(['id', 'user_id', 'action', 'entity_type', 'description', 'created_at'])
-            ->with('user:id,name')
-            ->latest();
+        $query = ActivityModel::with('user');
 
         $this->applyPanelFilter($query);
 
@@ -69,13 +62,12 @@ class Activity extends Component
     private function applyPanelFilter($query)
     {
         if ($this->panelFilter === 'worker') {
-            $query->whereHas('user', function($q) {
-                $q->where('username', 'like', 'worker%');
+            $query->whereHas('user.roles', function($q) {
+                $q->where('name', 'worker');
             });
         } elseif ($this->panelFilter === 'admin') {
-            $query->whereHas('user', function($q) {
-                $q->where('username', 'not like', 'owner%')
-                  ->where('username', 'not like', 'worker%');
+            $query->whereHas('user.roles', function($q) {
+                $q->where('name', 'admin');
             });
         }
         // for 'all' (owner), no additional filter

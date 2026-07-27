@@ -6,17 +6,14 @@ use Illuminate\Support\Facades\Auth;
 
 trait WorkerAccess
 {
-    protected array $allowedWorkers = [
-        'worker',
-    ];
-
     public bool $readonly = false;
     public string $worker = '';
 
     public function isWorkerUser(): bool
     {
-        $username = strtolower(Auth::user()->username ?? '');
-        return str_starts_with($username, 'worker') || in_array($username, $this->allowedWorkers, true);
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        return $user && $user->hasRole('worker');
     }
 
     public function ensureAdminOnly(): void
@@ -28,8 +25,9 @@ trait WorkerAccess
 
     public function ensureWorkerOnly(): void
     {
-        $worker = strtolower($this->worker ?? '');
-        if ((!str_starts_with($worker, 'worker') && !in_array($worker, $this->allowedWorkers, true)) || strtolower(Auth::user()->username ?? '') !== $worker) {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        if (!$user || !$user->hasRole('worker')) {
             abort(403, 'Hanya worker yang dapat mengakses panel ini.');
         }
     }

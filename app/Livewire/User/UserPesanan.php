@@ -8,26 +8,31 @@ use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pesanan;
 
+use Livewire\WithPagination;
+
 #[Layout('layouts.user')]
 class UserPesanan extends Component
 {
-    // Method mount() sebagai constructor komponen
-    public function mount(): void
-    {
-        $user     = Auth::user();
-        $username = strtolower($user->username ?? '');
-
-        // Middleware keamanan: Memastikan staf admin, owner, dan worker tidak bisa mengakses halaman user
-        if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
-            abort(403, 'Use your designated panel.');
-        }
-    }
+    use WithPagination;
 
     public $selectedPesananId = null;
 
     public function showDetail($id)
     {
         $this->selectedPesananId = $id;
+
+        // Pre-fetch snap token di background saat modal dibuka
+        // sehingga token sudah siap ketika user klik "Bayar Sekarang"
+        $pesanan = Pesanan::find($id);
+        if ($pesanan
+            && in_array($pesanan->status, ['dalam_antrian', 'diproses', 'terkirim'])
+            && $pesanan->payment_status === 'belum_dibayar'
+        ) {
+            $this->dispatch('prefetch-snap-token', [
+                'pesananId' => $id,
+                'csrfToken' => csrf_token(),
+            ]);
+        }
     }
 
     public function closeDetail()
@@ -50,7 +55,7 @@ class UserPesanan extends Component
         return Pesanan::where('user_id', Auth::id())
             ->with('produk')
             ->latest()
-            ->get();
+            ->paginate(15);
     }
 
     /**

@@ -75,9 +75,27 @@
                         <div class="space-y-4" wire:ignore>
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Titik Pengiriman (Peta)</label>
+                                <button type="button" id="btn-gps" class="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg flex items-center transition-colors">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    GPS
+                                </button>
                             </div>
-                            <div id="map" class="w-full h-64 rounded-2xl border border-slate-200 z-10"></div>
-                            <p class="text-xs text-slate-500 ml-1">Geser pin lokasi ke alamat Anda untuk menghitung jarak dan ongkos kirim secara otomatis.</p>
+                            <div id="map" class="w-full h-80 rounded-2xl border border-slate-200 z-10"></div>
+
+                            {{-- Input paste Google Maps link --}}
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    id="gmaps-paste-input"
+                                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-400 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 focus:bg-white placeholder-slate-400"
+                                    placeholder="Paste link / Plus Code / nama tempat (contoh: 7Q4H+2P3, Jepara)"
+                                    autocomplete="off"
+                                >
+                            </div>
+                            <p class="text-xs text-slate-500 ml-1">Geser pin lokasi atau paste link Google Maps untuk menghitung jarak secara otomatis.</p>
                         </div>
                         
                         <div class="space-y-4">
@@ -89,6 +107,7 @@
                             </div>
                             @error('alamat') <p class="text-[10px] text-rose-500 font-bold uppercase mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
+
 
 
                         <!-- WhatsApp -->
@@ -178,10 +197,9 @@
     const warehouseLat = -6.5888;
     const warehouseLng = 110.6684;
 
-    // Cek apakah user sudah punya koordinat bawaan dari profil
     const userLat = $wire.get('latitude');
     const userLng = $wire.get('longitude');
-    
+
     const initLat = userLat ? userLat : warehouseLat;
     const initLng = userLng ? userLng : warehouseLng;
 
@@ -192,13 +210,23 @@
         maxZoom: 19
     }).addTo(map);
 
-    const marker = L.marker([initLat, initLng], { draggable: true }).addTo(map);
+    // Satu marker pengiriman (merah)
+    const redIcon = L.divIcon({
+        html: '<div style="width: 28px; height: 28px; background-color: #ef4444; border: 3px solid white; border-radius: 50%; box-shadow: 0 3px 8px rgba(0,0,0,0.4); cursor: grab;"></div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -14]
+    });
+
+    const marker = L.marker([initLat, initLng], { draggable: true, icon: redIcon }).addTo(map);
+    marker.bindPopup('<b>📍 Titik Pengiriman</b><br>Geser ke lokasi tujuan pengiriman');
+    marker.openPopup();
 
     function updateDistanceAndAddress(lat, lng) {
         fetch(`https://router.project-osrm.org/route/v1/driving/${warehouseLng},${warehouseLat};${lng},${lat}?overview=false`)
             .then(response => response.json())
             .then(data => {
-                if(data.routes && data.routes.length > 0) {
+                if (data.routes && data.routes.length > 0) {
                     const distanceInKm = (data.routes[0].distance / 1000).toFixed(1);
                     $wire.set('jarak', distanceInKm);
                     $wire.set('latitude', lat);
@@ -210,14 +238,14 @@
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
             .then(response => response.json())
             .then(data => {
-                if(data && data.display_name) {
+                if (data && data.display_name) {
                     $wire.set('alamat', data.display_name);
                 }
             })
             .catch(err => console.error("Nominatim Error:", err));
     }
 
-    // Jika sudah ada koordinat user bawaan, hitung jarak awal
+    // Jika sudah ada koordinat user, hitung jarak awal
     if (userLat && userLng) {
         updateDistanceAndAddress(userLat, userLng);
         map.setView([userLat, userLng], 14);
@@ -230,15 +258,176 @@
 
     // Jika belum punya koordinat, coba ambil dari GPS browser
     if (!userLat && navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             const gpsLat = position.coords.latitude;
             const gpsLng = position.coords.longitude;
             map.setView([gpsLat, gpsLng], 14);
             marker.setLatLng([gpsLat, gpsLng]);
             updateDistanceAndAddress(gpsLat, gpsLng);
-        }, function(error) {
+        }, function (error) {
             console.log("Geolocation disabled or error", error);
         });
     }
+
+    // GPS Button Handler
+    document.getElementById('btn-gps').addEventListener('click', function () {
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Mencari...';
+        btn.disabled = true;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const gpsLat = position.coords.latitude;
+                const gpsLng = position.coords.longitude;
+                map.setView([gpsLat, gpsLng], 14);
+                marker.setLatLng([gpsLat, gpsLng]);
+                updateDistanceAndAddress(gpsLat, gpsLng);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, function (error) {
+                alert("Gagal mendapatkan lokasi. Pastikan GPS aktif dan diizinkan oleh browser.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                console.log("Geolocation disabled or error", error);
+            });
+        } else {
+            alert("Browser Anda tidak mendukung fitur GPS.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+
+    // ─── Location Input Handler ─────────────────────────────────────────────────
+    // Mendukung berbagai format input:
+    // 1. URL Google Maps (google.com/maps, maps.app.goo.gl)
+    // 2. Plus Code global: "8FX22222+22"
+    // 3. Plus Code lokal + konteks: "7Q4H+2P3, Jepara, Jawa Tengah"
+    // 4. Nama tempat / alamat bebas
+    // 5. Koordinat langsung: "-6.123, 110.456"
+
+    // Regex deteksi Plus Code: X+XX pattern (huruf kapital + angka)
+    const PLUS_CODE_RE = /^[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,}/i;
+
+    function parseGoogleMapsUrl(input) {
+        input = input.trim();
+
+        // Format: koordinat langsung "lat,lng" atau "lat, lng"
+        const coordDirect = input.match(/^(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)$/);
+        if (coordDirect) return { lat: parseFloat(coordDirect[1]), lng: parseFloat(coordDirect[2]) };
+
+        // Format: ?q=lat,lng
+        const qParam = input.match(/[?&]q=(-?\d+\.\d+)[,+](-?\d+\.\d+)/);
+        if (qParam) return { lat: parseFloat(qParam[1]), lng: parseFloat(qParam[2]) };
+
+        // Format: /@lat,lng,zoom atau /place/.../@lat,lng
+        const atSign = input.match(/\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+        if (atSign) return { lat: parseFloat(atSign[1]), lng: parseFloat(atSign[2]) };
+
+        // Format: /search/lat,lng
+        const searchCoord = input.match(/\/search\/(-?\d+\.\d+),(-?\d+\.\d+)/);
+        if (searchCoord) return { lat: parseFloat(searchCoord[1]), lng: parseFloat(searchCoord[2]) };
+
+        return null;
+    }
+
+    /**
+     * Geocode menggunakan Nominatim — mendukung Plus Code, nama tempat, dan alamat bebas.
+     */
+    async function geocodeWithNominatim(query) {
+        const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query);
+        const res = await fetch(url, { headers: { 'Accept-Language': 'id,en' } });
+        const data = await res.json();
+        if (data && data.length > 0) {
+            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+        }
+        return null;
+    }
+
+    async function handleGmapsInput(value) {
+        const pasteInput = document.getElementById('gmaps-paste-input');
+        const defaultPlaceholder = pasteInput.placeholder;
+        pasteInput.style.borderColor = '#f59e0b'; // kuning = sedang memproses
+
+        let coords = null;
+
+        // 1. Coba parse sebagai URL Google Maps (koordinat langsung dari URL)
+        coords = parseGoogleMapsUrl(value);
+
+        // 2. Jika short link goo.gl → resolve redirect dulu
+        if (!coords && value.includes('goo.gl')) {
+            pasteInput.placeholder = 'Memuat dari link pendek...';
+            try {
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(value);
+                const res = await fetch(proxyUrl);
+                const data = await res.json();
+                const finalUrl = data.status?.url || '';
+                coords = parseGoogleMapsUrl(finalUrl);
+            } catch (e) {
+                console.warn('Gagal resolve short link:', e);
+            }
+        }
+
+        // 3. Deteksi Plus Code (7Q4H+2P3 atau dengan konteks "7Q4H+2P3, Jepara, ...")
+        if (!coords) {
+            const firstPart = value.split(',')[0].trim();
+            if (PLUS_CODE_RE.test(firstPart)) {
+                pasteInput.placeholder = 'Mencari Plus Code...';
+                try {
+                    // Coba geocode seluruh string (Plus Code + konteks lokasi)
+                    coords = await geocodeWithNominatim(value);
+
+                    // Jika gagal, coba hanya konteks lokasi lalu skip (Plus Code butuh referensi)
+                    if (!coords && value.includes(',')) {
+                        const contextOnly = value.split(',').slice(1).join(',').trim();
+                        coords = await geocodeWithNominatim(contextOnly);
+                    }
+                } catch (e) {
+                    console.warn('Gagal geocode Plus Code:', e);
+                }
+            }
+        }
+
+        // 4. Fallback: coba geocode sebagai nama tempat / alamat bebas
+        if (!coords && !value.startsWith('http')) {
+            pasteInput.placeholder = 'Mencari lokasi...';
+            try {
+                coords = await geocodeWithNominatim(value);
+            } catch (e) {
+                console.warn('Gagal geocode teks:', e);
+            }
+        }
+
+        pasteInput.placeholder = defaultPlaceholder;
+
+        if (coords) {
+            map.setView([coords.lat, coords.lng], 17);
+            marker.setLatLng([coords.lat, coords.lng]);
+            updateDistanceAndAddress(coords.lat, coords.lng);
+            pasteInput.style.borderColor = '#22c55e'; // hijau = sukses
+            setTimeout(() => { pasteInput.style.borderColor = ''; }, 2500);
+        } else {
+            pasteInput.style.borderColor = '#ef4444'; // merah = gagal
+            setTimeout(() => { pasteInput.style.borderColor = ''; }, 2500);
+            console.warn('Tidak bisa mengenali lokasi:', value);
+        }
+    }
+
+    document.getElementById('gmaps-paste-input').addEventListener('paste', function (e) {
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        if (pastedText) {
+            e.preventDefault();
+            this.value = pastedText;
+            handleGmapsInput(pastedText);
+        }
+    });
+
+    // Handle jika user mengetik/input manual lalu tekan Enter atau blur
+    document.getElementById('gmaps-paste-input').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); if (this.value.trim()) handleGmapsInput(this.value.trim()); }
+    });
+    document.getElementById('gmaps-paste-input').addEventListener('change', function () {
+        if (this.value.trim()) handleGmapsInput(this.value.trim());
+    });
 </script>
 @endscript

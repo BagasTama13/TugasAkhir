@@ -44,23 +44,21 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $username = strtolower($user->username ?? '');
 
-        if ($user && str_starts_with($username, 'worker')) {
-            return redirect()->route('worker.dashboard', ['worker' => $username]);
-        }
-
-        if ($user && str_starts_with($username, 'owner')) {
-            return redirect()->route('owner.dashboard', ['owner' => $username]);
-        }
-
-        // Admin goes to admin dashboard
-        if ($user && $username === 'admin') {
+        if ($user && $user->hasRole('admin')) {
             return redirect()->intended(route('dashboard', absolute: false));
         }
 
-        // Regular users go to user dashboard
+        if ($user && $user->hasRole('owner')) {
+            return redirect()->route('owner.dashboard', ['owner' => $user->username ?? 'owner']);
+        }
+
+        if ($user && $user->hasRole('worker')) {
+            return redirect()->route('worker.dashboard', ['worker' => $user->username ?? 'worker']);
+        }
+
         return redirect()->intended(route('user.dashboard', absolute: false));
     }
 

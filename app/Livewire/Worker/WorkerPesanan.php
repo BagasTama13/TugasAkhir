@@ -39,7 +39,7 @@ class WorkerPesanan extends Pesanan
         return PesananModel::with(['user', 'produk'])
             ->whereIn('status', ['dalam_antrian', 'diproses', 'terkirim'])
             ->latest()
-            ->get();
+            ->paginate(15);
     }
 
     public function render()

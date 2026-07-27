@@ -15,20 +15,25 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetLocale::class,
         ]);
 
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
+
         // Exempt Midtrans webhook from CSRF verification
         $middleware->validateCsrfTokens(except: [
             'midtrans/notification',
         ]);
 
         $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
+            /** @var \App\Models\User|null $user */
             $user = \Illuminate\Support\Facades\Auth::user();
-            if ($user && strtolower($user->username) === 'admin') {
+            if ($user && $user->hasRole('admin')) {
                 return route('dashboard');
             }
-            if ($user && strtolower($user->username) === 'owner') {
+            if ($user && $user->hasRole('owner')) {
                 return route('owner.dashboard', ['owner' => 'owner']);
             }
-            if ($user && strtolower($user->username) === 'worker') {
+            if ($user && $user->hasRole('worker')) {
                 return route('worker.dashboard', ['worker' => 'worker']);
             }
             return route('user.dashboard');

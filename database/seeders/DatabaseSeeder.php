@@ -15,6 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seeding roles
+        $adminRole = \App\Models\Role::firstOrCreate(['name' => 'admin']);
+        $ownerRole = \App\Models\Role::firstOrCreate(['name' => 'owner']);
+        $workerRole = \App\Models\Role::firstOrCreate(['name' => 'worker']);
+        $userRole = \App\Models\Role::firstOrCreate(['name' => 'user']);
+
         $admin = User::updateOrCreate([
             'username' => 'Admin',
         ], [
@@ -26,6 +32,7 @@ class DatabaseSeeder extends Seeder
         if (! $admin->hasVerifiedEmail()) {
             $admin->markEmailAsVerified();
         }
+        $admin->roles()->syncWithoutDetaching([$adminRole->id]);
 
         $owner = User::updateOrCreate([
             'username' => 'owner',
@@ -38,6 +45,7 @@ class DatabaseSeeder extends Seeder
         if (! $owner->hasVerifiedEmail()) {
             $owner->markEmailAsVerified();
         }
+        $owner->roles()->syncWithoutDetaching([$ownerRole->id]);
 
         $worker = User::updateOrCreate([
             'username' => 'worker',
@@ -50,6 +58,7 @@ class DatabaseSeeder extends Seeder
         if (! $worker->hasVerifiedEmail()) {
             $worker->markEmailAsVerified();
         }
+        $worker->roles()->syncWithoutDetaching([$workerRole->id]);
 
         $wamilo = User::updateOrCreate([
             'username' => 'wamilo',
@@ -64,5 +73,6 @@ class DatabaseSeeder extends Seeder
         if (! $wamilo->hasVerifiedEmail()) {
             $wamilo->markEmailAsVerified();
         }
+        $wamilo->roles()->syncWithoutDetaching([$userRole->id]);
     }
 }

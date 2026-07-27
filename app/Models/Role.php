@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 // Model Role digunakan untuk mengatur hak akses (peran) dari setiap User (misal: Admin, User Biasa).
-class Role extends Authenticatable
+class Role extends Model
 {
     // $fillable menentukan kolom yang bisa diisi secara massal.
     protected $fillable = ['name']; // Menyimpan nama role, contoh: 'admin', 'user'

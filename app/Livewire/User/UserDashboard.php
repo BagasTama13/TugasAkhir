@@ -15,19 +15,6 @@ class UserDashboard extends Component
     // Kategori terpilih dari antarmuka (default: 'all')
     public string $category = 'all';
 
-    // Method mount() berfungsi sebagai constructor/middleware tingkat komponen
-    public function mount(): void
-    {
-        $user = Auth::user();
-        $username = strtolower($user->username ?? '');
-
-        // Middleware: Memblokir pengguna dengan hak akses admin, owner, dan worker 
-        // agar tidak mengakses halaman dasbor user biasa
-        if ($username === 'admin' || str_starts_with($username, 'owner') || str_starts_with($username, 'worker')) {
-            abort(403, 'Use your designated panel.');
-        }
-    }
-
     // #[Computed] men-cache daftar produk di sisi server untuk satu siklus request
     #[Computed]
     public function products()
@@ -78,7 +65,7 @@ class UserDashboard extends Component
     public function activeOrdersCount()
     {
         return \App\Models\Pesanan::where('user_id', Auth::id())
-            ->whereIn('status', ['pending', 'accepted'])
+            ->whereIn('status', ['pending', 'dalam_antrian', 'diproses'])
             ->count();
     }
 
