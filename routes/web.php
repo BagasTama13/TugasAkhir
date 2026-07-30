@@ -9,6 +9,7 @@ use App\Livewire\Owner\OwnerActivity;
 use App\Livewire\Owner\OwnerDashboard;
 use App\Livewire\Owner\OwnerEtalase;
 use App\Livewire\Owner\OwnerPemasukan;
+use App\Livewire\Owner\OwnerPegawai;
 use App\Livewire\Owner\OwnerPesanan;
 use App\Livewire\Admin\Pemasukan;
 use App\Livewire\Admin\Pesanan;
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'verified', 'role:owner'])->prefix('owner/{owner}')->
     Route::get('/pemasukan', OwnerPemasukan::class)->name('owner.pemasukan');
     Route::get('/etalase', OwnerEtalase::class)->name('owner.etalase');
     Route::get('/activity', OwnerActivity::class)->name('owner.activity');
+    Route::get('/pegawai', OwnerPegawai::class)->name('owner.pegawai');
 });
 
 Route::pattern('worker', 'worker[0-9]*');

@@ -27,6 +27,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',   // Password (akan di-hash secara otomatis)
         'alamat',     // Alamat domisili
         'no_hp',      // Nomor telepon yang dapat dihubungi
+        'jabatan',    // Jabatan spesifik
+        'nomor_armada', // Nomor armada (hanya untuk worker)
         'avatar',     // Path file gambar profil
         'latitude',   // Titik koordinat peta (Latitude)
         'longitude',  // Titik koordinat peta (Longitude)

@@ -36,31 +36,44 @@ class Pesanan extends Component
     public $showRejectModal = false;
     public $rejectingId = null;
 
-    public $nomor = '';
+    // Modal Pembayaran Cicilan
+    public $showPaymentModal  = false;
+    public $paymentPesananId  = null;
+    public $paymentJumlah     = '';
+    public $paymentTipe       = ''; // 'admin' | 'cod'
+    public $paymentTotalHarga = 0;
+    public $paymentKekurangan = 0;
+    public $paymentNomor      = '';
+
+    public $selectedPesananId = null;
+
     public $nama = '';
-    public $tipe = '';
     public $jumlah = '';
-    public $alamat_penjemputan = '';
+    public $jumlah_halus = '';
+    public $jumlah_kasar = '';
+    public $harga_halus = '';
+    public $harga_kasar = '';
     public $alamat_pengiriman = '';
-    public $status = 'pending';
-    public $description = '';
     public $durasi = '';
+    public $catatan = '';
     public $produk_id = null;
     public $no_whatsapp = '';
 
     // rules() mendefinisikan aturan validasi input pada backend sebelum pesanan dapat ditambahkan atau diperbarui (Server-side Validation)
     public function rules()
     {
+        $isGrajen = $this->isGrajen;
         return [
-            'nomor'              => 'required|string|unique:pesanans,nomor,' . ($this->editingId ?? 'NULL') . ',id',
             'nama'               => 'required|string|min:3',
-            'tipe'               => 'required|string',
-            'jumlah'             => 'required|integer|min:1',
-            'alamat_penjemputan' => 'required|string',
+            'produk_id'          => 'required|exists:produks,id',
+            'jumlah'             => $isGrajen ? 'nullable|integer|min:0' : 'required|integer|min:1',
+            'jumlah_halus'       => $isGrajen ? 'required|integer|min:0' : 'nullable|integer|min:0',
+            'jumlah_kasar'       => $isGrajen ? 'required|integer|min:0' : 'nullable|integer|min:0',
+            'harga_halus'        => $isGrajen ? 'required|integer|min:0' : 'nullable|integer|min:0',
+            'harga_kasar'        => $isGrajen ? 'required|integer|min:0' : 'nullable|integer|min:0',
             'alamat_pengiriman'  => 'required|string|min:5',
-            'status'             => 'required|in:pending,dalam_antrian,diproses,terkirim,rejected',
-            'description'        => 'nullable|string',
-            'durasi'             => 'required_if:tipe,sewa|integer|min:1',
+            'durasi'             => 'nullable|integer|min:1',
+            'catatan'            => 'nullable|string',
             'no_whatsapp'        => 'required|string|min:10',
         ];
     }
@@ -69,7 +82,16 @@ class Pesanan extends Component
     #[Computed(cache: true)]
     public function produks()
     {
-        return \App\Models\Produk::select('id', 'nama', 'harga')->get();
+        return \App\Models\Produk::select('id', 'nama', 'jenis', 'harga')->get();
+    }
+
+    // Deteksi apakah produk yang dipilih adalah Grajen (berdasarkan nama produk)
+    #[Computed]
+    public function isGrajen(): bool
+    {
+        if (!$this->produk_id) return false;
+        $produk = $this->produks->firstWhere('id', $this->produk_id);
+        return $produk && str_contains(strtolower($produk->nama), 'grajen');
     }
 
     // #[Computed] mengambil semua daftar pesanan beserta data relasinya (Eager Loading: with user & produk)
@@ -93,6 +115,23 @@ class Pesanan extends Component
             sum(case when status = 'diproses' then 1 else 0 end) as diproses,
             sum(case when status = 'terkirim' then 1 else 0 end) as terkirim
         ")->first();
+    }
+
+    #[Computed]
+    public function selectedPesanan()
+    {
+        if (!$this->selectedPesananId) return null;
+        return PesananModel::with(['user', 'produk'])->find($this->selectedPesananId);
+    }
+
+    public function showDetail($id): void
+    {
+        $this->selectedPesananId = $id;
+    }
+
+    public function closeDetail(): void
+    {
+        $this->selectedPesananId = null;
     }
 
     private function invalidatePesananCache()
@@ -123,14 +162,15 @@ class Pesanan extends Component
 
     private function resetAttributes()
     {
-        $this->nomor = '';
         $this->nama = '';
-        $this->tipe = '';
         $this->jumlah = '';
-        $this->alamat_penjemputan = '';
+        $this->jumlah_halus = '';
+        $this->jumlah_kasar = '';
+        $this->harga_halus = '';
+        $this->harga_kasar = '';
         $this->alamat_pengiriman = '';
-        $this->description = '';
         $this->durasi = '';
+        $this->catatan = '';
         $this->produk_id = null;
         $this->no_whatsapp = '';
     }
@@ -138,22 +178,19 @@ class Pesanan extends Component
     public function editPesanan($id)
     {
         $pesanan = PesananModel::select([
-            'id', 'nomor', 'nama', 'tipe', 'jumlah',
-            'alamat_penjemputan', 'alamat_pengiriman', 'status',
-            'description', 'produk_id', 'no_whatsapp', 'durasi',
+            'id', 'nama', 'jumlah',
+            'alamat_pengiriman',
+            'produk_id', 'no_whatsapp', 'durasi', 'catatan',
         ])->findOrFail($id);
 
-        $this->editingId        = $id;
-        $this->nomor            = $pesanan->nomor;
-        $this->nama             = $pesanan->nama;
-        $this->tipe             = $pesanan->tipe;
-        $this->jumlah           = $pesanan->jumlah;
-        $this->alamat_penjemputan = $pesanan->alamat_penjemputan;
+        $this->editingId          = $id;
+        $this->nama               = $pesanan->nama;
+        $this->jumlah             = $pesanan->jumlah;
         $this->alamat_pengiriman  = $pesanan->alamat_pengiriman;
-        $this->durasi           = $pesanan->durasi;
-        $this->description      = $pesanan->description;
-        $this->produk_id        = $pesanan->produk_id;
-        $this->no_whatsapp      = $pesanan->no_whatsapp;
+        $this->durasi             = $pesanan->durasi;
+        $this->catatan            = $pesanan->catatan;
+        $this->produk_id          = $pesanan->produk_id;
+        $this->no_whatsapp        = $pesanan->no_whatsapp;
         $this->showForm = true;
     }
 
@@ -161,37 +198,62 @@ class Pesanan extends Component
     {
         $this->validate();
 
+        // Ambil data produk untuk mengisi field-field otomatis (sesuai alur panel User)
         $produk = \App\Models\Produk::findOrFail($this->produk_id);
 
+        // Kalkulasi jumlah & total: jika Grajen, gabungkan halus + kasar
+        if ($this->isGrajen) {
+            $jumlahTotal   = (int)($this->jumlah_halus ?? 0) + (int)($this->jumlah_kasar ?? 0);
+            $totalHarga    = ((int)($this->jumlah_halus ?? 0) * (int)($this->harga_halus ?? 0))
+                           + ((int)($this->jumlah_kasar ?? 0) * (int)($this->harga_kasar ?? 0));
+            $deskripsiProduk = "Produk: {$produk->nama} ({$produk->jenis})";
+
+            // Rincian perhitungan disimpan sebagai catatan/note
+            $catatanGrajen = "Halus: {$this->jumlah_halus} {$produk->satuan} × Rp" . number_format((int)$this->harga_halus, 0, ',', '.')
+                           . " = Rp" . number_format((int)($this->jumlah_halus ?? 0) * (int)($this->harga_halus ?? 0), 0, ',', '.')
+                           . "\nKasar: {$this->jumlah_kasar} {$produk->satuan} × Rp" . number_format((int)$this->harga_kasar, 0, ',', '.')
+                           . " = Rp" . number_format((int)($this->jumlah_kasar ?? 0) * (int)($this->harga_kasar ?? 0), 0, ',', '.')
+                           . "\nTotal: Rp" . number_format($totalHarga, 0, ',', '.');
+            // Gabungkan dengan catatan manual admin (jika ada)
+            $catatanFinal = $catatanGrajen . ($this->catatan ? "\n---\n" . $this->catatan : '');
+        } else {
+            $jumlahTotal     = (int)$this->jumlah;
+            $totalHarga      = in_array($produk->jenis, ['carter', 'sewa'])
+                ? ($this->durasi ?? 1) * config('pricing.sewa_per_day', 300000)
+                : $jumlahTotal * $produk->harga;
+            $deskripsiProduk = "Produk: {$produk->nama} ({$produk->jenis})";
+            $catatanFinal    = $this->catatan;
+        }
+
+
+        // Data inti yang identik dengan yang disimpan panel User
         $data = [
-            'nomor'              => $this->nomor,
             'nama'               => $this->nama,
-            'tipe'               => $this->tipe,
-            'jumlah'             => $this->jumlah,
-            'alamat_penjemputan' => $this->alamat_penjemputan,
+            'tipe'               => $produk->jenis,       // Otomatis dari produk (sama seperti User)
+            'jumlah'             => $jumlahTotal,
+            'alamat_penjemputan' => '-',              // Default (admin tidak input GPS)
             'alamat_pengiriman'  => $this->alamat_pengiriman,
-            'status'             => $this->status,
-            'description'        => $this->description,
+            'description'        => $deskripsiProduk, // Otomatis (termasuk breakdown halus/kasar)
             'produk_id'          => $this->produk_id,
+            'harga'              => $produk->harga,       // Disimpan seperti panel User
+            'ongkos_kirim'       => 0,                    // Default 0 (sama seperti User)
+            'jarak'              => 0,                    // Default 0 (sama seperti User)
+            'total_harga'        => $totalHarga,
+            'catatan'            => $catatanFinal,
             'no_whatsapp'        => $this->no_whatsapp,
-            'durasi'             => $this->durasi,
+            'durasi'             => $this->durasi ?: null,
         ];
 
-        if ($this->tipe === 'carter') {
-            $totalHarga = $this->calculateCarterPrice($this);
-        } elseif ($this->tipe === 'sewa') {
-            $totalHarga = $this->durasi * config('pricing.sewa_per_day', 300000);
-        } else {
-            $totalHarga = $this->jumlah * $produk->harga;
-        }
-        $data['total_harga'] = $totalHarga;
-
         if ($this->editingId) {
+            // Mode Edit: perbarui data tanpa mengubah nomor & status
             $pesanan = PesananModel::findOrFail($this->editingId);
             $pesanan->update($data);
             $msg    = 'Pesanan berhasil diperbarui!';
             $action = 'update';
         } else {
+            // Mode Baru: generate nomor otomatis & set status awal pending (identik dengan User)
+            $data['nomor']   = 'ADM-' . strtoupper(uniqid());
+            $data['status']  = 'pending';
             $data['user_id'] = $this->getUserId();
             $pesanan = PesananModel::create($data);
             $msg    = 'Pesanan berhasil ditambahkan!';
@@ -203,7 +265,7 @@ class Pesanan extends Component
             'action'      => $action,
             'entity_type' => 'Pesanan',
             'entity_id'   => $pesanan->id,
-            'description' => ($action === 'update' ? 'Update: ' : 'Tambah: ') . $pesanan->nomor,
+            'description' => ($action === 'update' ? 'Update: ' : 'Tambah (Admin): ') . $pesanan->nomor,
         ]);
 
         $this->invalidatePesananCache();
@@ -348,43 +410,137 @@ class Pesanan extends Component
         session()->flash('success', 'Pembayaran dikonfirmasi!');
     }
 
-    // Algoritma internal untuk mengkalkulasi harga otomatis secara dinamis 
-    // berdasarkan tipe pesanan (Carter Jarak, Sewa Harian, atau Beli Produk Satuan)
+    // =========================================================================
+    // SISTEM CICILAN (Partial Payment)
+    // Saat konfirmasi bayar atau COD diklik, muncul popup input nilai pembayaran.
+    // Jika kurang dari total → dicatat sebagai cicilan (catatan + Pemasukan parsial).
+    // Jika >= total → langsung lunas.
+    // =========================================================================
+
+    public function openPaymentModal($id, $tipe = 'admin'): void
+    {
+        $pesanan = PesananModel::findOrFail($id);
+        if ($pesanan->payment_status === 'telah_dibayar') return;
+
+        $totalTerbayar = \App\Models\Pemasukan::where('pesanan_id', $id)->sum('jumlah');
+        $this->paymentKekurangan = max(0, $pesanan->total_harga - $totalTerbayar);
+
+        $this->paymentPesananId  = $id;
+        $this->paymentTipe       = $tipe;
+        $this->paymentJumlah     = '';
+        $this->paymentTotalHarga = $pesanan->total_harga;
+        $this->paymentNomor      = $pesanan->nomor;
+        $this->showPaymentModal  = true;
+    }
+
+    public function closePaymentModal(): void
+    {
+        $this->showPaymentModal  = false;
+        $this->paymentPesananId  = null;
+        $this->paymentJumlah     = '';
+        $this->paymentTipe       = '';
+        $this->paymentTotalHarga = 0;
+        $this->paymentKekurangan = 0;
+        $this->paymentNomor      = '';
+    }
+
+    public function simpanPembayaran(): void
+    {
+        $this->validate([
+            'paymentJumlah' => 'required|numeric|min:1|max:' . $this->paymentKekurangan
+        ], [
+            'paymentJumlah.max' => 'Nominal pembayaran tidak boleh melebihi total kekurangan (Rp' . number_format($this->paymentKekurangan, 0, ',', '.') . ').'
+        ]);
+
+        $pesanan     = PesananModel::findOrFail($this->paymentPesananId);
+        $jumlahBayar = (int) $this->paymentJumlah;
+        $totalHarga  = (int) $pesanan->total_harga;
+        
+        $totalTerbayarSebelumnya = \App\Models\Pemasukan::where('pesanan_id', $pesanan->id)->sum('jumlah');
+        $kekuranganSebelumnya = $totalHarga - $totalTerbayarSebelumnya;
+        
+        $lunas       = $jumlahBayar >= $kekuranganSebelumnya;
+        $labelTipe   = $this->paymentTipe === 'cod' ? 'COD' : 'Pembayaran Kantor';
+
+        if ($lunas) {
+            // === PEMBAYARAN PENUH ===
+            $tglSekarang = now()->format('d M Y, H:i');
+            $catatanLunas = "[Cicilan {$tglSekarang}]\n"
+                . "Telah membayar: Rp" . number_format($jumlahBayar, 0, ',', '.') . "\n"
+                . "telah lunas (dari total Rp" . number_format($totalHarga, 0, ',', '.') . ")";
+
+            $catatanLama = $pesanan->catatan;
+            $pesanan->update([
+                'payment_status' => 'telah_dibayar',
+                'paid_at'        => now(),
+                'catatan'        => $catatanLama ? $catatanLama . "\n---\n" . $catatanLunas : $catatanLunas,
+            ]);
+
+            Pemasukan::create([
+                'tanggal'    => today(),
+                'pesanan_id' => $pesanan->id,
+                'jumlah'     => $jumlahBayar,
+                'keterangan' => "{$labelTipe} (Pelunasan): {$pesanan->nomor} ({$pesanan->nama})",
+                'kategori'   => 'penjualan',
+                'status'     => 'confirmed',
+                'user_id'    => Auth::id(),
+            ]);
+
+            $msg = 'Pembayaran lunas dikonfirmasi!';
+            $actDesc = "{$labelTipe} lunas: #{$pesanan->nomor}";
+        } else {
+            // === CICILAN / PEMBAYARAN PARSIAL ===
+            $kekuranganBaru = $kekuranganSebelumnya - $jumlahBayar;
+            $tglSekarang    = now()->format('d M Y, H:i');
+            $catatanCicilan = "[Cicilan {$tglSekarang}]"
+                . "\nTelah membayar: Rp" . number_format($jumlahBayar, 0, ',', '.')
+                . "\nMasih harus membayar: Rp" . number_format($kekuranganBaru, 0, ',', '.')
+                . " (dari sisa kekurangan awal Rp" . number_format($kekuranganSebelumnya, 0, ',', '.') . ")"
+                . " (dari total Rp" . number_format($totalHarga, 0, ',', '.') . ")";
+
+            $catatanLama  = $pesanan->catatan;
+            $pesanan->update([
+                'catatan' => $catatanLama
+                    ? $catatanLama . "\n---\n" . $catatanCicilan
+                    : $catatanCicilan,
+            ]);
+
+            // Catat cicilan sebagai Pemasukan terpisah (bukan updateOrCreate)
+            Pemasukan::create([
+                'tanggal'    => today(),
+                'pesanan_id' => $pesanan->id,
+                'jumlah'     => $jumlahBayar,
+                'keterangan' => "Cicilan {$labelTipe}: {$pesanan->nomor} ({$pesanan->nama})",
+                'kategori'   => 'penjualan',
+                'status'     => 'confirmed',
+                'user_id'    => Auth::id(),
+            ]);
+
+            $msg     = 'Cicilan Rp' . number_format($jumlahBayar, 0, ',', '.') . ' dicatat. Kekurangan: Rp' . number_format($kekuranganBaru, 0, ',', '.');
+            $actDesc = "Cicilan {$pesanan->nomor}: Rp" . number_format($jumlahBayar, 0, ',', '.');
+        }
+
+        Activity::create([
+            'user_id'     => Auth::id(),
+            'action'      => 'payment',
+            'entity_type' => 'Pesanan',
+            'entity_id'   => $pesanan->id,
+            'description' => $actDesc,
+        ]);
+
+        $this->invalidatePesananCache();
+        $this->closePaymentModal();
+        session()->flash('success', $msg);
+    }
+
+    // Algoritma internal untuk mengkalkulasi harga otomatis secara dinamis
+    // berdasarkan tipe pesanan (Carter/Sewa Harian, atau Beli Produk Satuan)
     private function hitungTotalHarga(PesananModel $pesanan): float|int
     {
-        if ($pesanan->tipe === 'carter') {
-            return $this->calculateCarterPrice($pesanan);
-        } elseif ($pesanan->tipe === 'sewa') {
+        if (in_array($pesanan->tipe, ['carter', 'sewa'])) {
             return ($pesanan->durasi ?? 1) * config('pricing.sewa_per_day', 300000);
         }
         return $pesanan->jumlah * ($pesanan->produk->harga ?? 0);
-    }
-
-    private function calculateCarterPrice($pesanan)
-    {
-        $distanceKm = $this->getDistanceInKm($pesanan->alamat_penjemputan, $pesanan->alamat_pengiriman);
-        $basePrice  = 100000;
-        if ($distanceKm <= 20) {
-            return $basePrice;
-        }
-        $extraKm = $distanceKm - 20;
-        return $basePrice + ($extraKm * 20000);
-    }
-
-    private function getDistanceInKm($origin, $destination)
-    {
-        $originParts = explode(',', $origin);
-        $destParts   = explode(',', $destination);
-        if (count($originParts) < 2 || count($destParts) < 2) return 0;
-        [$lat1, $lon1] = array_map('floatval', $originParts);
-        [$lat2, $lon2] = array_map('floatval', $destParts);
-        $earthRadius = 6371;
-        $dLat = deg2rad($lat2 - $lat1);
-        $dLon = deg2rad($lon2 - $lon1);
-        $a = sin($dLat / 2) * sin($dLat / 2)
-            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) * sin($dLon / 2);
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        return $earthRadius * $c;
     }
 
     public function deletePesanan($id)

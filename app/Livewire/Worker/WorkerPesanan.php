@@ -119,43 +119,5 @@ class WorkerPesanan extends Pesanan
         session()->flash('success', 'Pesanan dikonfirmasi terkirim!');
     }
 
-    /**
-     * Logika Keuangan Lapangan (Skenario COD):
-     * Worker berwenang untuk menarik tunai dari pembeli secara langsung di lokasi (Cash on Delivery).
-     * Saat di-klik, status pembayaran pesanan menjadi lunas ('telah_dibayar'),
-     * dan otomatis menambahkan uang tunai ini ke catatan kas/pemasukan sebagai 'confirmed' (Valid).
-     */
-    public function konfirmasiCOD($id)
-    {
-        $pesanan = PesananModel::findOrFail($id);
-        if ($pesanan->payment_status === 'telah_dibayar') return;
 
-        $pesanan->update([
-            'payment_status' => 'telah_dibayar',
-            'paid_at'        => now(),
-        ]);
-
-        // Update Pemasukan menjadi confirmed
-        Pemasukan::updateOrCreate(
-            ['pesanan_id' => $pesanan->id],
-            [
-                'tanggal'    => today(),
-                'jumlah'     => $pesanan->total_harga,
-                'keterangan' => "COD: {$pesanan->nomor} ({$pesanan->nama})",
-                'kategori'   => 'penjualan',
-                'status'     => 'confirmed',
-                'user_id'    => Auth::id(),
-            ]
-        );
-
-        Activity::create([
-            'user_id'     => Auth::id(),
-            'action'      => 'payment',
-            'entity_type' => 'Pesanan',
-            'entity_id'   => $pesanan->id,
-            'description' => "Konfirmasi COD: #{$pesanan->nomor}",
-        ]);
-
-        session()->flash('success', 'Pembayaran COD dikonfirmasi!');
-    }
 }
