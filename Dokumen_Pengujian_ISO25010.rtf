@@ -1,0 +1,621 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033
+{\fonttbl{\f0\froman\fcharset0 Times New Roman;}{\f1\fswiss\fcharset0 Calibri;}{\f2\fmodern\fcharset0 Courier New;}}
+{\colortbl ;\red0\green0\blue0;\red70\green130\blue180;\red245\green245\blue245;}
+\widowctrl\hyphauto
+\margl1440\margr1440\margt1440\margb1440
+\f1\fs22
+{\pard\qc\sb400\sa100\b\fs36 DOKUMEN PENGUJIAN SISTEM\par}
+{\pard\qc\sb60\sa60\b\fs28 Berdasarkan Standar ISO/IEC 25010\par}
+{\pard\qc\sb60\sa200\fs24 Sistem Informasi Transportasi BPTrans\par}
+{\pard\qc\sb60\sa400\fs22 Major Testing \\u2014 Evaluasi Kualitas Perangkat Lunak\par}
+{\pard\page\par}
+{\pard\s1\sb300\sa100\b\fs28 1. Pengujian Performance Efficiency (Efisiensi Kinerja)\par}
+{\pard\s2\sb200\sa80\b\fs24 1.1 Tujuan Pengujian\par}
+{\pard\sb60\sa60\fs22 Pengujian Performance Efficiency bertujuan untuk mengukur kemampuan sistem dalam memberikan respons yang cepat dan efisien terhadap pengguna. Sesuai karakteristik ISO/IEC 25010, pengujian ini mencakup time behavior (perilaku waktu) dan resource utilization (utilisasi sumber daya).\par}
+{\pard\s2\sb200\sa80\b\fs24 1.2 Ruang Lingkup\par}
+{\pard\sb60\sa60\fs22 Halaman-halaman yang diuji meliputi seluruh halaman utama yang diakses oleh keempat peran aktor sistem (Admin, Owner, Worker, dan User/Customer).\par}
+{\pard\s2\sb200\sa80\b\fs24 1.3 Alat dan Metode Pengujian\par}
+{\pard\sb60\sa60\fs22 Alat    : Google Lighthouse (bawaan Google Chrome DevTools, Tab Lighthouse)\par}
+{\pard\sb60\sa60\fs22 Metode  : Automated Performance Audit\par}
+{\pard\sb60\sa60\fs22 Langkah pengujian:\par}
+{\pard\sb60\sa60\fs22 1. Buka halaman yang diuji pada browser Google Chrome dalam mode Incognito.\par}
+{\pard\sb60\sa60\fs22 2. Tekan F12 untuk membuka DevTools, pilih tab "Lighthouse".\par}
+{\pard\sb60\sa60\fs22 3. Pilih kategori "Performance" dan klik "Analyze page load".\par}
+{\pard\sb60\sa60\fs22 4. Catat skor dan metrik utama yang dihasilkan.\par}
+{\pard\s2\sb200\sa80\b\fs24 1.4 Kriteria Penilaian\par}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx2500\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx5500\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx9000
+{\pard\intbl\b\fs20\qc Rentang Skor\cell}
+{\pard\intbl\b\fs20\qc Kategori\cell}
+{\pard\intbl\b\fs20\qc Keterangan\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2500\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5500\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 90 \\u2013 100\cell}
+{\pard\intbl\fs20 Baik (Good)\cell}
+{\pard\intbl\fs20 Performa sangat optimal\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2500\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5500\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 50 \\u2013 89\cell}
+{\pard\intbl\fs20 Perlu Perbaikan\cell}
+{\pard\intbl\fs20 Masih dapat diterima namun perlu optimasi\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2500\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5500\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 0 \\u2013 49\cell}
+{\pard\intbl\fs20 Buruk (Poor)\cell}
+{\pard\intbl\fs20 Performa tidak memenuhi standar\cell}
+\row}
+{\pard\s2\sb200\sa80\b\fs24 1.5 Tabel Hasil Pengujian Performance Efficiency\par}
+{\pard\sb60\sa60\fs20 Catatan: Kolom "Skor" diisi setelah pengujian dilaksanakan. FCP = First Contentful Paint, TTI = Time to Interactive, LCP = Largest Contentful Paint.\par}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx2950\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx4450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx5650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx6650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx7650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx8650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx10000
+{\pard\intbl\b\fs20\qc No\cell}
+{\pard\intbl\b\fs20\qc Halaman\cell}
+{\pard\intbl\b\fs20\qc Peran\cell}
+{\pard\intbl\b\fs20\qc Skor (0-100)\cell}
+{\pard\intbl\b\fs20\qc FCP (s)\cell}
+{\pard\intbl\b\fs20\qc TTI (s)\cell}
+{\pard\intbl\b\fs20\qc LCP (s)\cell}
+{\pard\intbl\b\fs20\qc Kategori\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 1\cell}
+{\pard\intbl\fs20 Halaman Login\cell}
+{\pard\intbl\fs20 User (semua peran)\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 2\cell}
+{\pard\intbl\fs20 Dashboard Admin\cell}
+{\pard\intbl\fs20 Admin\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 3\cell}
+{\pard\intbl\fs20 Dashboard Owner\cell}
+{\pard\intbl\fs20 Owner\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 4\cell}
+{\pard\intbl\fs20 Dashboard Worker\cell}
+{\pard\intbl\fs20 Worker\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 5\cell}
+{\pard\intbl\fs20 Dashboard User (Customer)\cell}
+{\pard\intbl\fs20 User\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 6\cell}
+{\pard\intbl\fs20 Halaman Manajemen Pesanan (Admin)\cell}
+{\pard\intbl\fs20 Admin\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 7\cell}
+{\pard\intbl\fs20 Halaman Pesanan (Worker)\cell}
+{\pard\intbl\fs20 Worker\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 8\cell}
+{\pard\intbl\fs20 Halaman Pesanan (User)\cell}
+{\pard\intbl\fs20 User\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 9\cell}
+{\pard\intbl\fs20 Halaman Buat Pesanan (Checkout)\cell}
+{\pard\intbl\fs20 User\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 10\cell}
+{\pard\intbl\fs20 Halaman Etalase / Produk\cell}
+{\pard\intbl\fs20 Admin\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 11\cell}
+{\pard\intbl\fs20 Halaman Laporan Pemasukan\cell}
+{\pard\intbl\fs20 Admin / Owner\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2950\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx10000
+{\pard\intbl\fs20 12\cell}
+{\pard\intbl\fs20 Halaman Manajemen Pegawai\cell}
+{\pard\intbl\fs20 Owner\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\pard\page\par}
+{\pard\s1\sb300\sa100\b\fs28 2. Pengujian Compatibility (Kompatibilitas)\par}
+{\pard\s2\sb200\sa80\b\fs24 2.1 Tujuan Pengujian\par}
+{\pard\sb60\sa60\fs22 Pengujian Compatibility bertujuan untuk memastikan sistem dapat berjalan dengan baik dan menampilkan antarmuka yang konsisten pada berbagai browser dan ukuran layar perangkat yang berbeda-beda, tanpa adanya penurunan fungsi atau kerusakan tampilan.\par}
+{\pard\s2\sb200\sa80\b\fs24 2.2 Ruang Lingkup\par}
+{\pard\sb60\sa60\fs22 Pengujian mencakup dua aspek kompatibilitas:\par}
+{\pard\sb60\sa60\fs22 a) Kompatibilitas Browser: Diuji pada Google Chrome, Mozilla Firefox, dan Microsoft Edge.\par}
+{\pard\sb60\sa60\fs22 b) Kompatibilitas Perangkat (Responsivitas): Diuji pada tampilan Desktop, Tablet, dan Mobile.\par}
+{\pard\s2\sb200\sa80\b\fs24 2.3 Alat dan Metode Pengujian\par}
+{\pard\sb60\sa60\fs22 Alat    : Browser asli (Chrome, Firefox, Edge) + Chrome DevTools (Device Emulation)\par}
+{\pard\sb60\sa60\fs22 Metode  : Manual Checklist Testing\par}
+{\pard\sb60\sa60\fs22 Skala   : \\u2713 Kompatibel | \\u2717 Tidak Kompatibel\par}
+{\pard\s2\sb200\sa80\b\fs24 2.4 Tabel Pengujian Kompatibilitas Browser\par}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx2850\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx4150\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx5450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx6650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx9000
+{\pard\intbl\b\fs20\qc No\cell}
+{\pard\intbl\b\fs20\qc Halaman\cell}
+{\pard\intbl\b\fs20\qc Chrome\cell}
+{\pard\intbl\b\fs20\qc Firefox\cell}
+{\pard\intbl\b\fs20\qc Edge\cell}
+{\pard\intbl\b\fs20\qc Keterangan\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 1\cell}
+{\pard\intbl\fs20 Halaman Login\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 2\cell}
+{\pard\intbl\fs20 Dashboard Admin\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 3\cell}
+{\pard\intbl\fs20 Dashboard Owner\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 4\cell}
+{\pard\intbl\fs20 Dashboard Worker\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 5\cell}
+{\pard\intbl\fs20 Dashboard User\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 6\cell}
+{\pard\intbl\fs20 Halaman Pesanan (Admin)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 7\cell}
+{\pard\intbl\fs20 Halaman Pesanan (Worker)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 8\cell}
+{\pard\intbl\fs20 Halaman Pesanan (User)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 9\cell}
+{\pard\intbl\fs20 Halaman Buat Pesanan (Checkout)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 10\cell}
+{\pard\intbl\fs20 Halaman Etalase / Produk\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 11\cell}
+{\pard\intbl\fs20 Halaman Laporan Pemasukan\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 12\cell}
+{\pard\intbl\fs20 Halaman Manajemen Pegawai\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\pard\s2\sb200\sa80\b\fs24 2.5 Tabel Pengujian Kompatibilitas Perangkat (Responsivitas)\par}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx2850\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx4350\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx5650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx7050\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx9000
+{\pard\intbl\b\fs20\qc No\cell}
+{\pard\intbl\b\fs20\qc Halaman\cell}
+{\pard\intbl\b\fs20\qc Desktop (>1024px)\cell}
+{\pard\intbl\b\fs20\qc Tablet (768px)\cell}
+{\pard\intbl\b\fs20\qc Mobile (<480px)\cell}
+{\pard\intbl\b\fs20\qc Keterangan\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 1\cell}
+{\pard\intbl\fs20 Halaman Login\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 2\cell}
+{\pard\intbl\fs20 Dashboard Admin\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 3\cell}
+{\pard\intbl\fs20 Dashboard Owner\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 4\cell}
+{\pard\intbl\fs20 Dashboard Worker\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 5\cell}
+{\pard\intbl\fs20 Dashboard User\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 6\cell}
+{\pard\intbl\fs20 Halaman Pesanan (Admin)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 7\cell}
+{\pard\intbl\fs20 Halaman Pesanan (Worker)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 8\cell}
+{\pard\intbl\fs20 Halaman Pesanan (User)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 9\cell}
+{\pard\intbl\fs20 Halaman Buat Pesanan (Checkout)\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 10\cell}
+{\pard\intbl\fs20 Halaman Etalase / Produk\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 11\cell}
+{\pard\intbl\fs20 Halaman Laporan Pemasukan\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4350\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx5650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7050\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9000
+{\pard\intbl\fs20 12\cell}
+{\pard\intbl\fs20 Halaman Manajemen Pegawai\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 \\u2713 / \\u2717\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\pard\page\par}
+{\pard\s1\sb300\sa100\b\fs28 3. Pengujian Security (Keamanan)\par}
+{\pard\s2\sb200\sa80\b\fs24 3.1 Tujuan Pengujian\par}
+{\pard\sb60\sa60\fs22 Pengujian Security bertujuan untuk memastikan sistem mampu melindungi data dan sumber daya dari akses yang tidak sah. Pengujian ini sangat kritis mengingat sistem menangani transaksi keuangan, data pribadi pelanggan, dan integrasi dengan payment gateway (Midtrans).\par}
+{\pard\s2\sb200\sa80\b\fs24 3.2 Aspek yang Diuji\par}
+{\pard\sb60\sa60\fs22 a) Authentication  : Proteksi halaman dari akses tanpa login.\par}
+{\pard\sb60\sa60\fs22 b) Authorization   : Proteksi akses lintas peran (Role-Based Access Control).\par}
+{\pard\sb60\sa60\fs22 c) Input Validation: Proteksi dari input data tidak valid atau berbahaya.\par}
+{\pard\sb60\sa60\fs22 d) CSRF Protection : Proteksi dari pemalsuan permintaan lintas situs.\par}
+{\pard\sb60\sa60\fs22 e) Webhook Security: Verifikasi signature dari callback payment gateway.\par}
+{\pard\s2\sb200\sa80\b\fs24 3.3 Alat dan Metode Pengujian\par}
+{\pard\sb60\sa60\fs22 Alat   : Browser (manual), Postman (untuk uji webhook/API)\par}
+{\pard\sb60\sa60\fs22 Metode : Manual Black Box Testing \\u2014 setiap skenario dicoba langsung dan dicatat hasilnya.\par}
+{\pard\sb60\sa60\fs22 Skala  : Berhasil | Gagal\par}
+{\pard\s2\sb200\sa80\b\fs24 3.4 Tabel Pengujian Security\par}
+{\pard\sb60\sa60\fs20 Keterangan: "Berhasil" = sistem merespons sesuai yang diharapkan (aman). "Gagal" = terdapat celah keamanan.\par}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx1850\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx4850\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx7650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx9250\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx9950
+{\pard\intbl\b\fs20\qc No\cell}
+{\pard\intbl\b\fs20\qc Aspek\cell}
+{\pard\intbl\b\fs20\qc Skenario Pengujian\cell}
+{\pard\intbl\b\fs20\qc Hasil yang Diharapkan\cell}
+{\pard\intbl\b\fs20\qc Hasil Aktual\cell}
+{\pard\intbl\b\fs20\qc Status\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 1\cell}
+{\pard\intbl\fs20 Authentication\cell}
+{\pard\intbl\fs20 Akses halaman /admin/pesanan tanpa login\cell}
+{\pard\intbl\fs20 Sistem mengarahkan (redirect) ke halaman Login\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 2\cell}
+{\pard\intbl\fs20 Authentication\cell}
+{\pard\intbl\fs20 Akses halaman /owner/dashboard tanpa login\cell}
+{\pard\intbl\fs20 Sistem mengarahkan ke halaman Login\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 3\cell}
+{\pard\intbl\fs20 Authentication\cell}
+{\pard\intbl\fs20 Akses halaman /worker/pesanan tanpa login\cell}
+{\pard\intbl\fs20 Sistem mengarahkan ke halaman Login\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 4\cell}
+{\pard\intbl\fs20 Authentication\cell}
+{\pard\intbl\fs20 Akses halaman /user/pesanan tanpa login\cell}
+{\pard\intbl\fs20 Sistem mengarahkan ke halaman Login\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 5\cell}
+{\pard\intbl\fs20 Authorization\cell}
+{\pard\intbl\fs20 Pengguna berperan User (Customer) mengakses URL /admin/pesanan\cell}
+{\pard\intbl\fs20 Sistem menolak dan menampilkan error 403 Forbidden\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 6\cell}
+{\pard\intbl\fs20 Authorization\cell}
+{\pard\intbl\fs20 Pengguna berperan User mengakses URL /owner/dashboard\cell}
+{\pard\intbl\fs20 Sistem menolak, error 403 Forbidden\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 7\cell}
+{\pard\intbl\fs20 Authorization\cell}
+{\pard\intbl\fs20 Pengguna berperan Worker mengakses URL /admin/etalase\cell}
+{\pard\intbl\fs20 Sistem menolak, error 403 Forbidden\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 8\cell}
+{\pard\intbl\fs20 Authorization\cell}
+{\pard\intbl\fs20 Pengguna berperan Worker mencoba menambah pesanan melalui URL langsung\cell}
+{\pard\intbl\fs20 Sistem menolak dengan pesan "Worker tidak dapat menambah pesanan"\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 9\cell}
+{\pard\intbl\fs20 Authorization\cell}
+{\pard\intbl\fs20 Pengguna berperan Worker mencoba menghapus pesanan\cell}
+{\pard\intbl\fs20 Sistem menolak dengan pesan "Worker tidak dapat menghapus pesanan"\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 10\cell}
+{\pard\intbl\fs20 Authorization\cell}
+{\pard\intbl\fs20 User A mencoba mengakses detail pesanan milik User B melalui manipulasi ID\cell}
+{\pard\intbl\fs20 Sistem hanya menampilkan pesanan milik user yang sedang login\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 11\cell}
+{\pard\intbl\fs20 Input Validation\cell}
+{\pard\intbl\fs20 Submit form pembuatan pesanan dengan kolom nama kosong\cell}
+{\pard\intbl\fs20 Muncul pesan validasi "Nama pembeli wajib diisi", data tidak tersimpan\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 12\cell}
+{\pard\intbl\fs20 Input Validation\cell}
+{\pard\intbl\fs20 Submit form pesanan dengan jumlah = 0 atau negatif\cell}
+{\pard\intbl\fs20 Muncul pesan validasi "Jumlah produk minimal 1", data tidak tersimpan\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 13\cell}
+{\pard\intbl\fs20 Input Validation\cell}
+{\pard\intbl\fs20 Submit form pesanan dengan No. WhatsApp kurang dari 10 karakter\cell}
+{\pard\intbl\fs20 Muncul pesan validasi, data tidak tersimpan\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 14\cell}
+{\pard\intbl\fs20 Input Validation\cell}
+{\pard\intbl\fs20 Submit form cicilan dengan nominal melebihi sisa tagihan\cell}
+{\pard\intbl\fs20 Muncul pesan validasi batas maksimal, data tidak tersimpan\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 15\cell}
+{\pard\intbl\fs20 Input Validation\cell}
+{\pard\intbl\fs20 Admin menambah produk tanpa mengisi harga\cell}
+{\pard\intbl\fs20 Muncul pesan validasi "Harga wajib diisi dan berupa angka"\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 16\cell}
+{\pard\intbl\fs20 Input Validation\cell}
+{\pard\intbl\fs20 Owner menambah pegawai dengan username yang sudah digunakan\cell}
+{\pard\intbl\fs20 Muncul pesan validasi "Username sudah digunakan"\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 17\cell}
+{\pard\intbl\fs20 CSRF Protection\cell}
+{\pard\intbl\fs20 Mengirimkan permintaan POST ke endpoint form tanpa CSRF token\cell}
+{\pard\intbl\fs20 Sistem menolak permintaan dengan error 419 Page Expired\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 18\cell}
+{\pard\intbl\fs20 Webhook Security\cell}
+{\pard\intbl\fs20 Mengirimkan notifikasi webhook Midtrans dengan signature key yang salah (via Postman)\cell}
+{\pard\intbl\fs20 Sistem menolak dan mengembalikan respons 403 Invalid signature key\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx1850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4850\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx7650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9250\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9950
+{\pard\intbl\fs20 19\cell}
+{\pard\intbl\fs20 Webhook Security\cell}
+{\pard\intbl\fs20 Mengirimkan notifikasi webhook dengan order_id yang tidak terdaftar di sistem\cell}
+{\pard\intbl\fs20 Sistem mengembalikan respons 404 Pesanan not found\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\pard\page\par}
+{\pard\s1\sb300\sa100\b\fs28 4. Rekapitulasi Hasil Pengujian\par}
+{\pard\sb60\sa60\fs22 Tabel berikut merangkum kesimpulan akhir dari seluruh pengujian yang telah dilaksanakan berdasarkan standar ISO/IEC 25010.\par}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx2450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx4450\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx6650\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx8150\clbrdrt\brdrs\brdrw15\clbrdrl\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\clbrdrr\brdrs\brdrw15\cellx9050
+{\pard\intbl\b\fs20\qc No\cell}
+{\pard\intbl\b\fs20\qc Karakteristik\cell}
+{\pard\intbl\b\fs20\qc Metode\cell}
+{\pard\intbl\b\fs20\qc Cakupan\cell}
+{\pard\intbl\b\fs20\qc Hasil\cell}
+{\pard\intbl\b\fs20\qc Kesimpulan\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9050
+{\pard\intbl\fs20 1\cell}
+{\pard\intbl\fs20 Performance Efficiency\cell}
+{\pard\intbl\fs20 Lighthouse Audit\cell}
+{\pard\intbl\fs20 12 halaman diuji\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9050
+{\pard\intbl\fs20 2\cell}
+{\pard\intbl\fs20 Compatibility \\u2013 Browser\cell}
+{\pard\intbl\fs20 Manual Checklist\cell}
+{\pard\intbl\fs20 12 halaman \\xD7 3 browser\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9050
+{\pard\intbl\fs20 3\cell}
+{\pard\intbl\fs20 Compatibility \\u2013 Perangkat\cell}
+{\pard\intbl\fs20 Manual Checklist\cell}
+{\pard\intbl\fs20 12 halaman \\xD7 3 perangkat\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\trowd\trgaph100\trleft0\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx4450\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6650\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx8150\clbrdrt\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx9050
+{\pard\intbl\fs20 4\cell}
+{\pard\intbl\fs20 Security\cell}
+{\pard\intbl\fs20 Manual Black Box Testing\cell}
+{\pard\intbl\fs20 19 skenario diuji\cell}
+{\pard\intbl\fs20 -\cell}
+{\pard\intbl\fs20 -\cell}
+\row}
+{\pard\sb60\sa60\fs22 \par}
+{\pard\sb60\sa60\fs22 Catatan: Kolom "Hasil" dan "Kesimpulan" diisi setelah seluruh pengujian dilaksanakan.\par}
+}

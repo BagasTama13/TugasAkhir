@@ -422,8 +422,18 @@ class Pesanan extends Component
         $pesanan = PesananModel::findOrFail($id);
         if ($pesanan->payment_status === 'telah_dibayar') return;
 
-        $totalTerbayar = \App\Models\Pemasukan::where('pesanan_id', $id)->sum('jumlah');
-        $this->paymentKekurangan = max(0, $pesanan->total_harga - $totalTerbayar);
+        $totalTerbayar = (int) \App\Models\Pemasukan::where('pesanan_id', $id)->where('status', 'confirmed')->sum('jumlah');
+        $this->paymentKekurangan = max(0, (int) $pesanan->total_harga - $totalTerbayar);
+
+        if ($this->paymentKekurangan <= 0) {
+            $pesanan->update([
+                'payment_status' => 'telah_dibayar',
+                'paid_at'        => now(),
+            ]);
+            $this->invalidatePesananCache();
+            session()->flash('success', 'Status pesanan otomatis diperbarui menjadi lunas karena total pembayaran sudah memenuhi!');
+            return;
+        }
 
         $this->paymentPesananId  = $id;
         $this->paymentTipe       = $tipe;
@@ -456,7 +466,7 @@ class Pesanan extends Component
         $jumlahBayar = (int) $this->paymentJumlah;
         $totalHarga  = (int) $pesanan->total_harga;
         
-        $totalTerbayarSebelumnya = \App\Models\Pemasukan::where('pesanan_id', $pesanan->id)->sum('jumlah');
+        $totalTerbayarSebelumnya = (int) \App\Models\Pemasukan::where('pesanan_id', $pesanan->id)->where('status', 'confirmed')->sum('jumlah');
         $kekuranganSebelumnya = $totalHarga - $totalTerbayarSebelumnya;
         
         $lunas       = $jumlahBayar >= $kekuranganSebelumnya;

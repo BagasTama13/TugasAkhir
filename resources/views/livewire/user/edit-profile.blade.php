@@ -1,3 +1,8 @@
+@push('head')
+    {{-- Leaflet CSS & JS — hanya dimuat di halaman Edit Profil yang memerlukan peta --}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+@endpush
 <div class="min-h-screen bg-[#F8FAFC] pb-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div class="bg-white rounded-[3rem] shadow-xl border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700">

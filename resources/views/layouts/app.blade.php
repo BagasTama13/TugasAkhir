@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Panel internal: tidak perlu diindeks search engine --}}
+    <meta name="robots" content="noindex, nofollow">
     <title>
         @php
             $segment = request()->segment(1);
@@ -16,15 +18,32 @@
             }
         @endphp
     </title>
+    @php
+        $segment = request()->segment(1);
+        if ($segment === 'owner') {
+            $metaDesc = 'Portal Owner BPTrans — pantau laporan keuangan, manajemen pegawai, dan rekap pesanan secara real-time.';
+        } elseif ($segment === 'worker') {
+            $metaDesc = 'Portal Worker BPTrans — kelola dan perbarui status pengiriman pesanan.';
+        } else {
+            $metaDesc = 'Panel Admin BPTrans — manajemen pesanan, etalase produk, dan laporan pemasukan bisnis logistik.';
+        }
+    @endphp
+    <meta name="description" content="{{ $metaDesc }}">
 
-    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+    {{-- DNS Prefetch untuk mempercepat koneksi ke domain eksternal --}}
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
+    {{-- Google Fonts dengan font-display=swap agar teks tetap tampil saat font dimuat --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap&font-display=swap" rel="stylesheet">
 
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
+    @stack('head')
+
     <style>
         [x-cloak] { display: none !important; }
         .nav-link-active {
@@ -32,7 +51,7 @@
         }
     </style>
 </head>
-<body class="h-full text-slate-900 antialiased overflow-hidden selection:bg-indigo-500 selection:text-white">
+<body class="h-full text-slate-900 antialiased overflow-hidden overflow-x-hidden selection:bg-indigo-500 selection:text-white">
 
     <div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
         

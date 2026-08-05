@@ -215,8 +215,8 @@
                             $currentStatus = $statusMap[$pesanan->status] ?? ['label' => $pesanan->status, 'class' => 'bg-slate-100 text-slate-600 border-slate-200'];
                             $currentPay    = $payMap[$pesanan->payment_status] ?? ['label' => ($pesanan->payment_status ?? '-'), 'class' => 'bg-slate-100 text-slate-500 border-slate-200'];
                         @endphp
-                        <tr wire:key="p-{{ $pesanan->id }}" wire:click="showDetail({{ $pesanan->id }})" class="hover:bg-indigo-50/40 transition-colors cursor-pointer group">
-                            <td class="px-6 py-4">
+                        <tr wire:key="p-{{ $pesanan->id }}" class="hover:bg-indigo-50/40 transition-colors group">
+                            <td wire:click="showDetail({{ $pesanan->id }})" class="px-6 py-4 cursor-pointer">
                                 <div class="font-bold text-slate-900">#{{ $pesanan->nomor }}</div>
                                 <div class="text-xs text-slate-500 mt-0.5">{{ $pesanan->nama }}</div>
                                 <div class="mt-2">
@@ -239,14 +239,14 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
+                            <td wire:click="showDetail({{ $pesanan->id }})" class="px-6 py-4 cursor-pointer">
                                 <div class="text-sm font-semibold text-slate-700">{{ $pesanan->produk ? $pesanan->produk->nama : '-' }}</div>
                                 <div class="text-[10px] font-bold text-slate-400 mt-0.5 uppercase">{{ $pesanan->jumlah }} Units | {{ $pesanan->tipe }}</div>
                                 @if($pesanan->description)
                                     <div class="text-[9px] text-slate-500 mt-1 leading-tight max-w-[200px]">{{ $pesanan->description }}</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td wire:click="showDetail({{ $pesanan->id }})" class="px-6 py-4 cursor-pointer">
                                 <div class="text-sm font-bold text-slate-900">
                                     @if($pesanan->total_harga)
                                         Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
@@ -255,12 +255,12 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <td wire:click="showDetail({{ $pesanan->id }})" class="px-6 py-4 text-center cursor-pointer">
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $currentStatus['class'] }} uppercase tracking-wider">
                                     {{ $currentStatus['label'] }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <td wire:click="showDetail({{ $pesanan->id }})" class="px-6 py-4 text-center cursor-pointer">
                                 @if($pesanan->payment_status)
                                     <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $currentPay['class'] }} uppercase tracking-wider">
                                         {{ $currentPay['label'] }}

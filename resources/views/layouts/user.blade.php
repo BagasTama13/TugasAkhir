@@ -4,25 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="robots" content="noindex, nofollow">
     <title>Hub Pelanggan | BPTrans Logistik</title>
+    <meta name="description" content="Portal pelanggan BPTrans — pesan material bangunan dan logistik, pantau status pengiriman, dan kelola transaksi Anda secara online.">
 
-    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+    {{-- DNS Prefetch untuk mempercepat koneksi ke domain eksternal --}}
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//unpkg.com">
+    <link rel="dns-prefetch" href="//app.sandbox.midtrans.com">
+    <link rel="dns-prefetch" href="//app.midtrans.com">
+
+    {{-- Google Fonts dengan font-display=swap agar teks tetap tampil saat font dimuat --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap&font-display=swap" rel="stylesheet">
 
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-    {{-- Midtrans Snap.js --}}
+    {{-- Midtrans Snap.js — dimuat di semua halaman user karena bisa dibutuhkan dari halaman pesanan --}}
     <script
         src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
-        data-client-key="{{ config('midtrans.client_key') }}">
+        data-client-key="{{ config('midtrans.client_key') }}"
+        defer>
     </script>
+
+    {{-- Leaflet hanya dimuat di halaman yang membutuhkan (detail-pesanan, edit-profile) --}}
+    @stack('head')
 
     <style>
         [x-cloak] { display: none !important; }

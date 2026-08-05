@@ -4,14 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BPTrans | Solusi Material Konstruksi Premium & Terpercaya</title>
+    <meta name="description" content="BPTrans Jepara — supplier material konstruksi premium: batu bata, genteng, kayu, dan grajen. Pengiriman logistik tepat waktu se-Jepara dan sekitarnya.">
 
-    <!-- Google Fonts -->
+    {{-- DNS Prefetch untuk percepatan koneksi --}}
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
+    {{-- Preconnect wajib untuk Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    {{--
+        KRITIS: Preload font Plus Jakarta Sans Bold (digunakan oleh LCP element h1)
+        Memastikan font tersedia sebelum browser merender h1,
+        menghilangkan FOUT yang menyebabkan LCP lambat.
+    --}}
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    
-    <!-- AOS CSS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -177,7 +187,7 @@
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square bg-gradient-to-tr from-indigo-100 to-cyan-50 rounded-full -z-10 blur-3xl opacity-60"></div>
                     
                     <div class="relative transform hover:scale-[1.02] transition-transform duration-700 ease-out">
-                        <img src="{{ asset('images/colt.png') }}" alt="BPTrans" fetchpriority="high" class="w-full h-auto object-contain drop-shadow-[0_30px_60px_rgba(79,70,229,0.2)] animate-float">
+                        <img src="{{ asset('images/colt.png') }}" alt="BPTrans — Armada Logistik Material" fetchpriority="high" width="600" height="500" class="w-full h-auto object-contain drop-shadow-[0_30px_60px_rgba(79,70,229,0.2)] animate-float">
                         
                         <!-- Mini Badges -->
                         <div class="absolute top-[10%] right-[-10%] glass p-[1.618rem] rounded-2xl shadow-xl hidden md:block animate-bounce" style="animation-duration: 3s;">
@@ -381,18 +391,83 @@
 
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <!-- AOS JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    {{--
+        Ganti AOS dengan IntersectionObserver ringan yang TIDAK menyembunyikan elemen.
+        AOS menyebabkan CLS karena ia menyembunyikan elemen (opacity:0, transform)
+        sebelum viewport mencapainya — ini menyebabkan layout shift saat elemen muncul.
+        Pendekatan ini hanya menambahkan class CSS tanpa mengubah layout sama sekali.
+    --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({
-                duration: 800,
-                easing: 'ease-out-cubic',
-                once: true,
-                offset: 50
+        (function() {
+            // Tambahkan style animasi ringan tanpa mengubah layout
+            var style = document.createElement('style');
+            style.textContent = `
+                .fade-in-up { animation: fadeInUp 0.7s ease-out both; }
+                .fade-in-right { animation: fadeInRight 0.7s ease-out both; }
+                .fade-in-left { animation: fadeInLeft 0.7s ease-out both; }
+                .zoom-in-anim { animation: zoomIn 0.6s ease-out both; }
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(24px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes fadeInRight {
+                    from { opacity: 0; transform: translateX(-24px); }
+                    to   { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes fadeInLeft {
+                    from { opacity: 0; transform: translateX(24px); }
+                    to   { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes zoomIn {
+                    from { opacity: 0; transform: scale(0.95); }
+                    to   { opacity: 1; transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Map data-aos ke CSS class
+            var aosMap = {
+                'fade-up':    'fade-in-up',
+                'fade-right': 'fade-in-right',
+                'fade-left':  'fade-in-left',
+                'zoom-in':    'zoom-in-anim',
+                'fade-down':  'fade-in-up',
+            };
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            var el = entry.target;
+                            var aosType = el.getAttribute('data-aos') || 'fade-up';
+                            var delay = parseInt(el.getAttribute('data-aos-delay') || '0');
+                            var cssClass = aosMap[aosType] || 'fade-in-up';
+                            setTimeout(function() {
+                                el.classList.add(cssClass);
+                            }, delay);
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+                // Observe semua elemen dengan data-aos
+                document.querySelectorAll('[data-aos]').forEach(function(el) {
+                    observer.observe(el);
+                });
+
+                // Elemen di viewport saat load langsung dianimasikan
+                document.querySelectorAll('[data-aos]').forEach(function(el) {
+                    var rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        var aosType = el.getAttribute('data-aos') || 'fade-up';
+                        var cssClass = aosMap[aosType] || 'fade-in-up';
+                        el.classList.add(cssClass);
+                        observer.unobserve(el);
+                    }
+                });
             });
-        });
+        })();
     </script>
 </body>
 </html>

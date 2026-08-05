@@ -4,12 +4,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="robots" content="noindex, nofollow">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'BPTrans') }} — Login</title>
+        <meta name="description" content="Masuk ke sistem BPTrans — platform manajemen pesanan dan logistik material bangunan.">
+
+        {{-- DNS Prefetch --}}
+        <link rel="dns-prefetch" href="//fonts.bunny.net">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap&font-display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -101,37 +106,5 @@
             </p>
         </div>
 
-        <!-- Auto reload script for development -->
-        @if(app()->environment('local'))
-        <script>
-            // Auto reload when files change (for development)
-            if (typeof EventSource !== 'undefined') {
-                const evtSource = new EventSource('http://localhost:5174/');
-                evtSource.onmessage = function(event) {
-                    if (event.data === 'connected') {
-                        console.log('🔄 Auto-reload connected');
-                    }
-                };
-                evtSource.addEventListener('reload', function(event) {
-                    console.log('🔄 Reloading page due to file changes...');
-                    window.location.reload();
-                });
-                evtSource.onerror = function() {
-                    // Fallback: check for changes every 2 seconds
-                    setInterval(() => {
-                        fetch(window.location.href, { method: 'HEAD' })
-                            .then(response => {
-                                if (response.status !== 200) {
-                                    window.location.reload();
-                                }
-                            })
-                            .catch(() => {
-                                // Ignore errors in development
-                            });
-                        }, 2000);
-                };
-            }
-        </script>
-        @endif
     </body>
 </html>
