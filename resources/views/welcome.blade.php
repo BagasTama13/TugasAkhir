@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BPTrans Jepara — Distributor material konstruksi premium & terpercaya. Batu bata, genteng, kayu, dan grajen dengan kualitas Grade A. Layanan logistik terpadu ke seluruh wilayah Jepara dan sekitarnya.">
     <title>BPTrans | Solusi Material Konstruksi Premium & Terpercaya</title>
     <meta name="description" content="BPTrans Jepara — supplier material konstruksi premium: batu bata, genteng, kayu, dan grajen. Pengiriman logistik tepat waktu se-Jepara dan sekitarnya.">
 
@@ -13,77 +14,24 @@
     {{-- Preconnect wajib untuk Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     {{--
         KRITIS: Preload font Plus Jakarta Sans Bold (digunakan oleh LCP element h1)
         Memastikan font tersedia sebelum browser merender h1,
         menghilangkan FOUT yang menyebabkan LCP lambat.
     --}}
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" /></noscript>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Preload LCP Image -->
+    <link rel="preload" href="{{ asset('images/colt.webp') }}" as="image" fetchpriority="high">
 
-    <style>
-        body { font-family: 'Inter', sans-serif; font-size: 16px; }
-        .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        .glass-dark {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .text-gradient {
-            background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: radial-gradient(circle, #E2E8F0 1px, transparent 1px);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-26px); } /* Approx 1.618rem float */
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-
-        @keyframes blob {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(42px, -68px) scale(1.1); }
-            66% { transform: translate(-26px, 42px) scale(0.9); }
-        }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        
-        /* Premium Gradient BG Animation */
-        @keyframes gradient-xy {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .animate-gradient-xy {
-            background-size: 400% 400%;
-            animation: gradient-xy 15s ease infinite;
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/welcome.css', 'resources/js/welcome.js'])
 </head>
-<body class="bg-white text-slate-900 antialiased overflow-x-hidden text-[16px]">
+<body class="welcome-body bg-white text-slate-900 antialiased overflow-x-hidden text-[16px]">
 
     <!-- Premium Navigation -->
-    <nav x-data="{ atTop: true }" 
+    <nav x-data="{ atTop: true, mobileMenuOpen: false }" 
          @scroll.window="atTop = (window.pageYOffset > 26 ? false : true)"
          :class="atTop ? 'bg-transparent py-[1.618rem]' : 'glass py-[1rem] shadow-xl shadow-slate-200/50'"
          class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
@@ -92,7 +40,7 @@
                 <!-- Logo -->
                 <a href="#" class="flex items-center gap-[1rem] group">
                     <div class="h-[42px] w-[42px] bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-lg group-hover:scale-110 transition-transform">
-                        <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-full h-full object-contain p-1">
+                        <img src="{{ asset('images/colt.webp') }}" alt="Logo" class="w-full h-full object-contain p-1">
                     </div>
                     <span :class="atTop ? 'text-slate-900' : 'text-slate-900'" class="text-[20px] font-display font-black tracking-tight uppercase italic">BPTrans</span>
                 </a>
@@ -117,8 +65,34 @@
                         <svg class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         {{ __('Portal Member') }}
                     </a>
+                    {{-- Mobile Hamburger Button --}}
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="sm:hidden flex items-center justify-center h-[42px] w-[42px] bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 transition-all">
+                        <svg class="w-[24px] h-[24px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
+        </div>
+
+        {{-- Mobile Menu Drawer --}}
+        <div x-show="mobileMenuOpen" x-cloak 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-4"
+             class="sm:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xl py-4 px-4 flex flex-col gap-4 z-40">
+            <a @click="mobileMenuOpen = false" href="#home" class="block text-[16px] font-bold uppercase tracking-widest text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-100">{{ __('Beranda') }}</a>
+            <a @click="mobileMenuOpen = false" href="#produk" class="block text-[16px] font-bold uppercase tracking-widest text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-100">{{ __('Produk') }}</a>
+            <a @click="mobileMenuOpen = false" href="#tentang" class="block text-[16px] font-bold uppercase tracking-widest text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-100">{{ __('Tentang') }}</a>
+            <a @click="mobileMenuOpen = false" href="#kontak" class="block text-[16px] font-bold uppercase tracking-widest text-slate-700 hover:text-indigo-600 py-2 border-b border-slate-100">{{ __('Kontak') }}</a>
+            <a href="{{ route('login.user') }}" class="mt-2 flex items-center justify-center gap-[1rem] px-[1.618rem] py-[1rem] bg-indigo-600 text-white rounded-xl text-[14px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all">
+                <svg class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                {{ __('Portal Member') }}
+            </a>
         </div>
     </nav>
 
@@ -141,7 +115,7 @@
                         <span class="text-[12px] font-black text-slate-600 uppercase tracking-[0.2em]">{!! __('Mitra Strategis Pengadaan Material') !!}</span>
                     </div>
                     
-                    <h1 class="text-[48px] md:text-[60px] lg:text-[72px] font-display font-black text-slate-900 leading-[1.1]">
+                    <h1 class="text-[36px] md:text-[60px] lg:text-[72px] font-display font-black text-slate-900 leading-[1.1]">
                         {!! __('Suplai Material Premium, <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-cyan-500 animate-gradient-xy">Solusi Logistik Terpadu.</span>') !!}
                     </h1>
@@ -150,7 +124,7 @@
                         {{ __('Menghadirkan ekosistem rantai pasok material konstruksi berspesifikasi tinggi. Kami mendefinisikan ulang standar keunggulan mutu melalui distribusi logistik yang efisien, terstruktur, dan presisi.') }}
                     </p>
 
-                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-[1.618rem] pt-[1.618rem]">
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-[1rem] sm:gap-[1.618rem] pt-[1.618rem]">
                         <a href="#produk" class="group relative px-[2.618rem] py-[1.618rem] bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-200 hover:shadow-indigo-300 transition-all transform hover:-translate-y-1 overflow-hidden">
                             <span class="relative z-10 flex items-center justify-center gap-[1rem] text-[16px]">
                                 {{ __('Mulai Belanja Material') }}
@@ -187,7 +161,7 @@
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square bg-gradient-to-tr from-indigo-100 to-cyan-50 rounded-full -z-10 blur-3xl opacity-60"></div>
                     
                     <div class="relative transform hover:scale-[1.02] transition-transform duration-700 ease-out">
-                        <img src="{{ asset('images/colt.png') }}" alt="BPTrans — Armada Logistik Material" fetchpriority="high" width="600" height="500" class="w-full h-auto object-contain drop-shadow-[0_30px_60px_rgba(79,70,229,0.2)] animate-float">
+                        <img src="{{ asset('images/colt.webp') }}" alt="BPTrans — Armada Logistik Material" fetchpriority="high" width="600" height="500" class="w-full h-auto object-contain drop-shadow-[0_30px_60px_rgba(79,70,229,0.2)] animate-float">
                         
                         <!-- Mini Badges -->
                         <div class="absolute top-[10%] right-[-10%] glass p-[1.618rem] rounded-2xl shadow-xl hidden md:block animate-bounce" style="animation-duration: 3s;">
@@ -292,7 +266,7 @@
                         
                         <div class="relative h-[12rem] overflow-hidden bg-slate-100">
                             @if($product->gambar)
-                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-in-out">
+                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" loading="lazy" width="300" height="192" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-in-out">
                             @else
                                 <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
                                     <svg class="w-[48px] h-[48px] mb-[1rem]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -334,7 +308,7 @@
                 <div class="w-full lg:w-[61.8%] space-y-[2.618rem]" data-aos="fade-up" data-aos-delay="100">
                     <a href="#" class="flex items-center gap-[1rem]">
                         <div class="h-[68px] w-[68px] bg-white rounded-xl flex items-center justify-center overflow-hidden p-[0.5rem] shadow-lg shadow-indigo-500/20">
-                            <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-full h-full object-contain">
+                            <img src="{{ asset('images/colt.webp') }}" alt="Logo" class="w-full h-full object-contain">
                         </div>
                         <span class="text-[32px] font-display font-black text-white tracking-tight uppercase italic">BPTrans</span>
                     </a>

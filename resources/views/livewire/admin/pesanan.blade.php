@@ -349,7 +349,7 @@
     @if($showRejectModal)
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm"
          x-data @keydown.escape.window="$wire.closeRejectModal()">
-        <div @click.away="$wire.closeRejectModal()" class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 transform transition-all animate-in zoom-in-95 duration-200">
+        <div @click.away="$wire.closeRejectModal()" class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 transform transition-all animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto flex flex-col">
             <div class="flex justify-between items-center mb-5">
                 <h3 class="text-lg font-bold text-slate-900">Pilih Alasan Penolakan</h3>
                 <button wire:click="closeRejectModal" class="text-slate-400 hover:text-slate-500">
@@ -396,7 +396,7 @@
     @if($showPaymentModal)
     <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
          x-data @keydown.escape.window="$wire.closePaymentModal()">
-        <div @click.away="$wire.closePaymentModal()" class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+        <div @click.away="$wire.closePaymentModal()" class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
             <div class="bg-indigo-600 px-6 py-5 flex items-center justify-between text-white">
                 <div>
                     <h3 class="text-lg font-black tracking-tight">Konfirmasi Pembayaran</h3>
@@ -407,7 +407,7 @@
                 </button>
             </div>
             
-            <form wire:submit="simpanPembayaran" class="p-6 space-y-5">
+            <form wire:submit="simpanPembayaran" class="p-6 space-y-5 overflow-y-auto">
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center justify-between">
                     <div>
                         @if($paymentKekurangan < $paymentTotalHarga)

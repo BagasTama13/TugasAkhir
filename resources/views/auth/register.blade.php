@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-32 h-32 object-contain mx-auto drop-shadow-lg" />
+        <img src="{{ asset('images/colt.webp') }}" alt="Logo" width="128" height="128" class="w-32 h-32 object-contain mx-auto" />
     </div>
 
     <form method="POST" action="{{ route('register') }}" class="space-y-4">

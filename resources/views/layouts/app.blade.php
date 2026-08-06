@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- Panel internal: tidak perlu diindeks search engine --}}
     <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="BPTrans — Panel kontrol manajemen pesanan, pemasukan, dan etalase material konstruksi.">
     <title>
         @php
             $segment = request()->segment(1);

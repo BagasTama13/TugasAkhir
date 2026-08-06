@@ -1,3 +1,10 @@
+@push('scripts')
+    <script
+        src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+        data-client-key="{{ config('midtrans.client_key') }}">
+    </script>
+@endpush
+
 <!-- Wrapper utama halaman dengan min-height full screen dan background abu-abu terang. Terdapat wire:poll untuk me-refresh komponen secara otomatis setiap 5 detik. -->
 <div class="min-h-screen bg-[#F8FAFC] pb-12">
     <!-- Header Section -->
