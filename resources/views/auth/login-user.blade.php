@@ -3,7 +3,7 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-6 text-center">
-        <img src="{{ asset('images/colt.png') }}" alt="Logo" class="w-32 h-32 object-contain mx-auto drop-shadow-lg" />
+        <img src="{{ asset('images/colt.webp') }}" alt="Logo" width="128" height="128" class="w-32 h-32 object-contain mx-auto" />
         <h1 class="mt-4 text-2xl font-semibold text-gray-900">Login User</h1>
     </div>
 

@@ -4,18 +4,24 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="description" content="BPTrans — Login atau daftar untuk mengakses layanan pemesanan material konstruksi premium.">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preload" as="style" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" />
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" /></noscript>
+
+        <!-- Preload Logo Image -->
+        <link rel="preload" href="{{ asset('images/colt.webp') }}" as="image" fetchpriority="high">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col lg:flex-row justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 px-4 gap-8">
+        <div class="min-h-screen flex flex-col justify-center lg:flex-row lg:items-center py-10 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 px-4 gap-8">
             <!-- Form Card -->
             <div class="w-full sm:max-w-md px-6 py-8 bg-white shadow-2xl overflow-hidden sm:rounded-2xl border-t-4 border-blue-600">
                 {{ $slot }}
@@ -26,7 +32,7 @@
             @if(request()->routeIs('login*'))
                 @if($currentRole === 'admin')
                     <!-- Admin/Staff Panel -->
-                    <div class="hidden lg:block w-full sm:max-w-sm px-6 py-8 bg-white shadow-xl sm:rounded-2xl border border-red-100 relative overflow-hidden">
+                    <div class="w-full sm:max-w-sm px-6 py-8 bg-white shadow-xl sm:rounded-2xl border border-red-100 relative overflow-hidden mx-auto lg:mx-0">
                         <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-red-100 rounded-full opacity-50 blur-xl"></div>
                         
                         <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
@@ -62,7 +68,7 @@
                     </div>
                 @else
                     <!-- User Panel (Default) -->
-                    <div class="hidden lg:block w-full sm:max-w-sm px-6 py-8 bg-white shadow-xl sm:rounded-2xl border border-blue-100 relative overflow-hidden">
+                    <div class="w-full sm:max-w-sm px-6 py-8 bg-white shadow-xl sm:rounded-2xl border border-blue-100 relative overflow-hidden mx-auto lg:mx-0">
                         <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-blue-100 rounded-full opacity-50 blur-xl"></div>
                         
                         <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
@@ -95,43 +101,12 @@
         </div>
         
         <!-- Footer -->
-        <div class="absolute bottom-4 w-full text-center">
+        <div class="py-6 w-full text-center bg-transparent">
             <p class="text-xs font-semibold text-gray-500">
                 &copy; {{ date('Y') }} BPTrans Logistik & Material. Developed by <a href="https://github.com/BagasTama13" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-500 transition-colors">BagasTama13</a>.
             </p>
         </div>
 
-        <!-- Auto reload script for development -->
-        @if(app()->environment('local'))
-        <script>
-            // Auto reload when files change (for development)
-            if (typeof EventSource !== 'undefined') {
-                const evtSource = new EventSource('http://localhost:5174/');
-                evtSource.onmessage = function(event) {
-                    if (event.data === 'connected') {
-                        console.log('🔄 Auto-reload connected');
-                    }
-                };
-                evtSource.addEventListener('reload', function(event) {
-                    console.log('🔄 Reloading page due to file changes...');
-                    window.location.reload();
-                });
-                evtSource.onerror = function() {
-                    // Fallback: check for changes every 2 seconds
-                    setInterval(() => {
-                        fetch(window.location.href, { method: 'HEAD' })
-                            .then(response => {
-                                if (response.status !== 200) {
-                                    window.location.reload();
-                                }
-                            })
-                            .catch(() => {
-                                // Ignore errors in development
-                            });
-                        }, 2000);
-                };
-            }
-        </script>
-        @endif
+
     </body>
 </html>
