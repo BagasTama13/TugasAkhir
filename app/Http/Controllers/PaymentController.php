@@ -60,36 +60,40 @@ class PaymentController extends Controller
     }
 
     /**
-     * Handle Midtrans webhook notification.
-     * This route must be CSRF-exempt.
+     * Menangani notifikasi webhook dari Midtrans.
+     * Route ini dikecualikan dari perlindungan CSRF (Token) agar sistem 
+     * dapat menerima HTTP POST dari server eksternal Midtrans.
      */
     public function handleNotification(Request $request)
     {
         try {
+            // Mem-parsing muatan data (payload) notifikasi dari API Midtrans
             $data = $this->midtransService->parseNotification();
 
-            // Security check: Verify Midtrans Signature Key to prevent webhook forgery
+            // Pengecekan Keamanan: Memvalidasi Midtrans Signature Key 
+            // untuk mencegah intrusi atau pemalsuan webhook (webhook forgery)
             if (empty($data['is_valid_signature'])) {
-                Log::warning('Midtrans notification: Invalid signature key for order_id=' . ($data['order_id'] ?? 'unknown'));
+                Log::warning('Notifikasi Midtrans: Signature key tidak valid untuk order_id=' . ($data['order_id'] ?? 'unknown'));
                 return response()->json(['message' => 'Invalid signature key'], 403);
             }
 
             $transactionStatus = $data['transaction_status'];
-            $orderId           = $data['order_id']; // e.g. "USR-XXXX-timestamp"
+            $orderId           = $data['order_id']; // contoh format: "USR-XXXX-timestamp"
             $fraudStatus       = $data['fraud_status'];
             $transactionId     = $data['transaction_id'];
 
-            // Extract original nomor from order_id (strip the -timestamp suffix)
+            // Mengekstrak format nomor resi asli pesanan dari variabel order_id
             $nomor = preg_replace('/-\d+$/', '', $orderId);
             $pesanan = Pesanan::where('nomor', $nomor)->first();
 
             if (!$pesanan) {
-                Log::warning('Midtrans notification: pesanan not found for order_id=' . $orderId);
+                Log::warning('Notifikasi Midtrans: Pesanan tidak ditemukan untuk order_id=' . $orderId);
                 return response()->json(['message' => 'Pesanan not found'], 404);
             }
 
-            Log::info("Midtrans notification: order={$orderId}, status={$transactionStatus}, fraud={$fraudStatus}");
+            Log::info("Notifikasi Midtrans: order={$orderId}, status={$transactionStatus}, fraud={$fraudStatus}");
 
+            // Memperbarui status pesanan menjadi Lunas secara dinamis jika pembayaran berhasil (capture/settlement)
             if ($transactionStatus === 'capture') {
                 if ($fraudStatus === 'accept') {
                     $this->markAsPaid($pesanan, $transactionId);
@@ -97,13 +101,14 @@ class PaymentController extends Controller
             } elseif ($transactionStatus === 'settlement') {
                 $this->markAsPaid($pesanan, $transactionId);
             } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
-                // Clear snap token so user can retry
+                // Menghapus token (snap) agar pelanggan dapat mengulang proses pembayaran
                 $pesanan->update(['snap_token' => null]);
             }
 
             return response()->json(['message' => 'OK']);
         } catch (\Exception $e) {
-            Log::error('Midtrans notification error: ' . $e->getMessage());
+            // Pencatatan (Logging) jika terjadi kegagalan skrip atau koneksi
+            Log::error('Kesalahan notifikasi Midtrans: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

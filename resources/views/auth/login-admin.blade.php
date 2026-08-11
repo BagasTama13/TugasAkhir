@@ -13,7 +13,7 @@
         <!-- Username -->
         <div>
             <x-input-label for="name" value="Username" />
-            <x-text-input id="name" class="block mt-2 w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200" type="text" name="name" :value="old('name')" placeholder="Admin" required autofocus autocomplete="username" />
+            <x-text-input id="name" class="block mt-2 w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200" type="text" name="name" :value="old('name')" placeholder="Username" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
